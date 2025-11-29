@@ -1,47 +1,68 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { roadmapData, Category } from './data/questions';
 import { auth, googleProvider, signInWithPopup, firebaseSignOut, db, doc, onSnapshot, setDoc, isConfigured } from './lib/firebase';
 import { QuestionModal } from './components/QuestionModal';
-import clsx from 'clsx';
+import Sidebar from './components/Sidebar';
+import SettingsPanel from './components/SettingsPanel';
+import RoadmapNode from './components/RoadmapNode';
+import ConnectionLines from './components/ConnectionLines';
 import { User } from 'firebase/auth';
 
-/**
- * App.tsx
- * Phase 4: NeetCode UI Overhaul
- */
+// Initial Layout Positions (Approximate Tree Structure)
+const INITIAL_LAYOUT: Record<string, { x: number; y: number }> = {
+  'arrays': { x: 0, y: 0 },
+  'two_pointers': { x: -250, y: 180 },
+  'stack': { x: 250, y: 180 },
+  'binary_search': { x: -380, y: 360 },
+  'sliding_window': { x: -120, y: 360 },
+  'linked_list': { x: 250, y: 360 },
+  'trees': { x: 0, y: 540 },
+  'trie': { x: -250, y: 720 },
+  'backtracking': { x: 250, y: 720 },
+  'heap': { x: 0, y: 900 },
+  'graphs': { x: 250, y: 900 },
+  'intervals': { x: -250, y: 1080 },
+  'greedy': { x: 0, y: 1080 },
+  'advanced_graphs': { x: 250, y: 1080 },
+  'dp1': { x: 500, y: 900 }, // Side branch
+  'dp2': { x: 500, y: 1080 },
+  'bit_manipulation': { x: 750, y: 1080 },
+  'math': { x: 500, y: 1260 },
+};
+
 const App: React.FC = () => {
+  // --- State: User & Data ---
   const [user, setUser] = useState<User | null>(null);
   const [solvedIds, setSolvedIds] = useState<Set<string>>(new Set());
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
   const [isAuthLoading, setIsAuthLoading] = useState(true);
 
-  // Configuration check
-  if (!isConfigured) {
-    return (
-      <div className="min-h-screen bg-dark-bg text-dark-text font-sans flex items-center justify-center p-4">
-        <div className="max-w-md w-full bg-dark-card border border-brand-primary/30 rounded-2xl p-8 shadow-2xl text-center">
-          <h1 className="text-2xl font-bold text-white mb-4">Configuration Required</h1>
-          <p className="text-dark-muted">Please configure your firebase.ts file.</p>
-        </div>
-      </div>
-    );
-  }
+  // --- State: Canvas & Interaction ---
+  const [viewState, setViewState] = useState({ x: window.innerWidth / 2 - 100, y: 100, scale: 1 });
+  const [nodePositions, setNodePositions] = useState(INITIAL_LAYOUT);
+  const [settings, setSettings] = useState({ allowPan: true, allowZoom: true, allowDrag: false });
 
+  // --- Refs for Interaction Logic ---
+  const containerRef = useRef<HTMLDivElement>(null);
+  const isPanning = useRef(false);
+  const isDraggingNode = useRef<string | null>(null);
+  const lastMousePos = useRef({ x: 0, y: 0 });
+  const dragStartPos = useRef({ x: 0, y: 0 }); // To distinguish click vs drag
+
+  // --- Firebase Auth & Data Sync ---
   useEffect(() => {
+    if (!isConfigured) return;
     const unsubscribe = auth.onAuthStateChanged((currentUser) => {
       setUser(currentUser);
       setIsAuthLoading(false);
-
       if (currentUser) {
         const userRef = doc(db, 'users', currentUser.uid);
         return onSnapshot(userRef, (docSnap) => {
-          if (docSnap.exists()) {
-            setSolvedIds(new Set(docSnap.data().solved || []));
-          } else {
-            setDoc(userRef, { solved: [] }, { merge: true });
-          }
+          if (docSnap.exists()) setSolvedIds(new Set(docSnap.data().solved || []));
+          else setDoc(userRef, { solved: [] }, { merge: true });
         });
-      } else {
+      }
+      else {
         const local = localStorage.getItem('shreyans-arc-guest');
         if (local) setSolvedIds(new Set(JSON.parse(local)));
       }
@@ -55,11 +76,8 @@ const App: React.FC = () => {
     else newSet.add(id);
     setSolvedIds(newSet);
     const idsArray = Array.from(newSet);
-    if (user) {
-      await setDoc(doc(db, 'users', user.uid), { solved: idsArray }, { merge: true });
-    } else {
-      localStorage.setItem('shreyans-arc-guest', JSON.stringify(idsArray));
-    }
+    if (user) await setDoc(doc(db, 'users', user.uid), { solved: idsArray }, { merge: true });
+    else localStorage.setItem('shreyans-arc-guest', JSON.stringify(idsArray));
   };
 
   const handleLogin = async () => {
@@ -67,167 +85,228 @@ const App: React.FC = () => {
     catch (error) { console.error(error); alert("Login failed."); }
   };
 
+  // --- Interaction Handlers ---
+
+  const handleWheel = (e: React.WheelEvent) => {
+    if (!settings.allowZoom) return;
+    e.preventDefault(); // Prevent browser zoom if possible (though passive listener might block this)
+
+    const scaleAmount = -e.deltaY * 0.001;
+    const newScale = Math.min(Math.max(viewState.scale * (1 + scaleAmount), 0.4), 2.5);
+
+    // Zoom towards mouse pointer
+    const rect = containerRef.current?.getBoundingClientRect();
+    if (!rect) return;
+
+    const mouseX = e.clientX - rect.left;
+    const mouseY = e.clientY - rect.top;
+
+    const scaleRatio = newScale / viewState.scale;
+    const newX = mouseX - (mouseX - viewState.x) * scaleRatio;
+    const newY = mouseY - (mouseY - viewState.y) * scaleRatio;
+
+    setViewState({ x: newX, y: newY, scale: newScale });
+  };
+
+  const handleMouseDown = (e: React.MouseEvent) => {
+    // Middle mouse or Left mouse on background
+    if (e.button === 1 || (e.button === 0 && settings.allowPan)) {
+      isPanning.current = true;
+      lastMousePos.current = { x: e.clientX, y: e.clientY };
+    }
+  };
+
+  const handleNodeMouseDown = (e: React.MouseEvent, id: string) => {
+    if (settings.allowDrag) {
+      isDraggingNode.current = id;
+      lastMousePos.current = { x: e.clientX, y: e.clientY };
+      dragStartPos.current = { x: e.clientX, y: e.clientY };
+      e.stopPropagation();
+    }
+  };
+
+  const handleMouseMove = useCallback((e: MouseEvent) => {
+    if (isPanning.current) {
+      const dx = e.clientX - lastMousePos.current.x;
+      const dy = e.clientY - lastMousePos.current.y;
+      setViewState(prev => ({ ...prev, x: prev.x + dx, y: prev.y + dy }));
+      lastMousePos.current = { x: e.clientX, y: e.clientY };
+    }
+    else if (isDraggingNode.current) {
+      const dx = (e.clientX - lastMousePos.current.x) / viewState.scale;
+      const dy = (e.clientY - lastMousePos.current.y) / viewState.scale;
+
+      setNodePositions(prev => ({
+        ...prev,
+        [isDraggingNode.current!]: {
+          x: prev[isDraggingNode.current!].x + dx,
+          y: prev[isDraggingNode.current!].y + dy
+        }
+      }));
+      lastMousePos.current = { x: e.clientX, y: e.clientY };
+    }
+  }, [viewState.scale]);
+
+  const handleMouseUp = useCallback(() => {
+    isPanning.current = false;
+    isDraggingNode.current = null;
+  }, []);
+
+  // --- Touch Interaction Handlers (Mobile) ---
+  const touchStartDist = useRef<number | null>(null);
+  const lastTouchPos = useRef<{ x: number; y: number } | null>(null);
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    if (e.touches.length === 1) {
+      // Single touch - Pan
+      if (settings.allowPan) {
+        isPanning.current = true;
+        lastTouchPos.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+      }
+    }
+    else if (e.touches.length === 2) {
+      // Double touch - Zoom
+      if (settings.allowZoom) {
+        const dist = Math.hypot(
+          e.touches[0].clientX - e.touches[1].clientX,
+          e.touches[0].clientY - e.touches[1].clientY
+        );
+        touchStartDist.current = dist;
+      }
+    }
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (e.touches.length === 1 && isPanning.current && lastTouchPos.current) {
+      const dx = e.touches[0].clientX - lastTouchPos.current.x;
+      const dy = e.touches[0].clientY - lastTouchPos.current.y;
+      setViewState(prev => ({ ...prev, x: prev.x + dx, y: prev.y + dy }));
+      lastTouchPos.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+    }
+    else if (e.touches.length === 2 && settings.allowZoom && touchStartDist.current) {
+      const dist = Math.hypot(
+        e.touches[0].clientX - e.touches[1].clientX,
+        e.touches[0].clientY - e.touches[1].clientY
+      );
+
+      const scaleFactor = dist / touchStartDist.current;
+      const newScale = Math.min(Math.max(viewState.scale * scaleFactor, 0.4), 2.5);
+
+      // Center zoom (simplified for touch)
+      const centerX = (e.touches[0].clientX + e.touches[1].clientX) / 2;
+      const centerY = (e.touches[0].clientY + e.touches[1].clientY) / 2;
+
+      // Adjust position to zoom around center
+      // This is a bit complex to get perfect without previous scale reference in this event, 
+      // so we'll just update scale for now or use a simplified approach.
+      // For smoother pinch, we'd need to track previous center and scale.
+      // Simplified: Just scale.
+
+      setViewState(prev => ({ ...prev, scale: newScale }));
+      touchStartDist.current = dist;
+    }
+  };
+
+  const handleTouchEnd = () => {
+    isPanning.current = false;
+    touchStartDist.current = null;
+    lastTouchPos.current = null;
+  };
+
+  // Global event listeners for drag/pan
+  useEffect(() => {
+    window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener('mouseup', handleMouseUp);
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('mouseup', handleMouseUp);
+    };
+  }, [handleMouseMove, handleMouseUp]);
+
+
+  // --- Render Helpers ---
   const totalQuestions = roadmapData.reduce((acc, cat) => acc + cat.questions.length, 0);
   const totalSolved = solvedIds.size;
-  const overallProgress = Math.round((totalSolved / totalQuestions) * 100);
+  const overallProgress = totalQuestions > 0 ? Math.round((totalSolved / totalQuestions) * 100) : 0;
 
-  // Helper to find category by ID
-  const getCat = (id: string) => roadmapData.find(c => c.id === id);
+  if (!isConfigured) return <div className="text-white p-10">Config Required</div>;
 
   return (
-    <div className="min-h-screen bg-dark-bg text-dark-text font-sans pb-32">
-      {/* Navbar / Top Bar */}
-      <nav className="sticky top-0 z-40 w-full bg-dark-bg/90 backdrop-blur-md border-b border-dark-border shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="bg-brand-primary/10 p-1.5 rounded-lg border border-brand-primary/20">
-              <span className="font-bold text-brand-primary">SA</span>
-            </div>
-            <span className="font-bold text-lg tracking-tight text-white hidden sm:block">Shreyan's Arc</span>
+    <div className="relative w-screen h-screen overflow-hidden bg-dark-bg text-dark-text font-sans selection:bg-brand-primary/30">
+
+      {/* UI Layer */}
+      <Sidebar
+        totalSolved={totalSolved}
+        totalQuestions={totalQuestions}
+        overallProgress={overallProgress}
+      />
+
+      <SettingsPanel
+        settings={settings}
+        onToggle={(key) => setSettings(prev => ({ ...prev, [key]: !prev[key] }))}
+      />
+
+      {/* Auth Button (Floating Top Left) */}
+      <div className="fixed top-6 left-6 z-50">
+        {user ? (
+          <div className="flex items-center gap-3 bg-dark-card border border-dark-border p-2 rounded-lg shadow-xl">
+            <img src={user.photoURL || ''} alt="User" className="w-8 h-8 rounded-full" />
+            <button onClick={() => firebaseSignOut(auth)} className="text-xs font-bold text-dark-muted hover:text-white uppercase tracking-wider px-2">
+              Sign Out
+            </button>
           </div>
+        ) : (
+          <button
+            onClick={handleLogin}
+            className="bg-brand-primary text-white px-6 py-2.5 rounded-lg font-semibold shadow-lg shadow-brand-primary/20 hover:bg-brand-primaryHover transition-all hover:scale-105 active:scale-95"
+          >
+            Login to Save Progress
+          </button>
+        )}
+      </div>
 
-          {/* Central Progress Bar - Prominent */}
-          <div className="flex-1 max-w-md mx-6 hidden md:block">
-            <div className="flex justify-between text-xs font-mono text-dark-muted mb-1.5">
-              <span>Total Mastery</span>
-              <span>{totalSolved} / {totalQuestions}</span>
-            </div>
-            <div className="w-full h-2.5 bg-dark-card border border-dark-border rounded-full overflow-hidden">
-              <div
-                className="h-full bg-gradient-to-r from-brand-secondary to-brand-primary transition-all duration-700 ease-out"
-                style={{ width: `${overallProgress}%` }}
-              />
-            </div>
-          </div>
+      {/* Canvas Container */}
+      <div
+        ref={containerRef}
+        className="w-full h-full cursor-grab active:cursor-grabbing"
+        onWheel={handleWheel}
+        onMouseDown={handleMouseDown}
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
+      >
+        {/* Canvas World */}
+        <div
+          style={{
+            transform: `translate(${viewState.x}px, ${viewState.y}px) scale(${viewState.scale})`,
+            transformOrigin: '0 0',
+            width: '100%',
+            height: '100%',
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            willChange: 'transform'
+          }}
+        >
+          <ConnectionLines nodePositions={nodePositions} />
 
-          <div>
-            {isAuthLoading ? (
-              <div className="w-8 h-8 rounded-full bg-dark-highlight animate-pulse" />
-            ) : user ? (
-              <button onClick={() => firebaseSignOut(auth)} className="text-sm font-medium text-dark-muted hover:text-white transition-colors">
-                Sign Out
-              </button>
-            ) : (
-              <button onClick={handleLogin} className="text-sm font-semibold bg-brand-primary text-white px-4 py-2 rounded-lg hover:bg-brand-primaryHover transition-all shadow-lg shadow-brand-primary/20">
-                Log In
-              </button>
-            )}
-          </div>
-        </div>
-      </nav>
-
-      {/* Main Roadmap Tree Layout */}
-      <div className="max-w-5xl mx-auto px-4 mt-12 relative">
-
-        {/* SVG Connector Overlay - Behind the nodes */}
-        {/* We use a static SVG for the lines since the layout is fixed grid-like rows */}
-        <div className="absolute inset-0 z-0 pointer-events-none opacity-40 text-dark-highlight hidden md:block" style={{ top: '30px' }}>
-          <svg width="100%" height="100%" viewBox="0 0 1000 1200" preserveAspectRatio="none">
-            {/* Arrays -> Two Pointers & Stack */}
-            <path d="M500 40 C 500 80, 350 80, 350 130" stroke="currentColor" strokeWidth="2" fill="none" />
-            <path d="M500 40 C 500 80, 650 80, 650 130" stroke="currentColor" strokeWidth="2" fill="none" />
-
-            {/* Two Pointers -> Binary Search & Sliding Window */}
-            <path d="M350 200 C 350 240, 200 240, 200 290" stroke="currentColor" strokeWidth="2" fill="none" />
-            <path d="M350 200 C 350 240, 350 240, 350 290" stroke="currentColor" strokeWidth="2" fill="none" />
-
-            {/* Stack -> Linked List */}
-            <path d="M650 200 C 650 240, 500 240, 500 290" stroke="currentColor" strokeWidth="2" fill="none" />
-
-            {/* Binary Search + Sliding Window + Linked List -> Trees */}
-            <path d="M200 360 C 200 400, 500 400, 500 450" stroke="currentColor" strokeWidth="2" fill="none" />
-            <path d="M350 360 C 350 400, 500 400, 500 450" stroke="currentColor" strokeWidth="2" fill="none" />
-            <path d="M500 360 C 500 400, 500 400, 500 450" stroke="currentColor" strokeWidth="2" fill="none" />
-
-            {/* Trees -> Tries & Backtracking */}
-            <path d="M500 520 C 500 560, 275 560, 275 610" stroke="currentColor" strokeWidth="2" fill="none" />
-            <path d="M500 520 C 500 560, 725 560, 725 610" stroke="currentColor" strokeWidth="2" fill="none" />
-
-            {/* Trees -> Heap */}
-            <path d="M500 520 C 500 680, 500 680, 500 770" stroke="currentColor" strokeWidth="2" fill="none" />
-
-            {/* Backtracking -> Graphs */}
-            <path d="M725 680 C 725 720, 725 720, 725 770" stroke="currentColor" strokeWidth="2" fill="none" />
-
-            {/* Heap -> Intervals & Greedy */}
-            <path d="M500 840 C 500 880, 350 880, 350 930" stroke="currentColor" strokeWidth="2" fill="none" />
-            <path d="M500 840 C 500 880, 650 880, 650 930" stroke="currentColor" strokeWidth="2" fill="none" />
-
-            {/* Graphs -> Advanced Graphs & 1D DP */}
-            <path d="M725 840 C 725 880, 850 880, 850 930" stroke="currentColor" strokeWidth="2" fill="none" />
-            <path d="M725 840 C 725 880, 950 880, 950 770" stroke="currentColor" strokeWidth="2" fill="none" /> {/* Backtrack to 1D DP? Layout tweak */}
-
-            {/* Misc Links */}
-            <path d="M950 840 C 950 880, 800 1000, 800 1090" stroke="currentColor" strokeWidth="2" fill="none" /> {/* 1D DP -> 2D DP */}
-            <path d="M850 1000 C 850 1040, 800 1040, 800 1090" stroke="currentColor" strokeWidth="2" fill="none" /> {/* Adv Graph -> 2D DP */}
-            <path d="M800 1160 C 800 1200, 800 1200, 800 1250" stroke="currentColor" strokeWidth="2" fill="none" /> {/* 2D DP -> Math */}
-          </svg>
-        </div>
-
-        {/* Tree Nodes Container */}
-        <div className="relative z-10 flex flex-col items-center gap-12 md:gap-16 pb-20">
-
-          {/* ROW 1 */}
-          <div className="flex justify-center w-full">
-            <RoadmapNode category={getCat('arrays')} solvedIds={solvedIds} onClick={setSelectedCategory} />
-          </div>
-
-          {/* ROW 2 */}
-          <div className="flex justify-center gap-12 md:gap-40 w-full">
-            <RoadmapNode category={getCat('two_pointers')} solvedIds={solvedIds} onClick={setSelectedCategory} />
-            <RoadmapNode category={getCat('stack')} solvedIds={solvedIds} onClick={setSelectedCategory} />
-          </div>
-
-          {/* ROW 3 */}
-          <div className="flex justify-center gap-6 md:gap-12 w-full">
-            <RoadmapNode category={getCat('binary_search')} solvedIds={solvedIds} onClick={setSelectedCategory} />
-            <RoadmapNode category={getCat('sliding_window')} solvedIds={solvedIds} onClick={setSelectedCategory} />
-            <RoadmapNode category={getCat('linked_list')} solvedIds={solvedIds} onClick={setSelectedCategory} />
-          </div>
-
-          {/* ROW 4 */}
-          <div className="flex justify-center w-full">
-            <RoadmapNode category={getCat('trees')} solvedIds={solvedIds} onClick={setSelectedCategory} />
-          </div>
-
-          {/* ROW 5 */}
-          <div className="flex justify-center gap-12 md:gap-64 w-full">
-            <RoadmapNode category={getCat('trie')} solvedIds={solvedIds} onClick={setSelectedCategory} />
-            <RoadmapNode category={getCat('backtracking')} solvedIds={solvedIds} onClick={setSelectedCategory} />
-          </div>
-
-          {/* ROW 6 */}
-          <div className="flex justify-center gap-8 md:gap-32 w-full relative">
-            <RoadmapNode category={getCat('heap')} solvedIds={solvedIds} onClick={setSelectedCategory} />
-            <RoadmapNode category={getCat('graphs')} solvedIds={solvedIds} onClick={setSelectedCategory} />
-            <div className="absolute right-0 md:right-10 top-0">
-              <RoadmapNode category={getCat('dp1')} solvedIds={solvedIds} onClick={setSelectedCategory} />
-            </div>
-          </div>
-
-          {/* ROW 7 */}
-          <div className="flex justify-center gap-6 md:gap-16 w-full">
-            <RoadmapNode category={getCat('intervals')} solvedIds={solvedIds} onClick={setSelectedCategory} />
-            <RoadmapNode category={getCat('greedy')} solvedIds={solvedIds} onClick={setSelectedCategory} />
-            <RoadmapNode category={getCat('advanced_graphs')} solvedIds={solvedIds} onClick={setSelectedCategory} />
-          </div>
-
-          {/* ROW 8 */}
-          <div className="flex justify-center gap-6 md:gap-16 w-full relative">
-            <RoadmapNode category={getCat('dp2')} solvedIds={solvedIds} onClick={setSelectedCategory} />
-            <div className="absolute right-0 md:right-20 top-0">
-              <RoadmapNode category={getCat('bit_manipulation')} solvedIds={solvedIds} onClick={setSelectedCategory} />
-            </div>
-          </div>
-
-          {/* ROW 9 */}
-          <div className="flex justify-center w-full">
-            <RoadmapNode category={getCat('math')} solvedIds={solvedIds} onClick={setSelectedCategory} />
-          </div>
-
+          {roadmapData.map(category => (
+            <RoadmapNode
+              key={category.id}
+              category={category}
+              solvedIds={solvedIds}
+              onClick={setSelectedCategory}
+              x={nodePositions[category.id]?.x || 0}
+              y={nodePositions[category.id]?.y || 0}
+              scale={viewState.scale}
+              isDragging={!!isDraggingNode.current} // Pass drag state to prevent click
+              onMouseDown={handleNodeMouseDown}
+            />
+          ))}
         </div>
       </div>
 
+      {/* Modal */}
       {selectedCategory && (
         <QuestionModal
           category={selectedCategory}
@@ -237,57 +316,6 @@ const App: React.FC = () => {
           toggleQuestion={toggleQuestion}
         />
       )}
-    </div>
-  );
-};
-
-const RoadmapNode: React.FC<{
-  category?: Category;
-  solvedIds: Set<string>;
-  onClick: (c: Category) => void;
-}> = ({ category, solvedIds, onClick }) => {
-  if (!category) return <div className="w-40 h-16 opacity-0" />; // Placeholder
-
-  const total = category.questions.length;
-  const solved = category.questions.filter(q => solvedIds.has(q.id)).length;
-  const isComplete = solved === total && total > 0;
-  const progress = Math.round((solved / total) * 100);
-
-  return (
-    <div
-      onClick={() => onClick(category)}
-      className={clsx(
-        "relative w-36 md:w-48 p-0 rounded-lg cursor-pointer transition-all duration-300 group hover:scale-105 shadow-xl z-20",
-        "bg-dark-card border border-dark-border hover:border-dark-highlight"
-      )}
-    >
-      {/* Progress Background Fill */}
-      <div
-        className={clsx(
-          "absolute top-0 bottom-0 left-0 rounded-lg opacity-20 transition-all duration-500",
-          isComplete ? "bg-brand-accent" : "bg-brand-primary"
-        )}
-        style={{ width: `${progress}%` }}
-      />
-
-      <div className="relative p-3 text-center">
-        <h3 className="text-sm font-semibold text-white group-hover:text-white truncate px-1">
-          {category.title}
-        </h3>
-
-        {/* Status Pills */}
-        <div className="mt-2 flex justify-center">
-          {isComplete ? (
-            <span className="text-[10px] font-bold text-brand-accent bg-brand-accent/10 px-2 py-0.5 rounded-full border border-brand-accent/20">
-              COMPLETED
-            </span>
-          ) : (
-            <div className="text-[10px] font-mono text-dark-muted bg-black/20 px-2 py-0.5 rounded-full">
-              {solved} / {total}
-            </div>
-          )}
-        </div>
-      </div>
     </div>
   );
 };
