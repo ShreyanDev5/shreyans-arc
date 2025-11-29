@@ -40,7 +40,17 @@ const App: React.FC = () => {
 
   // --- State: Canvas & Interaction ---
   const [viewState, setViewState] = useState({ x: window.innerWidth / 2 - 100, y: 100, scale: 1 });
-  const [nodePositions, setNodePositions] = useState(INITIAL_LAYOUT);
+
+  // Initialize positions with fallback for new nodes
+  const [nodePositions, setNodePositions] = useState(() => {
+    const positions = { ...INITIAL_LAYOUT };
+    roadmapData.forEach(cat => {
+      if (!positions[cat.id]) {
+        positions[cat.id] = { x: 0, y: 0 };
+      }
+    });
+    return positions;
+  });
   const [settings, setSettings] = useState({ allowPan: true, allowZoom: true, allowDrag: false });
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -145,13 +155,17 @@ const App: React.FC = () => {
       const dx = (e.clientX - lastMousePos.current.x) / viewState.scale;
       const dy = (e.clientY - lastMousePos.current.y) / viewState.scale;
 
-      setNodePositions(prev => ({
-        ...prev,
-        [isDraggingNode.current!]: {
-          x: prev[isDraggingNode.current!].x + dx,
-          y: prev[isDraggingNode.current!].y + dy
-        }
-      }));
+      setNodePositions(prev => {
+        const currentId = isDraggingNode.current!;
+        const currentPos = prev[currentId] || { x: 0, y: 0 };
+        return {
+          ...prev,
+          [currentId]: {
+            x: currentPos.x + dx,
+            y: currentPos.y + dy
+          }
+        };
+      });
       lastMousePos.current = { x: e.clientX, y: e.clientY };
     }
   }, [viewState.scale]);
@@ -295,34 +309,28 @@ const App: React.FC = () => {
         onTouchEnd={handleTouchEnd}
       >
         {/* Canvas World */}
-        <div
-          style={{
-            transform: `translate(${viewState.x}px, ${viewState.y}px) scale(${viewState.scale})`,
-            transformOrigin: '0 0',
-            width: '100%',
-            height: '100%',
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            willChange: 'transform'
-          }}
-        >
-          <ConnectionLines nodePositions={nodePositions} />
+        <ConnectionLines
+          nodePositions={nodePositions}
+          scale={viewState.scale}
+          panX={viewState.x}
+          panY={viewState.y}
+        />
 
-          {roadmapData.map(category => (
-            <RoadmapNode
-              key={category.id}
-              category={category}
-              solvedIds={solvedIds}
-              onClick={setSelectedCategory}
-              x={nodePositions[category.id]?.x || 0}
-              y={nodePositions[category.id]?.y || 0}
-              scale={viewState.scale}
-              isDragging={!!isDraggingNode.current} // Pass drag state to prevent click
-              onMouseDown={handleNodeMouseDown}
-            />
-          ))}
-        </div>
+        {roadmapData.map(category => (
+          <RoadmapNode
+            key={category.id}
+            category={category}
+            solvedIds={solvedIds}
+            onClick={setSelectedCategory}
+            x={nodePositions[category.id]?.x || 0}
+            y={nodePositions[category.id]?.y || 0}
+            scale={viewState.scale}
+            panX={viewState.x}
+            panY={viewState.y}
+            isDragging={!!isDraggingNode.current} // Pass drag state to prevent click
+            onMouseDown={handleNodeMouseDown}
+          />
+        ))}
       </div>
 
       {/* Modal */}

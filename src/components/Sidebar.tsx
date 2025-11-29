@@ -54,7 +54,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                 </div>
                 <div className="w-full h-3 bg-dark-bg border border-dark-border rounded-full overflow-hidden">
                     <div
-                        className="h-full bg-brand-accent transition-all duration-700 ease-out shadow-[0_0_10px_rgba(16,185,129,0.4)]"
+                        className="h-full bg-[#16a34a] transition-all duration-700 ease-out shadow-[0_0_10px_rgba(22,163,74,0.4)]"
                         style={{ width: `${overallProgress}%` }}
                     />
                 </div>

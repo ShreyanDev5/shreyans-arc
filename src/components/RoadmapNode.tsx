@@ -9,6 +9,8 @@ interface RoadmapNodeProps {
     x: number;
     y: number;
     scale: number;
+    panX: number;
+    panY: number;
     isDragging: boolean;
     onMouseDown: (e: React.MouseEvent, id: string) => void;
 }
@@ -20,6 +22,8 @@ const RoadmapNode: React.FC<RoadmapNodeProps> = ({
     x,
     y,
     scale,
+    panX,
+    panY,
     isDragging,
     onMouseDown
 }) => {
@@ -27,14 +31,20 @@ const RoadmapNode: React.FC<RoadmapNodeProps> = ({
     const solved = category.questions.filter(q => solvedIds.has(q.id)).length;
     const isComplete = solved === total && total > 0;
     const progress = total > 0 ? Math.round((solved / total) * 100) : 0;
-    // Dynamic styles for positioning
+
+    // Screen space coordinates
+    const screenX = x * scale + panX;
+    const screenY = y * scale + panY;
+
+    // Dynamic styles for positioning and sizing
     const style: React.CSSProperties = {
-        transform: `translate(${x}px, ${y}px)`,
+        transform: `translate(${screenX}px, ${screenY}px)`,
         position: 'absolute',
         left: 0,
         top: 0,
-        width: '200px', // Fixed width for pill
+        width: `${240 * scale}px`, // Scaled width
         zIndex: 20,
+        fontSize: `${20 * scale}px`, // Scaled font size
     };
 
     const handleMouseDown = (e: React.MouseEvent) => {
@@ -50,38 +60,24 @@ const RoadmapNode: React.FC<RoadmapNodeProps> = ({
                 if (!isDragging) onClick(category);
             }}
             className={clsx(
-                "group cursor-pointer select-none transition-shadow duration-300",
-                "rounded-full border border-dark-border bg-dark-card",
-                isComplete ? "shadow-[0_0_15px_rgba(16,185,129,0.3)] hover:shadow-[0_0_25px_rgba(16,185,129,0.5)]"
-                    : "shadow-lg hover:shadow-[0_0_20px_rgba(59,130,246,0.4)]"
+                "group cursor-pointer select-none transition-shadow duration-300 overflow-hidden",
+                "rounded-xl border border-dark-border",
+                isComplete ? "bg-[#16a34a] shadow-none" : "bg-[#923B0F] shadow-lg" // Vibrant green for complete, specific red-brown for incomplete
             )}
         >
-            {/* Progress Fill Background */}
-            <div className="absolute inset-0 rounded-full overflow-hidden">
+            {/* Minimal Progress Bar */}
+            <div className="absolute bottom-0 left-0 right-0 bg-black/20" style={{ height: `${8 * scale}px` }}>
                 <div
-                    className={clsx(
-                        "h-full transition-all duration-500 opacity-20",
-                        isComplete ? "bg-brand-accent" : "bg-brand-primary"
-                    )}
+                    className="h-full bg-[#16a34a] transition-all duration-500"
                     style={{ width: `${progress}%` }}
                 />
             </div>
 
             {/* Content */}
-            <div className="relative px-4 py-3 flex items-center justify-between">
-                <span className={clsx(
-                    "font-semibold text-sm truncate",
-                    isComplete ? "text-brand-accent" : "text-white"
-                )}>
+            <div className="relative flex items-center justify-center" style={{ padding: `${24 * scale}px ${20 * scale}px` }}>
+                <span className="font-semibold text-white whitespace-nowrap" style={{ fontSize: '1em' }}>
                     {category.title}
                 </span>
-
-                <div className={clsx(
-                    "text-xs font-mono px-2 py-0.5 rounded-full",
-                    isComplete ? "bg-brand-accent/20 text-brand-accent" : "bg-black/30 text-dark-muted"
-                )}>
-                    {solved}/{total}
-                </div>
             </div>
         </div>
     );
