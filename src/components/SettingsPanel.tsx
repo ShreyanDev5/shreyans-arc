@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import clsx from 'clsx';
 
 interface SettingsPanelProps {
@@ -8,50 +8,60 @@ interface SettingsPanelProps {
         allowDrag: boolean;
     };
     onToggle: (key: keyof SettingsPanelProps['settings']) => void;
+    isOpen: boolean;
+    onClose: () => void;
 }
 
-const SettingsPanel: React.FC<SettingsPanelProps> = ({ settings, onToggle }) => {
-    const [isOpen, setIsOpen] = useState(false);
+const SettingsPanel: React.FC<SettingsPanelProps> = ({ settings, onToggle, isOpen, onClose }) => {
+    React.useEffect(() => {
+        const handleEsc = (e: KeyboardEvent) => {
+            if (e.key === 'Escape') onClose();
+        };
+        if (isOpen) window.addEventListener('keydown', handleEsc);
+        return () => window.removeEventListener('keydown', handleEsc);
+    }, [isOpen, onClose]);
+
+    if (!isOpen) return null;
 
     return (
-        <div className="fixed top-6 right-84 z-50 flex items-start gap-2">
-            {/* Toggle Button */}
-            <button
-                onClick={() => setIsOpen(!isOpen)}
-                className="p-2 bg-dark-card border border-dark-border rounded-lg text-dark-muted hover:text-white hover:border-dark-highlight transition-colors shadow-lg"
+        <div
+            className="fixed inset-0 z-[60] flex items-center justify-center bg-black/50 backdrop-blur-sm animate-fade-in"
+            onClick={onClose}
+        >
+            <div
+                className="bg-dark-card border border-dark-border rounded-lg p-6 shadow-2xl w-80 transform transition-all scale-100"
+                onClick={(e) => e.stopPropagation()}
             >
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.1a2 2 0 0 1-1-1.72v-.51a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z" />
-                    <circle cx="12" cy="12" r="3" />
-                </svg>
-            </button>
-
-            {/* Panel */}
-            {isOpen && (
-                <div className="bg-dark-card border border-dark-border rounded-lg p-4 shadow-2xl w-64 animate-fade-in">
-                    <h3 className="text-sm font-bold text-white mb-3 uppercase tracking-wider">Interaction Settings</h3>
-
-                    <div className="space-y-3">
-                        <ToggleRow
-                            label="Enable Panning"
-                            active={settings.allowPan}
-                            onClick={() => onToggle('allowPan')}
-                        />
-                        <ToggleRow
-                            label="Enable Zooming"
-                            active={settings.allowZoom}
-                            onClick={() => onToggle('allowZoom')}
-                        />
-                        <div className="h-px bg-dark-border my-2" />
-                        <ToggleRow
-                            label="Edit Layout (Drag)"
-                            active={settings.allowDrag}
-                            onClick={() => onToggle('allowDrag')}
-                            danger
-                        />
-                    </div>
+                <div className="flex justify-between items-center mb-6">
+                    <h3 className="text-lg font-bold text-white tracking-wide">Settings</h3>
+                    <button onClick={onClose} className="text-dark-muted hover:text-white transition-colors">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg>
+                    </button>
                 </div>
-            )}
+
+                <div className="space-y-4">
+                    <ToggleRow
+                        label="Enable Panning"
+                        active={settings.allowPan}
+                        onClick={() => onToggle('allowPan')}
+                    />
+                    <ToggleRow
+                        label="Enable Zooming"
+                        active={settings.allowZoom}
+                        onClick={() => onToggle('allowZoom')}
+                    />
+                    <div className="h-px bg-dark-border my-2" />
+                    <ToggleRow
+                        label="Edit Layout (Drag)"
+                        active={settings.allowDrag}
+                        onClick={() => onToggle('allowDrag')}
+                        danger
+                    />
+                </div>
+            </div>
         </div>
     );
 };

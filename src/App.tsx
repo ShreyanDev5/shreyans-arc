@@ -6,6 +6,7 @@ import Sidebar from './components/Sidebar';
 import SettingsPanel from './components/SettingsPanel';
 import RoadmapNode from './components/RoadmapNode';
 import ConnectionLines from './components/ConnectionLines';
+import InfoModal from './components/InfoModal';
 import { User } from 'firebase/auth';
 
 // Initial Layout Positions (Approximate Tree Structure)
@@ -41,6 +42,9 @@ const App: React.FC = () => {
   const [viewState, setViewState] = useState({ x: window.innerWidth / 2 - 100, y: 100, scale: 1 });
   const [nodePositions, setNodePositions] = useState(INITIAL_LAYOUT);
   const [settings, setSettings] = useState({ allowPan: true, allowZoom: true, allowDrag: false });
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [isInfoOpen, setIsInfoOpen] = useState(false);
 
   // --- Refs for Interaction Logic ---
   const containerRef = useRef<HTMLDivElement>(null);
@@ -83,6 +87,11 @@ const App: React.FC = () => {
   const handleLogin = async () => {
     try { await signInWithPopup(auth, googleProvider); }
     catch (error) { console.error(error); alert("Login failed."); }
+  };
+
+  const resetView = () => {
+    setViewState({ x: window.innerWidth / 2 - 100, y: 100, scale: 1 });
+    setNodePositions(INITIAL_LAYOUT);
   };
 
   // --- Interaction Handlers ---
@@ -239,31 +248,41 @@ const App: React.FC = () => {
         totalSolved={totalSolved}
         totalQuestions={totalQuestions}
         overallProgress={overallProgress}
+        user={user}
+        onLogin={handleLogin}
+        onLogout={() => firebaseSignOut(auth)}
+        onOpenSettings={() => setIsSettingsOpen(true)}
+        onReset={resetView}
+        onOpenInfo={() => setIsInfoOpen(true)}
+        isOpen={isSidebarOpen}
+        onClose={() => setIsSidebarOpen(false)}
       />
+
+      {/* Menu Button (Visible when Sidebar is closed) */}
+      {!isSidebarOpen && (
+        <button
+          onClick={() => setIsSidebarOpen(true)}
+          className="fixed top-6 right-6 z-40 p-3 bg-dark-card border border-dark-border rounded-lg text-white shadow-xl hover:bg-dark-highlight transition-all animate-fade-in"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+      )}
 
       <SettingsPanel
         settings={settings}
         onToggle={(key) => setSettings(prev => ({ ...prev, [key]: !prev[key] }))}
+        isOpen={isSettingsOpen}
+        onClose={() => setIsSettingsOpen(false)}
       />
 
-      {/* Auth Button (Floating Top Left) */}
-      <div className="fixed top-6 left-6 z-50">
-        {user ? (
-          <div className="flex items-center gap-3 bg-dark-card border border-dark-border p-2 rounded-lg shadow-xl">
-            <img src={user.photoURL || ''} alt="User" className="w-8 h-8 rounded-full" />
-            <button onClick={() => firebaseSignOut(auth)} className="text-xs font-bold text-dark-muted hover:text-white uppercase tracking-wider px-2">
-              Sign Out
-            </button>
-          </div>
-        ) : (
-          <button
-            onClick={handleLogin}
-            className="bg-brand-primary text-white px-6 py-2.5 rounded-lg font-semibold shadow-lg shadow-brand-primary/20 hover:bg-brand-primaryHover transition-all hover:scale-105 active:scale-95"
-          >
-            Login to Save Progress
-          </button>
-        )}
-      </div>
+      <InfoModal
+        isOpen={isInfoOpen}
+        onClose={() => setIsInfoOpen(false)}
+      />
 
       {/* Canvas Container */}
       <div
