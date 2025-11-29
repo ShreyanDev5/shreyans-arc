@@ -10,25 +10,26 @@ import InfoModal from './components/InfoModal';
 import { User } from 'firebase/auth';
 
 // Initial Layout Positions (Approximate Tree Structure)
+// Initial Layout Positions (Tree Structure)
 const INITIAL_LAYOUT: Record<string, { x: number; y: number }> = {
-  'arrays': { x: 0, y: 0 },
-  'two_pointers': { x: -250, y: 180 },
-  'stack': { x: 250, y: 180 },
-  'binary_search': { x: -380, y: 360 },
-  'sliding_window': { x: -120, y: 360 },
-  'linked_list': { x: 250, y: 360 },
+  'arrays_hashing': { x: 0, y: 0 },
+  'two_pointers_sliding_window': { x: -300, y: 180 },
+  'stacks_monotonic': { x: 300, y: 180 },
+  'binary_search_quickselect': { x: -500, y: 360 },
+  'linked_list': { x: 500, y: 360 },
   'trees': { x: 0, y: 540 },
-  'trie': { x: -250, y: 720 },
-  'backtracking': { x: 250, y: 720 },
-  'heap': { x: 0, y: 900 },
-  'graphs': { x: 250, y: 900 },
-  'intervals': { x: -250, y: 1080 },
-  'greedy': { x: 0, y: 1080 },
-  'advanced_graphs': { x: 250, y: 1080 },
-  'dp1': { x: 500, y: 900 }, // Side branch
-  'dp2': { x: 500, y: 1080 },
-  'bit_manipulation': { x: 750, y: 1080 },
-  'math': { x: 500, y: 1260 },
+  'trie': { x: -400, y: 720 },
+  'heap_priority_queue': { x: 0, y: 720 },
+  'backtracking': { x: 400, y: 720 },
+  'graphs': { x: 0, y: 900 },
+  'core_fundamentals': { x: -600, y: 900 },
+  'system_design_misc': { x: 600, y: 900 },
+  'intervals': { x: -400, y: 1080 },
+  'greedy': { x: 400, y: 1080 },
+  'dp_1d': { x: 0, y: 1260 },
+  'dp_2d': { x: 0, y: 1440 },
+  'bit_manipulation': { x: 400, y: 1440 },
+  'math_geometry': { x: -400, y: 1440 },
 };
 
 const App: React.FC = () => {
@@ -39,7 +40,7 @@ const App: React.FC = () => {
   const [isAuthLoading, setIsAuthLoading] = useState(true);
 
   // --- State: Canvas & Interaction ---
-  const [viewState, setViewState] = useState({ x: window.innerWidth / 2 - 100, y: 100, scale: 1 });
+  const [viewState, setViewState] = useState({ x: window.innerWidth / 2 - 400, y: 50, scale: 0.5 });
 
   // Initialize positions with fallback for new nodes
   const [nodePositions, setNodePositions] = useState(() => {
@@ -100,7 +101,7 @@ const App: React.FC = () => {
   };
 
   const resetView = () => {
-    setViewState({ x: window.innerWidth / 2 - 100, y: 100, scale: 1 });
+    setViewState({ x: window.innerWidth / 2 - 400, y: 50, scale: 0.5 });
     setNodePositions(INITIAL_LAYOUT);
   };
 

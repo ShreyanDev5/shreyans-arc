@@ -8,27 +8,24 @@ interface ConnectionLinesProps {
 }
 
 // Define the graph structure (adjacency list or edge list)
+// Define the graph structure (adjacency list or edge list)
 const CONNECTIONS = [
-    { from: 'arrays', to: 'two_pointers' },
-    { from: 'arrays', to: 'stack' },
-    { from: 'two_pointers', to: 'binary_search' },
-    { from: 'two_pointers', to: 'sliding_window' },
-    { from: 'stack', to: 'linked_list' },
-    { from: 'binary_search', to: 'trees' },
-    { from: 'sliding_window', to: 'trees' },
+    { from: 'arrays_hashing', to: 'two_pointers_sliding_window' },
+    { from: 'arrays_hashing', to: 'stacks_monotonic' },
+    { from: 'two_pointers_sliding_window', to: 'binary_search_quickselect' },
+    { from: 'two_pointers_sliding_window', to: 'linked_list' },
+    { from: 'stacks_monotonic', to: 'linked_list' },
     { from: 'linked_list', to: 'trees' },
     { from: 'trees', to: 'trie' },
     { from: 'trees', to: 'backtracking' },
-    { from: 'trees', to: 'heap' },
+    { from: 'trees', to: 'heap_priority_queue' },
     { from: 'backtracking', to: 'graphs' },
-    { from: 'heap', to: 'intervals' },
-    { from: 'heap', to: 'greedy' },
-    { from: 'graphs', to: 'advanced_graphs' },
-    { from: 'graphs', to: 'dp1' },
-    { from: 'advanced_graphs', to: 'dp2' },
-    { from: 'dp1', to: 'dp2' },
-    { from: 'dp1', to: 'bit_manipulation' },
-    { from: 'dp2', to: 'math' },
+    { from: 'heap_priority_queue', to: 'intervals' },
+    { from: 'heap_priority_queue', to: 'greedy' },
+    { from: 'graphs', to: 'dp_1d' },
+    { from: 'dp_1d', to: 'dp_2d' },
+    { from: 'dp_1d', to: 'bit_manipulation' },
+    { from: 'dp_2d', to: 'math_geometry' },
 ];
 
 const ConnectionLines: React.FC<ConnectionLinesProps> = ({ nodePositions, scale, panX, panY }) => {
