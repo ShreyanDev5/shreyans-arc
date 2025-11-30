@@ -34,9 +34,12 @@ const Sidebar: React.FC<SidebarProps> = ({
         >
             {/* Header */}
             <div className="p-6 border-b border-dark-border flex justify-between items-start">
-                <div>
-                    <h2 className="text-xl font-bold text-white mb-1">Shreyan's Arc</h2>
-                    <p className="text-xs text-dark-muted font-mono">INTERACTIVE ROADMAP</p>
+                <div className="flex items-center gap-3">
+                    <img src="/logo.svg" alt="Logo" className="w-10 h-10" />
+                    <div>
+                        <h2 className="text-xl font-bold text-white leading-tight">Shreyan's Arc</h2>
+                        <p className="text-[10px] text-dark-muted font-mono tracking-wider">INTERACTIVE ROADMAP</p>
+                    </div>
                 </div>
                 <button onClick={onClose} className="text-dark-muted hover:text-white transition-colors p-1">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
