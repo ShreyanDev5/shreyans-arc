@@ -8,7 +8,6 @@ interface ConnectionLinesProps {
 }
 
 // Define the graph structure (adjacency list or edge list)
-// Define the graph structure (adjacency list or edge list)
 const CONNECTIONS = [
     { from: 'arrays_hashing', to: 'two_pointers_sliding_window' },
     { from: 'arrays_hashing', to: 'stacks_monotonic' },
@@ -28,10 +27,23 @@ const CONNECTIONS = [
     { from: 'dp_2d', to: 'math_geometry' },
 ];
 
+// Static height configuration for nodes with wrapped text
+// Standard height is ~60px (scaled), tall nodes need more.
+// These values are unscaled base heights.
+const CUSTOM_NODE_HEIGHTS: Record<string, number> = {
+    'two_pointers_sliding_window': 90,
+    'binary_search_quickselect': 90,
+    'heap_priority_queue': 90,
+    'bit_manipulation': 90,
+    'math_geometry': 90,
+    'system_design_misc': 90,
+    // Add others if needed based on visual inspection
+};
+
 const ConnectionLines: React.FC<ConnectionLinesProps> = ({ nodePositions, scale, panX, panY }) => {
     // Node dimensions (approximate for centering lines)
     const NODE_WIDTH = 240 * scale;
-    const NODE_HEIGHT = 60 * scale; // Pill height (increased due to font/padding)
+    const BASE_NODE_HEIGHT = 60 * scale;
 
     return (
         <svg className="absolute inset-0 pointer-events-none overflow-visible" style={{ width: '100%', height: '100%' }}>
@@ -53,9 +65,13 @@ const ConnectionLines: React.FC<ConnectionLinesProps> = ({ nodePositions, scale,
 
                 if (!start || !end) return null;
 
+                // Determine height for start node
+                const startBaseHeight = CUSTOM_NODE_HEIGHTS[from] || 60;
+                const startNodeHeight = startBaseHeight * scale;
+
                 // Calculate center points in screen space
                 const startX = (start.x * scale) + panX + NODE_WIDTH / 2;
-                const startY = (start.y * scale) + panY + NODE_HEIGHT;
+                const startY = (start.y * scale) + panY + startNodeHeight;
                 const endX = (end.x * scale) + panX + NODE_WIDTH / 2;
                 const endY = (end.y * scale) + panY;
 
@@ -77,7 +93,7 @@ const ConnectionLines: React.FC<ConnectionLinesProps> = ({ nodePositions, scale,
                         stroke="#FFFFFF"
                         strokeWidth={3 * scale}
                         fill="none"
-                        className="transition-all duration-300"
+                        className=""
                         markerEnd="url(#arrowhead)"
                     />
                 );

@@ -39,12 +39,15 @@ const InfoModal: React.FC<InfoModalProps> = ({ isOpen, onClose }) => {
 
                 <div className="space-y-4 text-dark-text leading-relaxed">
                     <p>
-                        Welcome to the <span className="text-brand-primary font-semibold">NeetCode 150</span> interactive roadmap.
-                        This tool is designed to help you visualize and track your progress through the most important Data Structures and Algorithms patterns.
+                        Welcome to <span className="text-brand-primary font-semibold">Shreyan's Arc</span>.
+                        This curated roadmap consists of 118 questions, offering the perfect "sweet spot" combination of the Blind 75 and NeetCode 150.
+                    </p>
+                    <p>
+                        These are the most repeatedly asked questions by top product-based companies, making this the optimal tool for acing coding interviews quickly with maximum effectiveness and efficiency.
                     </p>
 
                     <ul className="space-y-2 list-disc list-inside text-dark-muted">
-                        <li><strong className="text-white">Nodes:</strong> Each node represents a topic (e.g., Arrays, Graphs). Click to see questions.</li>
+                        <li><strong className="text-white">Patterns:</strong> Each node represents a pattern (e.g., Arrays, Graphs). Click to see questions.</li>
                         <li><strong className="text-white">Connections:</strong> Lines show the recommended learning path and dependencies.</li>
                         <li><strong className="text-white">Progress:</strong> Mark questions as solved to see your progress bar fill up.</li>
                         <li><strong className="text-white">Navigation:</strong> Pan and zoom to explore the tree. Drag nodes to customize the layout (enable in settings).</li>
@@ -52,7 +55,7 @@ const InfoModal: React.FC<InfoModalProps> = ({ isOpen, onClose }) => {
 
                     <div className="pt-4 border-t border-dark-border mt-6">
                         <p className="text-xs text-dark-muted text-center">
-                            Based on the famous NeetCode 150 list. Good luck with your interview prep!
+                            Inspired by <a href="https://neetcode.io" target="_blank" rel="noopener noreferrer" className="text-brand-primary hover:underline">NeetCode.io</a>. Good luck with your interview prep!
                         </p>
                     </div>
                 </div>

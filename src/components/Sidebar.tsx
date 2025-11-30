@@ -35,7 +35,7 @@ const Sidebar: React.FC<SidebarProps> = ({
             {/* Header */}
             <div className="p-6 border-b border-dark-border flex justify-between items-start">
                 <div>
-                    <h2 className="text-xl font-bold text-white mb-1">NeetCode 150</h2>
+                    <h2 className="text-xl font-bold text-white mb-1">Shreyan's Arc</h2>
                     <p className="text-xs text-dark-muted font-mono">INTERACTIVE ROADMAP</p>
                 </div>
                 <button onClick={onClose} className="text-dark-muted hover:text-white transition-colors p-1">
@@ -59,7 +59,12 @@ const Sidebar: React.FC<SidebarProps> = ({
                     />
                 </div>
                 <p className="text-xs text-dark-muted mt-3 text-center">
-                    {overallProgress === 100 ? "Mastery Achieved!" : "Keep grinding!"}
+                    {totalSolved === totalQuestions ? "Mastery Achieved!" :
+                        overallProgress === 0 ? "Start your journey!" :
+                            overallProgress < 25 ? "Off to a great start!" :
+                                overallProgress < 50 ? "Keep grinding!" :
+                                    overallProgress < 75 ? "You're crushing it!" :
+                                        "Almost there!"}
                 </p>
             </div>
 

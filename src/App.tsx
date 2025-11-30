@@ -67,19 +67,38 @@ const App: React.FC = () => {
   // --- Firebase Auth & Data Sync ---
   useEffect(() => {
     if (!isConfigured) return;
+
+    // Create a Set of all valid question IDs for integrity checking
+    const validQuestionIds = new Set<string>();
+    roadmapData.forEach(cat => {
+      cat.questions.forEach(q => validQuestionIds.add(q.id));
+    });
+
+    const filterValidIds = (ids: string[]) => {
+      return ids.filter(id => validQuestionIds.has(id));
+    };
+
     const unsubscribe = auth.onAuthStateChanged((currentUser) => {
       setUser(currentUser);
       setIsAuthLoading(false);
       if (currentUser) {
         const userRef = doc(db, 'users', currentUser.uid);
         return onSnapshot(userRef, (docSnap) => {
-          if (docSnap.exists()) setSolvedIds(new Set(docSnap.data().solved || []));
+          if (docSnap.exists()) {
+            const data = docSnap.data();
+            const validSolved = filterValidIds(data.solved || []);
+            setSolvedIds(new Set(validSolved));
+          }
           else setDoc(userRef, { solved: [] }, { merge: true });
         });
       }
       else {
         const local = localStorage.getItem('shreyans-arc-guest');
-        if (local) setSolvedIds(new Set(JSON.parse(local)));
+        if (local) {
+          const parsed = JSON.parse(local);
+          const validSolved = filterValidIds(parsed);
+          setSolvedIds(new Set(validSolved));
+        }
       }
     });
     return () => unsubscribe();
@@ -175,6 +194,8 @@ const App: React.FC = () => {
     isPanning.current = false;
     isDraggingNode.current = null;
   }, []);
+
+
 
   // --- Touch Interaction Handlers (Mobile) ---
   const touchStartDist = useRef<number | null>(null);

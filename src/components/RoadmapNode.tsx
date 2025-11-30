@@ -75,7 +75,7 @@ const RoadmapNode: React.FC<RoadmapNodeProps> = ({
 
             {/* Content */}
             <div className="relative flex items-center justify-center" style={{ padding: `${24 * scale}px ${20 * scale}px` }}>
-                <span className="font-semibold text-white whitespace-nowrap" style={{ fontSize: '1em' }}>
+                <span className="font-semibold text-white text-center" style={{ fontSize: '1em' }}>
                     {category.title}
                 </span>
             </div>
