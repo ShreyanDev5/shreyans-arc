@@ -41,20 +41,20 @@ export const QuestionModal: React.FC<QuestionModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6">
       <div
         className="absolute inset-0 bg-dark-bg/80 backdrop-blur-sm animate-fade-in"
         onClick={onClose}
       />
 
-      <div className="relative w-full max-w-3xl bg-dark-card border border-dark-border rounded-xl shadow-2xl animate-slide-up max-h-[85vh] flex flex-col">
+      <div className="relative w-[95%] md:w-full md:max-w-3xl bg-dark-card border border-dark-border rounded-xl shadow-2xl animate-slide-up max-h-[85vh] flex flex-col">
         {/* Header */}
-        <div className="p-6 border-b border-dark-border bg-dark-card rounded-t-xl">
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-bold text-white tracking-tight">{category.title}</h2>
+        <div className="p-4 sm:p-6 border-b border-dark-border bg-dark-card rounded-t-xl">
+          <div className="flex items-center justify-between mb-4 sm:mb-6">
+            <h2 className="text-xl sm:text-2xl font-bold text-white tracking-tight truncate pr-4">{category.title}</h2>
             <button
               onClick={onClose}
-              className="p-2 rounded-md text-dark-muted hover:text-white hover:bg-dark-highlight transition-all"
+              className="p-2 rounded-md text-dark-muted hover:text-white hover:bg-dark-highlight transition-all flex-shrink-0"
             >
               <span className="sr-only">Close</span>
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -80,12 +80,12 @@ export const QuestionModal: React.FC<QuestionModalProps> = ({
         </div>
 
         {/* List */}
-        <div className="overflow-y-auto p-4 space-y-2 custom-scrollbar bg-dark-bg/30">
+        <div className="overflow-y-auto p-3 sm:p-4 space-y-2 custom-scrollbar bg-dark-bg/30">
           {/* Headers */}
-          <div className="grid grid-cols-12 gap-4 px-4 py-2 text-xs font-mono text-dark-muted uppercase tracking-wider border-b border-dark-border/50 mb-2">
+          <div className="grid grid-cols-12 gap-2 sm:gap-4 px-2 sm:px-4 py-2 text-xs font-mono text-dark-muted uppercase tracking-wider border-b border-dark-border/50 mb-2">
             <div className="col-span-2 text-center">Status</div>
             <div className="col-span-8">Problem</div>
-            <div className="col-span-2 text-right">Difficulty</div>
+            <div className="col-span-2 text-right">Diff</div>
           </div>
 
           {sortedQuestions.map((q) => {
@@ -94,7 +94,7 @@ export const QuestionModal: React.FC<QuestionModalProps> = ({
               <div
                 key={q.id}
                 className={clsx(
-                  "grid grid-cols-12 gap-4 items-center p-3 rounded-lg border transition-all duration-200 group",
+                  "grid grid-cols-12 gap-2 sm:gap-4 items-center p-2 sm:p-3 rounded-lg border transition-all duration-200 group",
                   isSolved
                     ? "bg-dark-highlight/10 border-brand-accent/20"
                     : "bg-dark-card border-dark-border hover:border-dark-highlight hover:bg-dark-highlight/30"
@@ -127,7 +127,7 @@ export const QuestionModal: React.FC<QuestionModalProps> = ({
                     target="_blank"
                     rel="noreferrer"
                     className={clsx(
-                      "font-medium text-sm transition-colors hover:text-brand-primary truncate block",
+                      "font-medium text-sm transition-colors hover:text-brand-primary block break-words",
                       isSolved ? "text-dark-muted line-through opacity-70" : "text-dark-text"
                     )}
                   >
@@ -138,12 +138,12 @@ export const QuestionModal: React.FC<QuestionModalProps> = ({
                 {/* Difficulty Column */}
                 <div className="col-span-2 text-right">
                   <span className={clsx(
-                    "text-xs font-mono",
+                    "text-[10px] sm:text-xs font-mono",
                     q.difficulty === 'Easy' && "text-brand-accent",
                     q.difficulty === 'Medium' && "text-brand-warning",
                     q.difficulty === 'Hard' && "text-brand-danger",
                   )}>
-                    {q.difficulty}
+                    {q.difficulty.slice(0, 1)}<span className="hidden sm:inline">{q.difficulty.slice(1)}</span>
                   </span>
                 </div>
               </div>

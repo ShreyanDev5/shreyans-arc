@@ -2,9 +2,6 @@ import React from 'react';
 
 interface ConnectionLinesProps {
     nodePositions: Record<string, { x: number; y: number }>;
-    scale: number;
-    panX: number;
-    panY: number;
 }
 
 // Define the graph structure (adjacency list or edge list)
@@ -47,10 +44,10 @@ const CUSTOM_NODE_HEIGHTS: Record<string, number> = {
     // Add others if needed based on visual inspection
 };
 
-const ConnectionLines: React.FC<ConnectionLinesProps> = ({ nodePositions, scale, panX, panY }) => {
-    // Node dimensions (approximate for centering lines)
-    const NODE_WIDTH = 240 * scale;
-    const BASE_NODE_HEIGHT = 60 * scale;
+const ConnectionLines: React.FC<ConnectionLinesProps> = ({ nodePositions }) => {
+    // Node dimensions (fixed base size)
+    const NODE_WIDTH = 240;
+    const BASE_NODE_HEIGHT = 60;
 
     return (
         <svg className="absolute inset-0 pointer-events-none overflow-visible" style={{ width: '100%', height: '100%' }}>
@@ -74,13 +71,13 @@ const ConnectionLines: React.FC<ConnectionLinesProps> = ({ nodePositions, scale,
 
                 // Determine height for start node
                 const startBaseHeight = CUSTOM_NODE_HEIGHTS[from] || 60;
-                const startNodeHeight = startBaseHeight * scale;
+                const startNodeHeight = startBaseHeight;
 
-                // Calculate center points in screen space
-                const startX = (start.x * scale) + panX + NODE_WIDTH / 2;
-                const startY = (start.y * scale) + panY + startNodeHeight;
-                const endX = (end.x * scale) + panX + NODE_WIDTH / 2;
-                const endY = (end.y * scale) + panY;
+                // Calculate center points in world space
+                const startX = start.x + NODE_WIDTH / 2;
+                const startY = start.y + startNodeHeight;
+                const endX = end.x + NODE_WIDTH / 2;
+                const endY = end.y;
 
                 // Vertical Bezier Curve with enhanced control for offset nodes
                 const distY = endY - startY;
@@ -89,7 +86,7 @@ const ConnectionLines: React.FC<ConnectionLinesProps> = ({ nodePositions, scale,
                 // Increase control point offset for horizontal distances to ensure vertical entry
                 // Base offset is half of vertical distance, but we clamp it
                 // For offset nodes, we want a "stiffer" curve at the end
-                const controlOffset = Math.min(distY * 0.6 + distX * 0.1, 150 * scale);
+                const controlOffset = Math.min(distY * 0.6 + distX * 0.1, 150);
 
                 const path = `M ${startX} ${startY} C ${startX} ${startY + controlOffset}, ${endX} ${endY - controlOffset}, ${endX} ${endY}`;
 
@@ -98,10 +95,11 @@ const ConnectionLines: React.FC<ConnectionLinesProps> = ({ nodePositions, scale,
                         key={`${from}-${to}`}
                         d={path}
                         stroke="#FFFFFF"
-                        strokeWidth={3 * scale}
+                        strokeWidth={3}
                         fill="none"
                         className=""
                         markerEnd="url(#arrowhead)"
+                        vectorEffect="non-scaling-stroke"
                     />
                 );
             })}

@@ -9,15 +9,14 @@ import ConnectionLines from './components/ConnectionLines';
 import InfoModal from './components/InfoModal';
 import { User } from 'firebase/auth';
 
-// Initial Layout Positions (Approximate Tree Structure)
 // Initial Layout Positions (Tree Structure)
 const INITIAL_LAYOUT: Record<string, { x: number; y: number }> = {
   'arrays_hashing': { x: 100, y: 0 },
   'core_sorting': { x: -150, y: 180 },
   'stacks_monotonic': { x: 350, y: 180 },
-  'two_pointers_sliding_window': { x: -350, y: 360 },
+  'two_pointers_sliding_window': { x: -150, y: 360 },
   'linked_list': { x: 350, y: 540 },
-  'binary_search_quickselect': { x: -350, y: 540 },
+  'binary_search_quickselect': { x: -150, y: 540 },
   'trees': { x: 100, y: 720 },
   'trie': { x: -200, y: 900 },
   'heap_priority_queue': { x: 100, y: 900 },
@@ -42,10 +41,7 @@ const App: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
   const [isAuthLoading, setIsAuthLoading] = useState(true);
 
-  // --- State: Canvas & Interaction ---
-  const [viewState, setViewState] = useState({ x: window.innerWidth / 2 - 250, y: 50, scale: 0.7 });
-
-  // Initialize positions with fallback for new nodes
+  // --- State: UI ---
   const [nodePositions, setNodePositions] = useState(() => {
     const positions = { ...INITIAL_LAYOUT };
     roadmapData.forEach(cat => {
@@ -62,10 +58,50 @@ const App: React.FC = () => {
 
   // --- Refs for Interaction Logic ---
   const containerRef = useRef<HTMLDivElement>(null);
-  const isPanning = useRef(false);
-  const isDraggingNode = useRef<string | null>(null);
-  const lastMousePos = useRef({ x: 0, y: 0 });
-  const dragStartPos = useRef({ x: 0, y: 0 }); // To distinguish click vs drag
+  const canvasRef = useRef<HTMLDivElement>(null);
+
+  // Transform State (Source of Truth)
+  const transform = useRef({ x: 0, y: 0, scale: 1 });
+
+  // Pointer State
+  const pointers = useRef<Map<number, { x: number, y: number }>>(new Map());
+  const [draggingNodeId, setDraggingNodeId] = useState<string | null>(null);
+  const lastDragPos = useRef({ x: 0, y: 0 }); // World coordinates for node dragging
+
+  // Helper: Update Transform
+  const updateTransform = useCallback(() => {
+    if (canvasRef.current) {
+      const { x, y, scale } = transform.current;
+      canvasRef.current.style.transform = `translate(${x}px, ${y}px) scale(${scale})`;
+    }
+  }, []);
+
+  // Helper: Screen to World
+  const screenToWorld = useCallback((screenX: number, screenY: number) => {
+    const { x, y, scale } = transform.current;
+    return {
+      x: (screenX - x) / scale,
+      y: (screenY - y) / scale
+    };
+  }, []);
+
+  // Initialize View
+  useEffect(() => {
+    // Center the graph initially
+    const padding = 100;
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+
+    // Simple centering logic (can be improved with bounding box)
+    const isMobile = width < 768;
+    const initialScale = isMobile ? 0.35 : 0.6;
+    const centerOffset = isMobile ? 250 : 450;
+    const initialX = width / 2 - (centerOffset * initialScale); // Approx center of tree width
+    const initialY = 100;
+
+    transform.current = { x: initialX, y: initialY, scale: initialScale };
+    updateTransform();
+  }, [updateTransform]);
 
   // --- Firebase Auth & Data Sync ---
   useEffect(() => {
@@ -123,154 +159,205 @@ const App: React.FC = () => {
   };
 
   const resetView = () => {
-    setViewState({ x: window.innerWidth / 2 - 250, y: 50, scale: 0.7 });
+    const width = window.innerWidth;
+    const isMobile = width < 768;
+    const initialScale = isMobile ? 0.35 : 0.6;
+    const centerOffset = isMobile ? 250 : 450;
+    const initialX = width / 2 - (centerOffset * initialScale);
+    const initialY = 100;
+
+    transform.current = { x: initialX, y: initialY, scale: initialScale };
+    updateTransform();
     setNodePositions(INITIAL_LAYOUT);
   };
 
   // --- Interaction Handlers ---
 
-  const handleWheel = (e: React.WheelEvent) => {
-    if (!settings.allowZoom) return;
-    e.preventDefault(); // Prevent browser zoom if possible (though passive listener might block this)
+  const getCentroid = (pointers: Map<number, { x: number, y: number }>) => {
+    let x = 0, y = 0, count = 0;
+    for (const p of pointers.values()) {
+      x += p.x;
+      y += p.y;
+      count++;
+    }
+    return { x: x / count, y: y / count };
+  };
 
-    const scaleAmount = -e.deltaY * 0.001;
-    const newScale = Math.min(Math.max(viewState.scale * (1 + scaleAmount), 0.1), 2.5);
+  const getDistance = (p1: { x: number, y: number }, p2: { x: number, y: number }) => {
+    return Math.hypot(p1.x - p2.x, p1.y - p2.y);
+  };
 
-    // Zoom towards mouse pointer
+  // Track initial pointer positions to implement drag threshold
+  const pointerStartPos = useRef<Map<number, { x: number, y: number }>>(new Map());
+  const hasCaptured = useRef<Map<number, boolean>>(new Map());
+
+  const handlePointerDown = (e: React.PointerEvent) => {
+    if ((e.target as HTMLElement).closest('.sidebar-ignore')) return;
+
+    // Don't capture yet. Just track start position.
+    pointers.current.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    pointerStartPos.current.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    hasCaptured.current.set(e.pointerId, false);
+  };
+
+  const handlePointerMove = (e: React.PointerEvent) => {
+    if (!pointers.current.has(e.pointerId)) return;
+
+    const currentPos = { x: e.clientX, y: e.clientY };
+    const startPos = pointerStartPos.current.get(e.pointerId)!;
+
+    // Check threshold if not yet captured
+    if (!hasCaptured.current.get(e.pointerId)) {
+      const dist = Math.hypot(currentPos.x - startPos.x, currentPos.y - startPos.y);
+      if (dist < 5) {
+        // Update current pos but don't act yet
+        // Actually, we shouldn't even update pointers.current if we want to avoid micro-movements
+        // But for multi-touch zoom, we might need immediate updates?
+        // Let's just update pointers.current but NOT pan/drag until threshold.
+        // pointers.current.set(e.pointerId, currentPos); 
+        // If we update pointers, the delta calculation below will be small.
+        // Better to NOT update pointers.current until capture, so the first "move" is a jump of >5px?
+        // Or just track "isMoving" state.
+        return;
+      }
+
+      // Threshold passed: Capture and mark as moving
+      containerRef.current?.setPointerCapture(e.pointerId);
+      hasCaptured.current.set(e.pointerId, true);
+    }
+
+    const prevPointers = new Map<number, { x: number, y: number }>(pointers.current);
+    pointers.current.set(e.pointerId, currentPos);
+
+    // Node Dragging
+    if (draggingNodeId && settings.allowDrag) {
+      const worldPos = screenToWorld(e.clientX, e.clientY);
+      const dx = worldPos.x - lastDragPos.current.x;
+      const dy = worldPos.y - lastDragPos.current.y;
+
+      setNodePositions(prev => {
+        const id = draggingNodeId;
+        const current = prev[id] || { x: 0, y: 0 };
+        return {
+          ...prev,
+          [id]: { x: current.x + dx, y: current.y + dy }
+        };
+      });
+      lastDragPos.current = worldPos;
+      return;
+    }
+
+    // Pan & Zoom
+    if (pointers.current.size === 1 && settings.allowPan) {
+      const prev = prevPointers.get(e.pointerId)!;
+      const curr = pointers.current.get(e.pointerId)!;
+      const dx = curr.x - prev.x;
+      const dy = curr.y - prev.y;
+
+      transform.current.x += dx;
+      transform.current.y += dy;
+      updateTransform();
+    } else if (pointers.current.size === 2 && settings.allowZoom) {
+      const [p1Id, p2Id] = Array.from(pointers.current.keys()) as number[];
+      const prevP1 = prevPointers.get(p1Id)!;
+      const prevP2 = prevPointers.get(p2Id)!;
+      const currP1 = pointers.current.get(p1Id)!;
+      const currP2 = pointers.current.get(p2Id)!;
+
+      const prevDist = getDistance(prevP1, prevP2);
+      const currDist = getDistance(currP1, currP2);
+
+      if (prevDist === 0) return;
+
+      const scaleFactor = currDist / prevDist;
+      const newScale = Math.min(Math.max(transform.current.scale * scaleFactor, 0.1), 3);
+
+      // Zoom towards centroid
+      const prevCenter = getCentroid(prevPointers);
+      const currCenter = getCentroid(pointers.current);
+
+      // Calculate how much the world moved due to panning (centroid shift)
+      const dx = currCenter.x - prevCenter.x;
+      const dy = currCenter.y - prevCenter.y;
+
+      // Calculate zoom offset
+      // World point under centroid should stay under centroid
+      // (Center - Pan) / OldScale = (Center - NewPan) / NewScale
+      // NewPan = Center - (Center - Pan) * (NewScale / OldScale)
+
+      const oldScale = transform.current.scale;
+      const x = currCenter.x - (prevCenter.x - transform.current.x) * (newScale / oldScale) + dx;
+      const y = currCenter.y - (prevCenter.y - transform.current.y) * (newScale / oldScale) + dy;
+
+      transform.current = { x, y, scale: newScale };
+      updateTransform();
+    }
+  };
+
+  const handlePointerUp = (e: React.PointerEvent) => {
+    if (hasCaptured.current.get(e.pointerId)) {
+      containerRef.current?.releasePointerCapture(e.pointerId);
+    }
+    pointers.current.delete(e.pointerId);
+    pointerStartPos.current.delete(e.pointerId);
+    hasCaptured.current.delete(e.pointerId);
+    setDraggingNodeId(null);
+  };
+
+  // Non-passive wheel listener for zoom
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const onWheel = (e: WheelEvent) => {
+      if (!settings.allowZoom) return;
+      e.preventDefault();
+
+      const scaleAmount = -e.deltaY * 0.001;
+      const newScale = Math.min(Math.max(transform.current.scale * (1 + scaleAmount), 0.1), 3);
+
+      const rect = container.getBoundingClientRect();
+      const mouseX = e.clientX - rect.left;
+      const mouseY = e.clientY - rect.top;
+
+      const { x, y, scale } = transform.current;
+      const newX = mouseX - (mouseX - x) * (newScale / scale);
+      const newY = mouseY - (mouseY - y) * (newScale / scale);
+
+      transform.current = { x: newX, y: newY, scale: newScale };
+      updateTransform();
+    };
+
+    container.addEventListener('wheel', onWheel, { passive: false });
+    return () => container.removeEventListener('wheel', onWheel);
+  }, [settings.allowZoom, updateTransform]);
+
+  const handleNodeMouseDown = (e: React.MouseEvent, id: string) => {
+    if (settings.allowDrag) {
+      e.stopPropagation();
+      setDraggingNodeId(id);
+      lastDragPos.current = screenToWorld(e.clientX, e.clientY);
+    }
+  };
+
+  const handleDoubleTap = (e: React.MouseEvent) => {
+    // Simple double click/tap zoom reset or zoom in
+    // For now, let's just zoom in to the point
     const rect = containerRef.current?.getBoundingClientRect();
     if (!rect) return;
 
     const mouseX = e.clientX - rect.left;
     const mouseY = e.clientY - rect.top;
 
-    const scaleRatio = newScale / viewState.scale;
-    const newX = mouseX - (mouseX - viewState.x) * scaleRatio;
-    const newY = mouseY - (mouseY - viewState.y) * scaleRatio;
+    const targetScale = transform.current.scale < 1 ? 1.2 : 0.6;
+    const { x, y, scale } = transform.current;
 
-    setViewState({ x: newX, y: newY, scale: newScale });
+    const newX = mouseX - (mouseX - x) * (targetScale / scale);
+    const newY = mouseY - (mouseY - y) * (targetScale / scale);
+
+    transform.current = { x: newX, y: newY, scale: targetScale };
+    updateTransform();
   };
-
-  const handleMouseDown = (e: React.MouseEvent) => {
-    // Middle mouse or Left mouse on background
-    if (e.button === 1 || (e.button === 0 && settings.allowPan)) {
-      isPanning.current = true;
-      lastMousePos.current = { x: e.clientX, y: e.clientY };
-    }
-  };
-
-  const handleNodeMouseDown = (e: React.MouseEvent, id: string) => {
-    if (settings.allowDrag) {
-      isDraggingNode.current = id;
-      lastMousePos.current = { x: e.clientX, y: e.clientY };
-      dragStartPos.current = { x: e.clientX, y: e.clientY };
-      e.stopPropagation();
-    }
-  };
-
-  const handleMouseMove = useCallback((e: MouseEvent) => {
-    if (isPanning.current) {
-      const dx = e.clientX - lastMousePos.current.x;
-      const dy = e.clientY - lastMousePos.current.y;
-      setViewState(prev => ({ ...prev, x: prev.x + dx, y: prev.y + dy }));
-      lastMousePos.current = { x: e.clientX, y: e.clientY };
-    }
-    else if (isDraggingNode.current) {
-      const dx = (e.clientX - lastMousePos.current.x) / viewState.scale;
-      const dy = (e.clientY - lastMousePos.current.y) / viewState.scale;
-
-      setNodePositions(prev => {
-        const currentId = isDraggingNode.current!;
-        const currentPos = prev[currentId] || { x: 0, y: 0 };
-        return {
-          ...prev,
-          [currentId]: {
-            x: currentPos.x + dx,
-            y: currentPos.y + dy
-          }
-        };
-      });
-      lastMousePos.current = { x: e.clientX, y: e.clientY };
-    }
-  }, [viewState.scale]);
-
-  const handleMouseUp = useCallback(() => {
-    isPanning.current = false;
-    isDraggingNode.current = null;
-  }, []);
-
-
-
-  // --- Touch Interaction Handlers (Mobile) ---
-  const touchStartDist = useRef<number | null>(null);
-  const lastTouchPos = useRef<{ x: number; y: number } | null>(null);
-
-  const handleTouchStart = (e: React.TouchEvent) => {
-    if (e.touches.length === 1) {
-      // Single touch - Pan
-      if (settings.allowPan) {
-        isPanning.current = true;
-        lastTouchPos.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
-      }
-    }
-    else if (e.touches.length === 2) {
-      // Double touch - Zoom
-      if (settings.allowZoom) {
-        const dist = Math.hypot(
-          e.touches[0].clientX - e.touches[1].clientX,
-          e.touches[0].clientY - e.touches[1].clientY
-        );
-        touchStartDist.current = dist;
-      }
-    }
-  };
-
-  const handleTouchMove = (e: React.TouchEvent) => {
-    if (e.touches.length === 1 && isPanning.current && lastTouchPos.current) {
-      const dx = e.touches[0].clientX - lastTouchPos.current.x;
-      const dy = e.touches[0].clientY - lastTouchPos.current.y;
-      setViewState(prev => ({ ...prev, x: prev.x + dx, y: prev.y + dy }));
-      lastTouchPos.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
-    }
-    else if (e.touches.length === 2 && settings.allowZoom && touchStartDist.current) {
-      const dist = Math.hypot(
-        e.touches[0].clientX - e.touches[1].clientX,
-        e.touches[0].clientY - e.touches[1].clientY
-      );
-
-      const scaleFactor = dist / touchStartDist.current;
-      const newScale = Math.min(Math.max(viewState.scale * scaleFactor, 0.1), 2.5);
-
-      // Center zoom (simplified for touch)
-      const centerX = (e.touches[0].clientX + e.touches[1].clientX) / 2;
-      const centerY = (e.touches[0].clientY + e.touches[1].clientY) / 2;
-
-      // Adjust position to zoom around center
-      // This is a bit complex to get perfect without previous scale reference in this event, 
-      // so we'll just update scale for now or use a simplified approach.
-      // For smoother pinch, we'd need to track previous center and scale.
-      // Simplified: Just scale.
-
-      setViewState(prev => ({ ...prev, scale: newScale }));
-      touchStartDist.current = dist;
-    }
-  };
-
-  const handleTouchEnd = () => {
-    isPanning.current = false;
-    touchStartDist.current = null;
-    lastTouchPos.current = null;
-  };
-
-  // Global event listeners for drag/pan
-  useEffect(() => {
-    window.addEventListener('mousemove', handleMouseMove);
-    window.addEventListener('mouseup', handleMouseUp);
-    return () => {
-      window.removeEventListener('mousemove', handleMouseMove);
-      window.removeEventListener('mouseup', handleMouseUp);
-    };
-  }, [handleMouseMove, handleMouseUp]);
-
 
   // --- Render Helpers ---
   const totalQuestions = roadmapData.reduce((acc, cat) => acc + cat.questions.length, 0);
@@ -283,25 +370,27 @@ const App: React.FC = () => {
     <div className="relative w-screen h-screen overflow-hidden bg-dark-bg text-dark-text font-sans selection:bg-brand-primary/30">
 
       {/* UI Layer */}
-      <Sidebar
-        totalSolved={totalSolved}
-        totalQuestions={totalQuestions}
-        overallProgress={overallProgress}
-        user={user}
-        onLogin={handleLogin}
-        onLogout={() => firebaseSignOut(auth)}
-        onOpenSettings={() => setIsSettingsOpen(true)}
-        onReset={resetView}
-        onOpenInfo={() => setIsInfoOpen(true)}
-        isOpen={isSidebarOpen}
-        onClose={() => setIsSidebarOpen(false)}
-      />
+      <div className="sidebar-ignore">
+        <Sidebar
+          totalSolved={totalSolved}
+          totalQuestions={totalQuestions}
+          overallProgress={overallProgress}
+          user={user}
+          onLogin={handleLogin}
+          onLogout={() => firebaseSignOut(auth)}
+          onOpenSettings={() => setIsSettingsOpen(true)}
+          onReset={resetView}
+          onOpenInfo={() => setIsInfoOpen(true)}
+          isOpen={isSidebarOpen}
+          onClose={() => setIsSidebarOpen(false)}
+        />
+      </div>
 
-      {/* Menu Button (Visible when Sidebar is closed) */}
+      {/* Menu Button */}
       {!isSidebarOpen && (
         <button
           onClick={() => setIsSidebarOpen(true)}
-          className="fixed top-6 right-6 z-40 p-3 bg-dark-card border border-dark-border rounded-lg text-white shadow-xl hover:bg-dark-highlight transition-all animate-fade-in"
+          className="sidebar-ignore fixed top-6 right-6 z-40 p-3 bg-dark-card border border-dark-border rounded-lg text-white shadow-xl hover:bg-dark-highlight transition-all animate-fade-in"
         >
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <line x1="3" y1="12" x2="21" y2="12"></line>
@@ -311,62 +400,66 @@ const App: React.FC = () => {
         </button>
       )}
 
-      <SettingsPanel
-        settings={settings}
-        onToggle={(key) => setSettings(prev => ({ ...prev, [key]: !prev[key] }))}
-        isOpen={isSettingsOpen}
-        onClose={() => setIsSettingsOpen(false)}
-      />
-
-      <InfoModal
-        isOpen={isInfoOpen}
-        onClose={() => setIsInfoOpen(false)}
-      />
+      <div className="sidebar-ignore">
+        <SettingsPanel
+          settings={settings}
+          onToggle={(key) => setSettings(prev => ({ ...prev, [key]: !prev[key] }))}
+          isOpen={isSettingsOpen}
+          onClose={() => setIsSettingsOpen(false)}
+        />
+        <InfoModal
+          isOpen={isInfoOpen}
+          onClose={() => setIsInfoOpen(false)}
+        />
+      </div>
 
       {/* Canvas Container */}
       <div
         ref={containerRef}
-        className="w-full h-full cursor-grab active:cursor-grabbing"
-        onWheel={handleWheel}
-        onMouseDown={handleMouseDown}
-        onTouchStart={handleTouchStart}
-        onTouchMove={handleTouchMove}
-        onTouchEnd={handleTouchEnd}
+        className="w-full h-full cursor-grab active:cursor-grabbing touch-none"
+        onPointerDown={handlePointerDown}
+        onPointerMove={handlePointerMove}
+        onPointerUp={handlePointerUp}
+        onPointerCancel={handlePointerUp}
+        onPointerLeave={handlePointerUp}
+        onDoubleClick={handleDoubleTap}
       >
-        {/* Canvas World */}
-        <ConnectionLines
-          nodePositions={nodePositions}
-          scale={viewState.scale}
-          panX={viewState.x}
-          panY={viewState.y}
-        />
-
-        {roadmapData.map(category => (
-          <RoadmapNode
-            key={category.id}
-            category={category}
-            solvedIds={solvedIds}
-            onClick={setSelectedCategory}
-            x={nodePositions[category.id]?.x || 0}
-            y={nodePositions[category.id]?.y || 0}
-            scale={viewState.scale}
-            panX={viewState.x}
-            panY={viewState.y}
-            isDragging={!!isDraggingNode.current} // Pass drag state to prevent click
-            onMouseDown={handleNodeMouseDown}
+        {/* Transform Layer */}
+        <div
+          ref={canvasRef}
+          className="w-full h-full origin-top-left will-change-transform"
+          style={{ transform: 'translate(0px, 0px) scale(1)' }}
+        >
+          <ConnectionLines
+            nodePositions={nodePositions}
           />
-        ))}
+
+          {roadmapData.map(category => (
+            <RoadmapNode
+              key={category.id}
+              category={category}
+              solvedIds={solvedIds}
+              onClick={setSelectedCategory}
+              x={nodePositions[category.id]?.x || 0}
+              y={nodePositions[category.id]?.y || 0}
+              isDragging={!!draggingNodeId}
+              onMouseDown={handleNodeMouseDown}
+            />
+          ))}
+        </div>
       </div>
 
       {/* Modal */}
       {selectedCategory && (
-        <QuestionModal
-          category={selectedCategory}
-          isOpen={!!selectedCategory}
-          onClose={() => setSelectedCategory(null)}
-          solvedIds={solvedIds}
-          toggleQuestion={toggleQuestion}
-        />
+        <div className="sidebar-ignore">
+          <QuestionModal
+            category={selectedCategory}
+            isOpen={!!selectedCategory}
+            onClose={() => setSelectedCategory(null)}
+            solvedIds={solvedIds}
+            toggleQuestion={toggleQuestion}
+          />
+        </div>
       )}
     </div>
   );

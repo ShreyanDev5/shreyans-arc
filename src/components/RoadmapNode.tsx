@@ -8,9 +8,6 @@ interface RoadmapNodeProps {
     onClick: (c: Category) => void;
     x: number;
     y: number;
-    scale: number;
-    panX: number;
-    panY: number;
     isDragging: boolean;
     onMouseDown: (e: React.MouseEvent, id: string) => void;
 }
@@ -21,9 +18,6 @@ const RoadmapNode: React.FC<RoadmapNodeProps> = ({
     onClick,
     x,
     y,
-    scale,
-    panX,
-    panY,
     isDragging,
     onMouseDown
 }) => {
@@ -32,19 +26,15 @@ const RoadmapNode: React.FC<RoadmapNodeProps> = ({
     const isComplete = solved === total && total > 0;
     const progress = total > 0 ? Math.round((solved / total) * 100) : 0;
 
-    // Screen space coordinates
-    const screenX = x * scale + panX;
-    const screenY = y * scale + panY;
-
     // Dynamic styles for positioning and sizing
     const style: React.CSSProperties = {
-        transform: `translate(${screenX}px, ${screenY}px)`,
+        transform: `translate(${x}px, ${y}px)`,
         position: 'absolute',
         left: 0,
         top: 0,
-        width: `${240 * scale}px`, // Scaled width
+        width: '240px',
         zIndex: 20,
-        fontSize: `${20 * scale}px`, // Scaled font size
+        fontSize: '20px',
     };
 
     const handleMouseDown = (e: React.MouseEvent) => {
@@ -66,7 +56,7 @@ const RoadmapNode: React.FC<RoadmapNodeProps> = ({
             )}
         >
             {/* Minimal Progress Bar */}
-            <div className="absolute bottom-0 left-0 right-0 bg-black/20" style={{ height: `${8 * scale}px` }}>
+            <div className="absolute bottom-0 left-0 right-0 bg-black/20" style={{ height: '8px' }}>
                 <div
                     className="h-full bg-[#16a34a] transition-all duration-500"
                     style={{ width: `${progress}%` }}
@@ -74,7 +64,7 @@ const RoadmapNode: React.FC<RoadmapNodeProps> = ({
             </div>
 
             {/* Content */}
-            <div className="relative flex items-center justify-center" style={{ padding: `${24 * scale}px ${20 * scale}px` }}>
+            <div className="relative flex items-center justify-center" style={{ padding: '24px 20px' }}>
                 <span className="font-semibold text-white text-center" style={{ fontSize: '1em' }}>
                     {category.title}
                 </span>

@@ -30,7 +30,7 @@ const Sidebar: React.FC<SidebarProps> = ({
 }) => {
     return (
         <div
-            className={`fixed right-0 top-0 bottom-0 w-80 bg-dark-card border-l border-dark-border z-50 flex flex-col shadow-2xl transform transition-transform duration-300 ease-in-out ${isOpen ? 'translate-x-0' : 'translate-x-full'}`}
+            className={`fixed right-4 top-4 bottom-4 w-80 bg-dark-card border border-dark-border z-50 flex flex-col shadow-2xl rounded-2xl transform transition-transform duration-300 ease-in-out ${isOpen ? 'translate-x-0' : 'translate-x-[120%]'}`}
         >
             {/* Header */}
             <div className="p-6 border-b border-dark-border flex justify-between items-start">
