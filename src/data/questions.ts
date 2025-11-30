@@ -15,6 +15,7 @@ export interface Category {
 const lc = (name: string) => `https://leetcode.com/problems/${name.toLowerCase().replace(/ /g, '-').replace(/[()]/g, '')}/`;
 
 export const roadmapData: Category[] = [
+  // 1. Arrays & Hashing
   {
     id: 'arrays_hashing',
     title: 'Arrays & Hashing',
@@ -30,6 +31,17 @@ export const roadmapData: Category[] = [
       { id: '9', title: 'First Missing Positive', difficulty: 'Hard', url: lc('First Missing Positive') },
     ]
   },
+  // 2. [Core] Sorting
+  {
+    id: 'core_sorting',
+    title: 'Sorting Fundamentals',
+    questions: [
+      { id: '107', title: 'Insertion Sort', difficulty: 'Easy', url: '' },
+      { id: '108', title: 'Merge Sort', difficulty: 'Medium', url: '' },
+      { id: '109', title: 'Quick Sort', difficulty: 'Medium', url: '' },
+    ]
+  },
+  // 3. Two Pointers & Sliding Window
   {
     id: 'two_pointers_sliding_window',
     title: 'Two Pointers & Sliding Window',
@@ -48,19 +60,7 @@ export const roadmapData: Category[] = [
       { id: '21', title: 'Sliding Window Maximum', difficulty: 'Hard', url: lc('Sliding Window Maximum') },
     ]
   },
-  {
-    id: 'linked_list',
-    title: 'Linked List',
-    questions: [
-      { id: '22', title: 'Reverse Linked List', difficulty: 'Easy', url: lc('Reverse Linked List') },
-      { id: '23', title: 'Merge Two Sorted Lists', difficulty: 'Easy', url: lc('Merge Two Sorted Lists') },
-      { id: '24', title: 'Linked List Cycle', difficulty: 'Easy', url: lc('Linked List Cycle') },
-      { id: '25', title: 'Remove Nth Node From End of List', difficulty: 'Medium', url: lc('Remove Nth Node From End of List') },
-      { id: '26', title: 'Add Two Numbers', difficulty: 'Medium', url: lc('Add Two Numbers') },
-      { id: '27', title: 'Palindrome Linked List', difficulty: 'Easy', url: lc('Palindrome Linked List') },
-      { id: '28', title: 'Intersection of Two Linked Lists', difficulty: 'Easy', url: lc('Intersection of Two Linked Lists') },
-    ]
-  },
+  // 4. Stacks & Monotonic
   {
     id: 'stacks_monotonic',
     title: 'Stacks & Monotonic',
@@ -73,6 +73,7 @@ export const roadmapData: Category[] = [
       { id: '34', title: 'Evaluate Reverse Polish Notation', difficulty: 'Medium', url: lc('Evaluate Reverse Polish Notation') },
     ]
   },
+  // 5. Binary Search & Quickselect
   {
     id: 'binary_search_quickselect',
     title: 'Binary Search & Quickselect',
@@ -86,6 +87,21 @@ export const roadmapData: Category[] = [
       { id: '41', title: 'Search Insert Position', difficulty: 'Easy', url: lc('Search Insert Position') },
     ]
   },
+  // 6. Linked List
+  {
+    id: 'linked_list',
+    title: 'Linked List',
+    questions: [
+      { id: '22', title: 'Reverse Linked List', difficulty: 'Easy', url: lc('Reverse Linked List') },
+      { id: '23', title: 'Merge Two Sorted Lists', difficulty: 'Easy', url: lc('Merge Two Sorted Lists') },
+      { id: '24', title: 'Linked List Cycle', difficulty: 'Easy', url: lc('Linked List Cycle') },
+      { id: '25', title: 'Remove Nth Node From End of List', difficulty: 'Medium', url: lc('Remove Nth Node From End of List') },
+      { id: '26', title: 'Add Two Numbers', difficulty: 'Medium', url: lc('Add Two Numbers') },
+      { id: '27', title: 'Palindrome Linked List', difficulty: 'Easy', url: lc('Palindrome Linked List') },
+      { id: '28', title: 'Intersection of Two Linked Lists', difficulty: 'Easy', url: lc('Intersection of Two Linked Lists') },
+    ]
+  },
+  // 7. Trees
   {
     id: 'trees',
     title: 'Trees',
@@ -105,6 +121,51 @@ export const roadmapData: Category[] = [
       { id: '54', title: 'Serialize and Deserialize Binary Tree', difficulty: 'Hard', url: lc('Serialize and Deserialize Binary Tree') },
     ]
   },
+  // 8. Trie (Moved from #15)
+  {
+    id: 'trie',
+    title: 'Trie',
+    questions: [
+      { id: '102', title: 'Implement Trie (Prefix Tree)', difficulty: 'Medium', url: lc('Implement Trie (Prefix Tree)') },
+      { id: '103', title: 'Word Search II', difficulty: 'Hard', url: lc('Word Search II') },
+    ]
+  },
+  // 9. Heap / Priority Queue (Moved from #11)
+  {
+    id: 'heap_priority_queue',
+    title: 'Heap / Priority Queue',
+    questions: [
+      { id: '84', title: 'Kth Largest Element in a Stream', difficulty: 'Easy', url: lc('Kth Largest Element in a Stream') },
+      { id: '85', title: 'Merge k Sorted Lists', difficulty: 'Hard', url: lc('Merge k Sorted Lists') },
+      { id: '86', title: 'Find Median from Data Stream', difficulty: 'Hard', url: lc('Find Median from Data Stream') },
+      { id: '87', title: 'Task Scheduler', difficulty: 'Medium', url: lc('Task Scheduler') },
+      { id: '88', title: 'K Closest Points to Origin', difficulty: 'Medium', url: lc('K Closest Points to Origin') },
+    ]
+  },
+  // 10. Backtracking
+  {
+    id: 'backtracking',
+    title: 'Backtracking',
+    questions: [
+      { id: '78', title: 'Subsets', difficulty: 'Medium', url: lc('Subsets') },
+      { id: '79', title: 'Permutations', difficulty: 'Medium', url: lc('Permutations') },
+      { id: '80', title: 'Combination Sum', difficulty: 'Medium', url: lc('Combination Sum') },
+      { id: '81', title: 'Combination Sum II', difficulty: 'Medium', url: lc('Combination Sum II') },
+      { id: '82', title: 'Generate Parentheses', difficulty: 'Medium', url: lc('Generate Parentheses') },
+      { id: '83', title: 'Letter Combinations of a Phone Number', difficulty: 'Medium', url: lc('Letter Combinations of a Phone Number') },
+    ]
+  },
+  // 11. [Core] Graph Theory Basics
+  {
+    id: 'core_graph_basics',
+    title: 'Graph Theory Basics',
+    questions: [
+      { id: '110', title: 'Matrix DFS', difficulty: 'Easy', url: '' },
+      { id: '111', title: 'Matrix BFS', difficulty: 'Medium', url: '' },
+      { id: '115', title: 'Topological Sort', difficulty: 'Medium', url: '' },
+    ]
+  },
+  // 12. Graphs
   {
     id: 'graphs',
     title: 'Graphs',
@@ -116,11 +177,31 @@ export const roadmapData: Category[] = [
       { id: '59', title: 'Rotting Oranges', difficulty: 'Medium', url: lc('Rotting Oranges') },
       { id: '60', title: 'Flood Fill', difficulty: 'Easy', url: lc('Flood Fill') },
       { id: '61', title: 'Number of Connected Components', difficulty: 'Medium', url: 'https://leetcode.com/problems/number-of-connected-components-in-an-undirected-graph/' },
-      { id: '62', title: 'Detect Cycles in Directed & Undirected Graphs', difficulty: 'Medium', url: '' }, // Conceptual / Multiple problems
+      { id: '62', title: 'Detect Cycles in Directed & Undirected Graphs', difficulty: 'Medium', url: '' },
       { id: '63', title: 'Word Ladder', difficulty: 'Hard', url: lc('Word Ladder') },
       { id: '64', title: 'Alien Dictionary', difficulty: 'Hard', url: 'https://leetcode.com/problems/alien-dictionary/' },
     ]
   },
+  // 13. [Core] Advanced Graph Algos
+  {
+    id: 'core_advanced_graph',
+    title: 'Advanced Graph Algorithms',
+    questions: [
+      { id: '112', title: 'Dijkstra’s Algorithm', difficulty: 'Medium', url: '' },
+      { id: '113', title: 'Prim’s Algorithm', difficulty: 'Medium', url: '' },
+      { id: '114', title: 'Kruskal’s Algorithm', difficulty: 'Medium', url: '' },
+    ]
+  },
+  // 14. [Core] DP Fundamentals
+  {
+    id: 'core_dp_patterns',
+    title: 'DP Fundamentals',
+    questions: [
+      { id: '116', title: '0/1 Knapsack', difficulty: 'Medium', url: '' },
+      { id: '117', title: 'Unbounded Knapsack', difficulty: 'Medium', url: '' },
+    ]
+  },
+  // 15. Dynamic Programming — 1D
   {
     id: 'dp_1d',
     title: 'Dynamic Programming — 1D',
@@ -136,6 +217,7 @@ export const roadmapData: Category[] = [
       { id: '73', title: 'Longest Palindromic Substring', difficulty: 'Medium', url: lc('Longest Palindromic Substring') },
     ]
   },
+  // 16. Dynamic Programming — 2D
   {
     id: 'dp_2d',
     title: 'Dynamic Programming — 2D',
@@ -146,29 +228,7 @@ export const roadmapData: Category[] = [
       { id: '77', title: 'Edit Distance', difficulty: 'Hard', url: lc('Edit Distance') },
     ]
   },
-  {
-    id: 'backtracking',
-    title: 'Backtracking',
-    questions: [
-      { id: '78', title: 'Subsets', difficulty: 'Medium', url: lc('Subsets') },
-      { id: '79', title: 'Permutations', difficulty: 'Medium', url: lc('Permutations') },
-      { id: '80', title: 'Combination Sum', difficulty: 'Medium', url: lc('Combination Sum') },
-      { id: '81', title: 'Combination Sum II', difficulty: 'Medium', url: lc('Combination Sum II') },
-      { id: '82', title: 'Generate Parentheses', difficulty: 'Medium', url: lc('Generate Parentheses') },
-      { id: '83', title: 'Letter Combinations of a Phone Number', difficulty: 'Medium', url: lc('Letter Combinations of a Phone Number') },
-    ]
-  },
-  {
-    id: 'heap_priority_queue',
-    title: 'Heap / Priority Queue',
-    questions: [
-      { id: '84', title: 'Kth Largest Element in a Stream', difficulty: 'Easy', url: lc('Kth Largest Element in a Stream') },
-      { id: '85', title: 'Merge k Sorted Lists', difficulty: 'Hard', url: lc('Merge k Sorted Lists') },
-      { id: '86', title: 'Find Median from Data Stream', difficulty: 'Hard', url: lc('Find Median from Data Stream') },
-      { id: '87', title: 'Task Scheduler', difficulty: 'Medium', url: lc('Task Scheduler') },
-      { id: '88', title: 'K Closest Points to Origin', difficulty: 'Medium', url: lc('K Closest Points to Origin') },
-    ]
-  },
+  // 17. Greedy
   {
     id: 'greedy',
     title: 'Greedy',
@@ -178,6 +238,7 @@ export const roadmapData: Category[] = [
       { id: '91', title: 'Gas Station', difficulty: 'Medium', url: lc('Gas Station') },
     ]
   },
+  // 18. Intervals
   {
     id: 'intervals',
     title: 'Intervals',
@@ -189,6 +250,7 @@ export const roadmapData: Category[] = [
       { id: '96', title: 'Meeting Rooms', difficulty: 'Easy', url: 'https://leetcode.com/problems/meeting-rooms/' },
     ]
   },
+  // 19. Bit Manipulation
   {
     id: 'bit_manipulation',
     title: 'Bit Manipulation',
@@ -200,14 +262,7 @@ export const roadmapData: Category[] = [
       { id: '101', title: 'Reverse Bits', difficulty: 'Easy', url: lc('Reverse Bits') },
     ]
   },
-  {
-    id: 'trie',
-    title: 'Trie',
-    questions: [
-      { id: '102', title: 'Implement Trie (Prefix Tree)', difficulty: 'Medium', url: lc('Implement Trie (Prefix Tree)') },
-      { id: '103', title: 'Word Search II', difficulty: 'Hard', url: lc('Word Search II') },
-    ]
-  },
+  // 20. Math & Geometry
   {
     id: 'math_geometry',
     title: 'Math & Geometry',
@@ -217,26 +272,7 @@ export const roadmapData: Category[] = [
       { id: '106', title: 'Set Matrix Zeroes', difficulty: 'Medium', url: lc('Set Matrix Zeroes') },
     ]
   },
-  {
-    id: 'core_fundamentals',
-    title: 'Core Fundamentals',
-    questions: [
-      // Sorting
-      { id: '107', title: 'Insertion Sort', difficulty: 'Easy', url: '' },
-      { id: '108', title: 'Merge Sort', difficulty: 'Medium', url: lc('Sort an Array') },
-      { id: '109', title: 'Quick Sort', difficulty: 'Medium', url: lc('Sort an Array') },
-      // Graph / Grid
-      { id: '110', title: 'Matrix DFS', difficulty: 'Easy', url: '' },
-      { id: '111', title: 'Matrix BFS', difficulty: 'Medium', url: '' },
-      { id: '112', title: 'Dijkstra’s Algorithm', difficulty: 'Medium', url: lc('Network Delay Time') },
-      { id: '113', title: 'Prim’s Algorithm', difficulty: 'Medium', url: lc('Min Cost to Connect All Points') },
-      { id: '114', title: 'Kruskal’s Algorithm', difficulty: 'Medium', url: lc('Min Cost to Connect All Points') },
-      { id: '115', title: 'Topological Sort', difficulty: 'Medium', url: lc('Course Schedule II') },
-      // Dynamic Programming
-      { id: '116', title: '0/1 Knapsack', difficulty: 'Medium', url: '' },
-      { id: '117', title: 'Unbounded Knapsack', difficulty: 'Medium', url: '' },
-    ]
-  },
+  // 21. System Design & Misc
   {
     id: 'system_design_misc',
     title: 'System Design & Misc',

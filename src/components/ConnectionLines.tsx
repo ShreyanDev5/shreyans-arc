@@ -9,22 +9,29 @@ interface ConnectionLinesProps {
 
 // Define the graph structure (adjacency list or edge list)
 const CONNECTIONS = [
-    { from: 'arrays_hashing', to: 'two_pointers_sliding_window' },
+    { from: 'arrays_hashing', to: 'core_sorting' },
     { from: 'arrays_hashing', to: 'stacks_monotonic' },
+    { from: 'core_sorting', to: 'two_pointers_sliding_window' },
     { from: 'two_pointers_sliding_window', to: 'binary_search_quickselect' },
     { from: 'two_pointers_sliding_window', to: 'linked_list' },
-    { from: 'stacks_monotonic', to: 'linked_list' },
+    { from: 'binary_search_quickselect', to: 'trees' },
+    { from: 'stacks_monotonic', to: 'trees' },
     { from: 'linked_list', to: 'trees' },
     { from: 'trees', to: 'trie' },
-    { from: 'trees', to: 'backtracking' },
     { from: 'trees', to: 'heap_priority_queue' },
-    { from: 'backtracking', to: 'graphs' },
-    { from: 'heap_priority_queue', to: 'intervals' },
-    { from: 'heap_priority_queue', to: 'greedy' },
-    { from: 'graphs', to: 'dp_1d' },
+    { from: 'trees', to: 'backtracking' },
+    { from: 'backtracking', to: 'core_graph_basics' },
+    { from: 'core_graph_basics', to: 'graphs' },
+    { from: 'graphs', to: 'core_advanced_graph' },
+    { from: 'graphs', to: 'core_dp_patterns' },
+    { from: 'heap_priority_queue', to: 'core_advanced_graph' },
+    { from: 'core_advanced_graph', to: 'greedy' },
+    { from: 'greedy', to: 'intervals' },
+    { from: 'core_dp_patterns', to: 'dp_1d' },
     { from: 'dp_1d', to: 'dp_2d' },
     { from: 'dp_1d', to: 'bit_manipulation' },
     { from: 'dp_2d', to: 'math_geometry' },
+    { from: 'math_geometry', to: 'system_design_misc' },
 ];
 
 // Static height configuration for nodes with wrapped text

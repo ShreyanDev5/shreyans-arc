@@ -12,24 +12,27 @@ import { User } from 'firebase/auth';
 // Initial Layout Positions (Approximate Tree Structure)
 // Initial Layout Positions (Tree Structure)
 const INITIAL_LAYOUT: Record<string, { x: number; y: number }> = {
-  'arrays_hashing': { x: 0, y: 0 },
-  'two_pointers_sliding_window': { x: -300, y: 180 },
-  'stacks_monotonic': { x: 300, y: 180 },
-  'binary_search_quickselect': { x: -500, y: 360 },
-  'linked_list': { x: 500, y: 360 },
-  'trees': { x: 0, y: 540 },
-  'trie': { x: -400, y: 720 },
-  'heap_priority_queue': { x: 0, y: 720 },
-  'backtracking': { x: 400, y: 720 },
-  'graphs': { x: 0, y: 900 },
-  'core_fundamentals': { x: -600, y: 900 },
-  'system_design_misc': { x: 600, y: 900 },
-  'intervals': { x: -400, y: 1080 },
-  'greedy': { x: 400, y: 1080 },
-  'dp_1d': { x: 0, y: 1260 },
-  'dp_2d': { x: 0, y: 1440 },
-  'bit_manipulation': { x: 400, y: 1440 },
-  'math_geometry': { x: -400, y: 1440 },
+  'arrays_hashing': { x: 100, y: 0 },
+  'core_sorting': { x: -150, y: 180 },
+  'stacks_monotonic': { x: 350, y: 180 },
+  'two_pointers_sliding_window': { x: -350, y: 360 },
+  'linked_list': { x: 350, y: 540 },
+  'binary_search_quickselect': { x: -350, y: 540 },
+  'trees': { x: 100, y: 720 },
+  'trie': { x: -200, y: 900 },
+  'heap_priority_queue': { x: 100, y: 900 },
+  'backtracking': { x: 400, y: 900 },
+  'core_graph_basics': { x: 400, y: 1080 },
+  'graphs': { x: 300, y: 1260 },
+  'core_advanced_graph': { x: 100, y: 1440 },
+  'core_dp_patterns': { x: 500, y: 1440 },
+  'greedy': { x: 100, y: 1620 },
+  'dp_1d': { x: 500, y: 1620 },
+  'bit_manipulation': { x: 900, y: 1800 },
+  'intervals': { x: 100, y: 1800 },
+  'dp_2d': { x: 500, y: 1800 },
+  'math_geometry': { x: 500, y: 1980 },
+  'system_design_misc': { x: 300, y: 2160 },
 };
 
 const App: React.FC = () => {
@@ -40,7 +43,7 @@ const App: React.FC = () => {
   const [isAuthLoading, setIsAuthLoading] = useState(true);
 
   // --- State: Canvas & Interaction ---
-  const [viewState, setViewState] = useState({ x: window.innerWidth / 2 - 400, y: 50, scale: 0.5 });
+  const [viewState, setViewState] = useState({ x: window.innerWidth / 2 - 250, y: 50, scale: 0.7 });
 
   // Initialize positions with fallback for new nodes
   const [nodePositions, setNodePositions] = useState(() => {
@@ -120,7 +123,7 @@ const App: React.FC = () => {
   };
 
   const resetView = () => {
-    setViewState({ x: window.innerWidth / 2 - 400, y: 50, scale: 0.5 });
+    setViewState({ x: window.innerWidth / 2 - 250, y: 50, scale: 0.7 });
     setNodePositions(INITIAL_LAYOUT);
   };
 
@@ -131,7 +134,7 @@ const App: React.FC = () => {
     e.preventDefault(); // Prevent browser zoom if possible (though passive listener might block this)
 
     const scaleAmount = -e.deltaY * 0.001;
-    const newScale = Math.min(Math.max(viewState.scale * (1 + scaleAmount), 0.4), 2.5);
+    const newScale = Math.min(Math.max(viewState.scale * (1 + scaleAmount), 0.1), 2.5);
 
     // Zoom towards mouse pointer
     const rect = containerRef.current?.getBoundingClientRect();
@@ -235,7 +238,7 @@ const App: React.FC = () => {
       );
 
       const scaleFactor = dist / touchStartDist.current;
-      const newScale = Math.min(Math.max(viewState.scale * scaleFactor, 0.4), 2.5);
+      const newScale = Math.min(Math.max(viewState.scale * scaleFactor, 0.1), 2.5);
 
       // Center zoom (simplified for touch)
       const centerX = (e.touches[0].clientX + e.touches[1].clientX) / 2;
