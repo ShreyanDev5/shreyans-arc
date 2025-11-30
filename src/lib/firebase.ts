@@ -9,12 +9,12 @@ import { getFirestore, doc, setDoc, getDoc, onSnapshot } from 'firebase/firestor
  * You can find this in Firebase Console -> Project Settings -> General -> Your apps
  */
 const firebaseConfig = {
-  apiKey: "AIzaSyBJqC-Jot6MYof9mHg_LO_jb4xZwtYbjR4",
-  authDomain: "shreyans-arc.firebaseapp.com",
-  projectId: "shreyans-arc",
-  storageBucket: "shreyans-arc.firebasestorage.app",
-  messagingSenderId: "102438847894",
-  appId: "1:102438847894:web:a13bfa89f871cd186109b7"
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID
 };
 
 

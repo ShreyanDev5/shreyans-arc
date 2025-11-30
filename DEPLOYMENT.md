@@ -40,11 +40,15 @@ This guide provides step-by-step instructions to deploy your Vite + React projec
 4.  **Environment Variables**
     Your `vite.config.ts` references `GEMINI_API_KEY`. Even if not currently used in `src`, it's best to define it to avoid build warnings or future runtime errors.
     *   Expand the **"Environment Variables"** section.
-    *   Key: `GEMINI_API_KEY`
-    *   Value: `your_actual_api_key_here`
-    *   Click **Add**.
-
-    > **Note on Firebase**: Your `src/lib/firebase.ts` currently contains hardcoded configuration. This works fine, but for better security in the future, consider moving these values to Environment Variables (e.g., `VITE_FIREBASE_API_KEY`) and accessing them via `import.meta.env`.
+    *   Add the following variables (values found in your `.env.local` or Firebase Console):
+        *   `GEMINI_API_KEY`
+        *   `VITE_FIREBASE_API_KEY`
+        *   `VITE_FIREBASE_AUTH_DOMAIN`
+        *   `VITE_FIREBASE_PROJECT_ID`
+        *   `VITE_FIREBASE_STORAGE_BUCKET`
+        *   `VITE_FIREBASE_MESSAGING_SENDER_ID`
+        *   `VITE_FIREBASE_APP_ID`
+    *   Click **Add** for each.
 
 5.  **Deploy**
     *   Click **"Deploy"**.
@@ -79,7 +83,7 @@ Vercel usually handles Single Page Applications (SPAs) automatically. However, i
     *   **Publish directory**: `dist`
 5.  **Environment Variables**:
     *   Click **"Show advanced"** -> **"New variable"**.
-    *   Add `GEMINI_API_KEY` and its value.
+    *   Add `GEMINI_API_KEY` and all `VITE_FIREBASE_...` variables listed above.
 6.  **Deploy Site**.
 
 **Important for Netlify**:
