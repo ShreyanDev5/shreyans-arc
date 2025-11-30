@@ -83,13 +83,28 @@ export const QuestionModal: React.FC<QuestionModalProps> = ({
         <div className="overflow-y-auto p-3 sm:p-4 space-y-2 custom-scrollbar bg-dark-bg/30">
           {/* Headers */}
           <div className="grid grid-cols-12 gap-2 sm:gap-4 px-2 sm:px-4 py-2 text-xs font-mono text-dark-muted uppercase tracking-wider border-b border-dark-border/50 mb-2">
-            <div className="col-span-2 text-center">Status</div>
-            <div className="col-span-8">Problem</div>
-            <div className="col-span-2 text-right">Diff</div>
+            <div className="col-span-2 text-center">
+              <span className="hidden sm:inline">Status</span>
+              <span className="sm:hidden">Sts</span>
+            </div>
+            <div className="col-span-8">
+              <span className="hidden sm:inline">Problem</span>
+              <span className="sm:hidden">Prob</span>
+            </div>
+            <div className="col-span-2 text-right">
+              <span className="hidden sm:inline">Difficulty</span>
+              <span className="sm:hidden">Diff</span>
+            </div>
           </div>
 
           {sortedQuestions.map((q) => {
             const isSolved = solvedIds.has(q.id);
+            const difficultyBorder = {
+              Easy: "border-brand-accent/20",
+              Medium: "border-brand-warning/20",
+              Hard: "border-brand-danger/20"
+            }[q.difficulty];
+
             return (
               <div
                 key={q.id}
@@ -97,7 +112,10 @@ export const QuestionModal: React.FC<QuestionModalProps> = ({
                   "grid grid-cols-12 gap-2 sm:gap-4 items-center p-2 sm:p-3 rounded-lg border transition-all duration-200 group",
                   isSolved
                     ? "bg-dark-highlight/10 border-brand-accent/20"
-                    : "bg-dark-card border-dark-border hover:border-dark-highlight hover:bg-dark-highlight/30"
+                    : clsx(
+                      "bg-dark-card hover:border-dark-highlight hover:bg-dark-highlight/30",
+                      difficultyBorder
+                    )
                 )}
               >
                 {/* Checkbox Column */}
@@ -138,7 +156,7 @@ export const QuestionModal: React.FC<QuestionModalProps> = ({
                 {/* Difficulty Column */}
                 <div className="col-span-2 text-right">
                   <span className={clsx(
-                    "text-[10px] sm:text-xs font-mono",
+                    "text-[10px] sm:text-xs font-mono font-bold",
                     q.difficulty === 'Easy' && "text-brand-accent",
                     q.difficulty === 'Medium' && "text-brand-warning",
                     q.difficulty === 'Hard' && "text-brand-danger",
