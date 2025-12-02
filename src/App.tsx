@@ -313,7 +313,17 @@ const App: React.FC = () => {
       if (!settings.allowZoom) return;
       e.preventDefault();
 
-      const scaleAmount = -e.deltaY * 0.001;
+      // Fix for trackpad pinch-to-zoom on Windows (Ctrl + Wheel)
+      // Trackpad usually sends small deltas (e.g. < 50) with deltaMode 0 (pixels).
+      // Mouse wheel + Ctrl usually sends large deltas (e.g. 100).
+      // We boost the sensitivity for trackpad to make it feel natural.
+      let multiplier = 0.001;
+      // Check for trackpad: Ctrl key + Pixel mode (0) + small delta
+      if (e.ctrlKey && e.deltaMode === 0 && Math.abs(e.deltaY) < 50) {
+        multiplier = 0.015;
+      }
+
+      const scaleAmount = -e.deltaY * multiplier;
       const newScale = Math.min(Math.max(transform.current.scale * (1 + scaleAmount), 0.1), 3);
 
       const rect = container.getBoundingClientRect();
@@ -427,7 +437,7 @@ const App: React.FC = () => {
         {/* Transform Layer */}
         <div
           ref={canvasRef}
-          className="w-full h-full origin-top-left will-change-transform"
+          className="w-full h-full origin-top-left"
           style={{ transform: 'translate(0px, 0px) scale(1)' }}
         >
           <ConnectionLines
