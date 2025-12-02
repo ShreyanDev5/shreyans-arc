@@ -31,6 +31,10 @@ A premium, interactive Data Structures and Algorithms (DSA) roadmap and progress
 - **Smooth Animations**: 60fps transitions, hover effects, and modal interactions.
 - **Responsive Design**: Optimized for everything from large desktop monitors to mobile phones.
 
+### ⚡ Performance & Engine
+- **Optimized Mobile Performance**: Custom touch handling for 60fps panning and zooming on mobile devices.
+- **Dynamic Layout Engine**: Node-based architecture with smart connection lines that adapt to layout changes.
+
 ## 🛠️ Tech Stack
 
 - **Frontend Framework**: React 19
@@ -101,8 +105,31 @@ shreyan's-arc/
 │   └── index.tsx        # Entry point
 ├── index.html           # HTML root & Tailwind CDN
 ├── package.json         # Dependencies
-└── vite.config.ts       # Vite configuration
+├── vite.config.ts       # Vite configuration
+└── vercel.json          # Vercel configuration
 ```
+
+## 🚀 Deployment
+
+### Deploy to Vercel
+
+The easiest way to deploy this app is with [Vercel](https://vercel.com).
+
+1.  **Push your code to GitHub.**
+2.  **Import the project into Vercel.**
+3.  **Environment Variables**:
+    - Add your Firebase configuration keys as environment variables in Vercel (or hardcode them in `src/lib/firebase.ts` if this is a personal project, though env vars are recommended).
+4.  **Deploy**: Vercel will automatically detect Vite and build the project.
+
+### Manual Build
+
+To build the project for production:
+
+```bash
+npm run build
+```
+
+The output will be in the `dist` folder, ready to be served by any static host.
 
 ## 📄 License
 

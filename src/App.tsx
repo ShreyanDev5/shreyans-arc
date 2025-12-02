@@ -214,10 +214,7 @@ const App: React.FC = () => {
         // Actually, we shouldn't even update pointers.current if we want to avoid micro-movements
         // But for multi-touch zoom, we might need immediate updates?
         // Let's just update pointers.current but NOT pan/drag until threshold.
-        // pointers.current.set(e.pointerId, currentPos); 
-        // If we update pointers, the delta calculation below will be small.
-        // Better to NOT update pointers.current until capture, so the first "move" is a jump of >5px?
-        // Or just track "isMoving" state.
+
         return;
       }
 
