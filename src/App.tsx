@@ -31,7 +31,6 @@ const INITIAL_LAYOUT: Record<string, { x: number; y: number }> = {
   'intervals': { x: 100, y: 1800 },
   'dp_2d': { x: 500, y: 1800 },
   'math_geometry': { x: 500, y: 1980 },
-  'system_design_misc': { x: 300, y: 2160 },
 };
 
 const App: React.FC = () => {

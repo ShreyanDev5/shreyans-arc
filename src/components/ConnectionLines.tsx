@@ -28,7 +28,6 @@ const CONNECTIONS = [
     { from: 'dp_1d', to: 'dp_2d' },
     { from: 'dp_1d', to: 'bit_manipulation' },
     { from: 'dp_2d', to: 'math_geometry' },
-    { from: 'math_geometry', to: 'system_design_misc' },
 ];
 
 // Static height configuration for nodes with wrapped text
@@ -40,7 +39,6 @@ const CUSTOM_NODE_HEIGHTS: Record<string, number> = {
     'heap_priority_queue': 90,
     'bit_manipulation': 90,
     'math_geometry': 90,
-    'system_design_misc': 90,
     // Add others if needed based on visual inspection
 };
 
