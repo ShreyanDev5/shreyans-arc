@@ -40,7 +40,7 @@ const InfoModal: React.FC<InfoModalProps> = ({ isOpen, onClose }) => {
                 <div className="space-y-4 text-dark-text leading-relaxed">
                     <p>
                         Welcome to <span className="text-brand-primary font-semibold">Shreyan's Arc</span>.
-                        This curated roadmap consists of 118 questions, offering the perfect "sweet spot" combination of the Blind 75 and NeetCode 150.
+                        This curated list of 114 questions is tailored for Freshers, SDE 1, and Junior Developer roles.
                     </p>
                     <p>
                         These are the most repeatedly asked questions by top product-based companies, making this the optimal tool for acing coding interviews quickly with maximum effectiveness and efficiency.
