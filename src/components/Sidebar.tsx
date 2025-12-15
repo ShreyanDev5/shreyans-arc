@@ -49,7 +49,7 @@ const Sidebar: React.FC<SidebarProps> = ({
             </div>
 
             {/* Progress Section */}
-            <div className="p-5">
+            <div className="py-9 px-5">
                 <div className="flex justify-between text-sm font-medium text-dark-muted mb-2">
                     <span>Total Progress</span>
                     <span className="text-white">{totalSolved} / {totalQuestions}</span>
