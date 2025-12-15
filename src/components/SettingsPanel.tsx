@@ -29,7 +29,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ settings, onToggle, isOpe
             onClick={onClose}
         >
             <div
-                className="bg-dark-card border border-dark-border rounded-lg p-6 shadow-2xl w-80 transform transition-all scale-100"
+                className="bg-dark-card border border-dark-border rounded-lg p-5 shadow-2xl w-80 transform transition-all scale-100"
                 onClick={(e) => e.stopPropagation()}
             >
                 <div className="flex justify-between items-center mb-6">

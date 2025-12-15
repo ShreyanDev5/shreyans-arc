@@ -30,15 +30,14 @@ const Sidebar: React.FC<SidebarProps> = ({
 }) => {
     return (
         <div
-            className={`fixed right-4 top-4 bottom-4 w-80 bg-dark-card border border-dark-border z-50 flex flex-col shadow-2xl rounded-2xl transform transition-transform duration-300 ease-in-out ${isOpen ? 'translate-x-0' : 'translate-x-[120%]'}`}
+            className={`fixed right-4 top-4 w-80 max-h-[calc(100vh-2rem)] bg-dark-card border border-dark-border z-50 flex flex-col shadow-2xl rounded-2xl transform transition-transform duration-300 ease-in-out ${isOpen ? 'translate-x-0' : 'translate-x-[120%]'}`}
         >
             {/* Header */}
-            <div className="p-6 border-b border-dark-border flex justify-between items-start">
+            <div className="p-5 border-b border-dark-border flex justify-between items-start">
                 <div className="flex items-center gap-3">
-                    <img src="/logo.svg" alt="Logo" className="w-10 h-10" />
+                    <img src="/logo.svg" alt="Logo" className="w-8 h-8" />
                     <div>
                         <h2 className="text-xl font-bold text-white leading-tight">Shreyan's Arc</h2>
-                        <p className="text-[10px] text-dark-muted font-mono tracking-wider">INTERACTIVE ROADMAP</p>
                     </div>
                 </div>
                 <button onClick={onClose} className="text-dark-muted hover:text-white transition-colors p-1">
@@ -50,7 +49,7 @@ const Sidebar: React.FC<SidebarProps> = ({
             </div>
 
             {/* Progress Section */}
-            <div className="p-6">
+            <div className="p-5">
                 <div className="flex justify-between text-sm font-medium text-dark-muted mb-2">
                     <span>Total Progress</span>
                     <span className="text-white">{totalSolved} / {totalQuestions}</span>
@@ -72,7 +71,7 @@ const Sidebar: React.FC<SidebarProps> = ({
             </div>
 
             {/* Bottom Actions */}
-            <div className="p-6 border-t border-dark-border mt-auto flex flex-col gap-4 items-center">
+            <div className="p-5 border-t border-dark-border mt-auto flex flex-col gap-4 items-center">
                 {/* Action Buttons Row */}
                 <div className="flex items-center gap-4">
                     <button
@@ -91,7 +90,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                         className="p-2 text-dark-muted hover:text-white transition-colors rounded-full hover:bg-dark-bg"
                         title="Settings"
                     >
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                             <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.1a2 2 0 0 1-1-1.72v-.51a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z" />
                             <circle cx="12" cy="12" r="3" />
                         </svg>
@@ -128,7 +127,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                 ) : (
                     <button
                         onClick={onLogin}
-                        className="w-full py-2 px-4 rounded-lg bg-[#2563eb] text-white font-medium text-sm hover:bg-blue-700 transition-all shadow-lg shadow-blue-500/20"
+                        className="w-full py-2 px-4 rounded-lg bg-[#1d4ed8] text-white font-medium text-sm hover:bg-[#1e40af] transition-all shadow-lg shadow-blue-600/20"
                     >
                         Login to Save Progress
                     </button>
