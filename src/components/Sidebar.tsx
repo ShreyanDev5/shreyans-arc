@@ -28,6 +28,59 @@ const Sidebar: React.FC<SidebarProps> = ({
     isOpen,
     onClose
 }) => {
+    const getMotivationalMessage = (progress: number, solved: number) => {
+        if (progress === 100) return "Mastery Unlocked! You're ready. 🚀";
+        if (progress === 0) return "Your journey to SDE-1 starts here.";
+
+        const messages = {
+            early: [ // 1-24%
+                "Off to a great start!",
+                "Consistency is key. Keep going.",
+                "One problem at a time.",
+                "Building your foundation...",
+                "Small steps, big results."
+            ],
+            building: [ // 25-49%
+                "You're getting the hang of this!",
+                "Momentum is building.",
+                "Keep pushing, you're doing great.",
+                "Don't break the streak!",
+                "Leveling up, one day at a time."
+            ],
+            strong: [ // 50-74%
+                "Halfway there! Unstoppable.",
+                "You're crushing the core patterns.",
+                "Serious progress detected.",
+                "Nothing can stop you now.",
+                "Turning algorithms into muscle memory."
+            ],
+            advanced: [ // 75-89%
+                "Elite territory. Keep focused.",
+                "Almost at the finish line!",
+                "Polishing your skills for the interview.",
+                "Stay sharp, you're nearly there.",
+                "The hard work is paying off."
+            ],
+            final: [ // 90-99%
+                "Final stretch! Finish strong.",
+                "So close to 100%. Don't stop!",
+                "One last push for mastery.",
+                " Victory is in sight.",
+                "You've come so far. Finish it!"
+            ]
+        };
+
+        let pool: string[] = [];
+        if (progress < 25) pool = messages.early;
+        else if (progress < 50) pool = messages.building;
+        else if (progress < 75) pool = messages.strong;
+        else if (progress < 90) pool = messages.advanced;
+        else pool = messages.final;
+
+        // Deterministic rotation based on solved count to keep it fresh but stable
+        return pool[solved % pool.length];
+    };
+
     return (
         <div
             className={`fixed right-4 top-4 w-80 max-h-[calc(100vh-2rem)] bg-dark-card border border-dark-border z-50 flex flex-col shadow-2xl rounded-2xl transform transition-transform duration-300 ease-in-out ${isOpen ? 'translate-x-0' : 'translate-x-[120%]'}`}
@@ -60,13 +113,8 @@ const Sidebar: React.FC<SidebarProps> = ({
                         style={{ width: `${overallProgress}%` }}
                     />
                 </div>
-                <p className="text-xs text-dark-muted mt-3 text-center">
-                    {totalSolved === totalQuestions ? "Mastery Achieved!" :
-                        overallProgress === 0 ? "Start your journey!" :
-                            overallProgress < 25 ? "Off to a great start!" :
-                                overallProgress < 50 ? "Keep grinding!" :
-                                    overallProgress < 75 ? "You're crushing it!" :
-                                        "Almost there!"}
+                <p className="text-xs text-dark-muted mt-3 text-center h-4 flex items-center justify-center transition-all duration-300">
+                    {getMotivationalMessage(overallProgress, totalSolved)}
                 </p>
             </div>
 
