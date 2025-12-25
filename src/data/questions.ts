@@ -15,7 +15,7 @@ export interface Category {
 const lc = (name: string) => `https://leetcode.com/problems/${name.toLowerCase().replace(/ /g, '-').replace(/[()]/g, '')}/`;
 
 export const roadmapData: Category[] = [
-  // 1. Arrays & Hashing
+  // 1. Arrays & Hashing (8 questions: 1-8)
   {
     id: 'arrays_hashing',
     title: 'Arrays & Hashing',
@@ -30,7 +30,7 @@ export const roadmapData: Category[] = [
       { id: '8', title: 'First Missing Positive', difficulty: 'Hard', url: lc('First Missing Positive') },
     ]
   },
-  // 2. Two Pointers
+  // 2. Two Pointers (6 questions: 9-14) — Removed: Move Zeroes
   {
     id: 'two_pointers',
     title: 'Two Pointers',
@@ -41,193 +41,192 @@ export const roadmapData: Category[] = [
       { id: '12', title: 'Trapping Rain Water', difficulty: 'Hard', url: lc('Trapping Rain Water') },
       { id: '13', title: 'Container With Most Water', difficulty: 'Medium', url: lc('Container With Most Water') },
       { id: '14', title: 'Sort Colors', difficulty: 'Medium', url: lc('Sort Colors') },
-      { id: '15', title: 'Move Zeroes', difficulty: 'Easy', url: lc('Move Zeroes') },
     ]
   },
-  // 2b. Sliding Window
+  // 3. Sliding Window (6 questions: 15-20)
   {
     id: 'sliding_window',
     title: 'Sliding Window',
     questions: [
-      { id: '16', title: 'Longest Substring Without Repeating Characters', difficulty: 'Medium', url: lc('Longest Substring Without Repeating Characters') },
-      { id: '17', title: 'Minimum Window Substring', difficulty: 'Hard', url: lc('Minimum Window Substring') },
-      { id: '18', title: 'Longest Repeating Character Replacement', difficulty: 'Medium', url: lc('Longest Repeating Character Replacement') },
-      { id: '19', title: 'Permutation in String', difficulty: 'Medium', url: lc('Permutation in String') },
-      { id: '20', title: 'Best Time to Buy and Sell Stock', difficulty: 'Easy', url: lc('Best Time to Buy and Sell Stock') },
-      { id: '21', title: 'Sliding Window Maximum', difficulty: 'Hard', url: lc('Sliding Window Maximum') },
+      { id: '15', title: 'Longest Substring Without Repeating Characters', difficulty: 'Medium', url: lc('Longest Substring Without Repeating Characters') },
+      { id: '16', title: 'Minimum Window Substring', difficulty: 'Hard', url: lc('Minimum Window Substring') },
+      { id: '17', title: 'Longest Repeating Character Replacement', difficulty: 'Medium', url: lc('Longest Repeating Character Replacement') },
+      { id: '18', title: 'Permutation in String', difficulty: 'Medium', url: lc('Permutation in String') },
+      { id: '19', title: 'Best Time to Buy and Sell Stock', difficulty: 'Easy', url: lc('Best Time to Buy and Sell Stock') },
+      { id: '20', title: 'Sliding Window Maximum', difficulty: 'Hard', url: lc('Sliding Window Maximum') },
     ]
   },
-  // 3. Stacks & Monotonic
+  // 4. Stacks & Monotonic (5 questions: 21-25) — Removed: Next Greater Element I, Added: Largest Rectangle in Histogram
   {
     id: 'stacks_monotonic',
     title: 'Stacks & Monotonic',
     questions: [
-      { id: '22', title: 'Valid Parentheses', difficulty: 'Easy', url: lc('Valid Parentheses') },
-      { id: '23', title: 'Min Stack', difficulty: 'Medium', url: lc('Min Stack') },
-      { id: '24', title: 'Daily Temperatures', difficulty: 'Medium', url: lc('Daily Temperatures') },
-      { id: '25', title: 'Next Greater Element I', difficulty: 'Easy', url: lc('Next Greater Element I') },
-      { id: '26', title: 'Evaluate Reverse Polish Notation', difficulty: 'Medium', url: lc('Evaluate Reverse Polish Notation') },
+      { id: '21', title: 'Valid Parentheses', difficulty: 'Easy', url: lc('Valid Parentheses') },
+      { id: '22', title: 'Min Stack', difficulty: 'Medium', url: lc('Min Stack') },
+      { id: '23', title: 'Daily Temperatures', difficulty: 'Medium', url: lc('Daily Temperatures') },
+      { id: '24', title: 'Evaluate Reverse Polish Notation', difficulty: 'Medium', url: lc('Evaluate Reverse Polish Notation') },
+      { id: '25', title: 'Largest Rectangle in Histogram', difficulty: 'Hard', url: lc('Largest Rectangle in Histogram') },
     ]
   },
-  // 4. Binary Search & Quickselect
+  // 5. Binary Search & Quickselect (5 questions: 26-30) — Removed: Find Smallest Letter Greater Than Target
   {
     id: 'binary_search_quickselect',
     title: 'Binary Search & Quickselect',
     questions: [
-      { id: '27', title: 'Binary Search', difficulty: 'Easy', url: lc('Binary Search') },
-      { id: '28', title: 'Search in Rotated Sorted Array', difficulty: 'Medium', url: lc('Search in Rotated Sorted Array') },
-      { id: '29', title: 'Find Minimum in Rotated Sorted Array', difficulty: 'Medium', url: lc('Find Minimum in Rotated Sorted Array') },
-      { id: '30', title: 'Kth Largest Element in an Array', difficulty: 'Medium', url: lc('Kth Largest Element in an Array') },
-      { id: '31', title: 'Find Smallest Letter Greater Than Target', difficulty: 'Easy', url: lc('Find Smallest Letter Greater Than Target') },
-      { id: '32', title: 'Find Peak Element', difficulty: 'Medium', url: lc('Find Peak Element') },
+      { id: '26', title: 'Binary Search', difficulty: 'Easy', url: lc('Binary Search') },
+      { id: '27', title: 'Search in Rotated Sorted Array', difficulty: 'Medium', url: lc('Search in Rotated Sorted Array') },
+      { id: '28', title: 'Find Minimum in Rotated Sorted Array', difficulty: 'Medium', url: lc('Find Minimum in Rotated Sorted Array') },
+      { id: '29', title: 'Kth Largest Element in an Array', difficulty: 'Medium', url: lc('Kth Largest Element in an Array') },
+      { id: '30', title: 'Find Peak Element', difficulty: 'Medium', url: lc('Find Peak Element') },
     ]
   },
-  // 5. Linked List
+  // 6. Linked List (6 questions: 31-36) — Removed: Intersection of Two Linked Lists
   {
     id: 'linked_list',
     title: 'Linked List',
     questions: [
-      { id: '33', title: 'Reverse Linked List', difficulty: 'Easy', url: lc('Reverse Linked List') },
-      { id: '34', title: 'Merge Two Sorted Lists', difficulty: 'Easy', url: lc('Merge Two Sorted Lists') },
-      { id: '35', title: 'Linked List Cycle', difficulty: 'Easy', url: lc('Linked List Cycle') },
-      { id: '36', title: 'Remove Nth Node From End of List', difficulty: 'Medium', url: lc('Remove Nth Node From End of List') },
-      { id: '37', title: 'Add Two Numbers', difficulty: 'Medium', url: lc('Add Two Numbers') },
-      { id: '38', title: 'Intersection of Two Linked Lists', difficulty: 'Easy', url: lc('Intersection of Two Linked Lists') },
-      { id: '39', title: 'Reorder List', difficulty: 'Medium', url: lc('Reorder List') },
+      { id: '31', title: 'Reverse Linked List', difficulty: 'Easy', url: lc('Reverse Linked List') },
+      { id: '32', title: 'Merge Two Sorted Lists', difficulty: 'Easy', url: lc('Merge Two Sorted Lists') },
+      { id: '33', title: 'Linked List Cycle', difficulty: 'Easy', url: lc('Linked List Cycle') },
+      { id: '34', title: 'Remove Nth Node From End of List', difficulty: 'Medium', url: lc('Remove Nth Node From End of List') },
+      { id: '35', title: 'Add Two Numbers', difficulty: 'Medium', url: lc('Add Two Numbers') },
+      { id: '36', title: 'Reorder List', difficulty: 'Medium', url: lc('Reorder List') },
     ]
   },
-  // 6. Trees
+  // 7. Trees (8 questions: 37-44) — Removed: Lowest Common Ancestor of BST, Diameter of Binary Tree, Same Tree
   {
     id: 'trees',
     title: 'Trees',
     questions: [
-      { id: '40', title: 'Invert Binary Tree', difficulty: 'Easy', url: lc('Invert Binary Tree') },
-      { id: '41', title: 'Maximum Depth of Binary Tree', difficulty: 'Easy', url: lc('Maximum Depth of Binary Tree') },
-      { id: '42', title: 'Validate Binary Search Tree', difficulty: 'Medium', url: lc('Validate Binary Search Tree') },
-      { id: '43', title: 'Binary Tree Level Order Traversal', difficulty: 'Medium', url: lc('Binary Tree Level Order Traversal') },
-      { id: '44', title: 'Construct Binary Tree from Preorder and Inorder Traversal', difficulty: 'Medium', url: lc('Construct Binary Tree from Preorder and Inorder Traversal') },
-      { id: '45', title: 'Lowest Common Ancestor of a BST', difficulty: 'Medium', url: lc('Lowest Common Ancestor of a Binary Search Tree') },
-      { id: '46', title: 'Kth Smallest Element in a BST', difficulty: 'Medium', url: lc('Kth Smallest Element in a BST') },
-      { id: '47', title: 'Binary Tree Maximum Path Sum', difficulty: 'Hard', url: lc('Binary Tree Maximum Path Sum') },
-      { id: '48', title: 'Diameter of Binary Tree', difficulty: 'Easy', url: lc('Diameter of Binary Tree') },
-      { id: '49', title: 'Same Tree', difficulty: 'Easy', url: lc('Same Tree') },
-      { id: '50', title: 'Lowest Common Ancestor of a Binary Tree', difficulty: 'Medium', url: lc('Lowest Common Ancestor of a Binary Tree') },
+      { id: '37', title: 'Invert Binary Tree', difficulty: 'Easy', url: lc('Invert Binary Tree') },
+      { id: '38', title: 'Maximum Depth of Binary Tree', difficulty: 'Easy', url: lc('Maximum Depth of Binary Tree') },
+      { id: '39', title: 'Validate Binary Search Tree', difficulty: 'Medium', url: lc('Validate Binary Search Tree') },
+      { id: '40', title: 'Binary Tree Level Order Traversal', difficulty: 'Medium', url: lc('Binary Tree Level Order Traversal') },
+      { id: '41', title: 'Construct Binary Tree from Preorder and Inorder Traversal', difficulty: 'Medium', url: lc('Construct Binary Tree from Preorder and Inorder Traversal') },
+      { id: '42', title: 'Kth Smallest Element in a BST', difficulty: 'Medium', url: lc('Kth Smallest Element in a BST') },
+      { id: '43', title: 'Binary Tree Maximum Path Sum', difficulty: 'Hard', url: lc('Binary Tree Maximum Path Sum') },
+      { id: '44', title: 'Lowest Common Ancestor of a Binary Tree', difficulty: 'Medium', url: lc('Lowest Common Ancestor of a Binary Tree') },
     ]
   },
-  // 7. Trie
+  // 8. Trie (2 questions: 45-46)
   {
     id: 'trie',
     title: 'Trie',
     questions: [
-      { id: '51', title: 'Implement Trie (Prefix Tree)', difficulty: 'Medium', url: lc('Implement Trie (Prefix Tree)') },
-      { id: '52', title: 'Word Search II', difficulty: 'Hard', url: lc('Word Search II') },
+      { id: '45', title: 'Implement Trie (Prefix Tree)', difficulty: 'Medium', url: lc('Implement Trie (Prefix Tree)') },
+      { id: '46', title: 'Word Search II', difficulty: 'Hard', url: lc('Word Search II') },
     ]
   },
-  // 8. Heap / Priority Queue
+  // 9. Heap / Priority Queue (5 questions: 47-51) — Removed: Find K Closest Elements
   {
     id: 'heap_priority_queue',
     title: 'Heap / Priority Queue',
     questions: [
-      { id: '53', title: 'Kth Largest Element in a Stream', difficulty: 'Easy', url: lc('Kth Largest Element in a Stream') },
-      { id: '54', title: 'Merge k Sorted Lists', difficulty: 'Hard', url: lc('Merge k Sorted Lists') },
-      { id: '55', title: 'Task Scheduler', difficulty: 'Medium', url: lc('Task Scheduler') },
-      { id: '56', title: 'Find Median from Data Stream', difficulty: 'Hard', url: lc('Find Median from Data Stream') },
-      { id: '57', title: 'K Closest Points to Origin', difficulty: 'Medium', url: lc('K Closest Points to Origin') },
-      { id: '58', title: 'Find K Closest Elements', difficulty: 'Medium', url: lc('Find K Closest Elements') },
+      { id: '47', title: 'Kth Largest Element in a Stream', difficulty: 'Easy', url: lc('Kth Largest Element in a Stream') },
+      { id: '48', title: 'Merge k Sorted Lists', difficulty: 'Hard', url: lc('Merge k Sorted Lists') },
+      { id: '49', title: 'Task Scheduler', difficulty: 'Medium', url: lc('Task Scheduler') },
+      { id: '50', title: 'Find Median from Data Stream', difficulty: 'Hard', url: lc('Find Median from Data Stream') },
+      { id: '51', title: 'K Closest Points to Origin', difficulty: 'Medium', url: lc('K Closest Points to Origin') },
     ]
   },
-  // 9. Backtracking
+  // 10. Backtracking (6 questions: 52-57)
   {
     id: 'backtracking',
     title: 'Backtracking',
     questions: [
-      { id: '59', title: 'Subsets', difficulty: 'Medium', url: lc('Subsets') },
-      { id: '60', title: 'Permutations', difficulty: 'Medium', url: lc('Permutations') },
-      { id: '61', title: 'Combination Sum', difficulty: 'Medium', url: lc('Combination Sum') },
-      { id: '62', title: 'Word Search', difficulty: 'Medium', url: lc('Word Search') },
-      { id: '63', title: 'Generate Parentheses', difficulty: 'Medium', url: lc('Generate Parentheses') },
-      { id: '64', title: 'Letter Combinations of a Phone Number', difficulty: 'Medium', url: lc('Letter Combinations of a Phone Number') },
+      { id: '52', title: 'Subsets', difficulty: 'Medium', url: lc('Subsets') },
+      { id: '53', title: 'Permutations', difficulty: 'Medium', url: lc('Permutations') },
+      { id: '54', title: 'Combination Sum', difficulty: 'Medium', url: lc('Combination Sum') },
+      { id: '55', title: 'Word Search', difficulty: 'Medium', url: lc('Word Search') },
+      { id: '56', title: 'Generate Parentheses', difficulty: 'Medium', url: lc('Generate Parentheses') },
+      { id: '57', title: 'Letter Combinations of a Phone Number', difficulty: 'Medium', url: lc('Letter Combinations of a Phone Number') },
     ]
   },
-  // 10. Graphs
+  // 11. Graphs (11 questions: 58-68) — Added: Redundant Connection, Evaluate Division, Network Delay Time, Pacific Atlantic Water Flow
   {
     id: 'graphs',
     title: 'Graphs',
     questions: [
-      { id: '65', title: 'Number of Islands', difficulty: 'Medium', url: lc('Number of Islands') },
-      { id: '66', title: 'Clone Graph', difficulty: 'Medium', url: lc('Clone Graph') },
-      { id: '67', title: 'Course Schedule', difficulty: 'Medium', url: lc('Course Schedule') },
-      { id: '68', title: 'Course Schedule II', difficulty: 'Medium', url: lc('Course Schedule II') },
-      { id: '69', title: 'Rotting Oranges', difficulty: 'Medium', url: lc('Rotting Oranges') },
-      { id: '70', title: 'Flood Fill', difficulty: 'Easy', url: lc('Flood Fill') },
-      { id: '71', title: 'Word Ladder', difficulty: 'Hard', url: lc('Word Ladder') },
+      { id: '58', title: 'Number of Islands', difficulty: 'Medium', url: lc('Number of Islands') },
+      { id: '59', title: 'Clone Graph', difficulty: 'Medium', url: lc('Clone Graph') },
+      { id: '60', title: 'Course Schedule', difficulty: 'Medium', url: lc('Course Schedule') },
+      { id: '61', title: 'Course Schedule II', difficulty: 'Medium', url: lc('Course Schedule II') },
+      { id: '62', title: 'Rotting Oranges', difficulty: 'Medium', url: lc('Rotting Oranges') },
+      { id: '63', title: 'Flood Fill', difficulty: 'Easy', url: lc('Flood Fill') },
+      { id: '64', title: 'Word Ladder', difficulty: 'Hard', url: lc('Word Ladder') },
+      { id: '65', title: 'Redundant Connection', difficulty: 'Medium', url: lc('Redundant Connection') },
+      { id: '66', title: 'Evaluate Division', difficulty: 'Medium', url: lc('Evaluate Division') },
+      { id: '67', title: 'Network Delay Time', difficulty: 'Medium', url: lc('Network Delay Time') },
+      { id: '68', title: 'Pacific Atlantic Water Flow', difficulty: 'Medium', url: lc('Pacific Atlantic Water Flow') },
     ]
   },
-  // 11. Dynamic Programming — 1D
+  // 12. Dynamic Programming — 1D (9 questions: 69-77) — Removed: Palindromic Substrings
   {
     id: 'dp_1d',
     title: 'Dynamic Programming — 1D',
     questions: [
-      { id: '72', title: 'Climbing Stairs', difficulty: 'Easy', url: lc('Climbing Stairs') },
-      { id: '73', title: 'House Robber', difficulty: 'Medium', url: lc('House Robber') },
-      { id: '74', title: 'Coin Change', difficulty: 'Medium', url: lc('Coin Change') },
-      { id: '75', title: 'Longest Increasing Subsequence', difficulty: 'Medium', url: lc('Longest Increasing Subsequence') },
-      { id: '76', title: 'Word Break', difficulty: 'Medium', url: lc('Word Break') },
-      { id: '77', title: 'Partition Equal Subset Sum', difficulty: 'Medium', url: lc('Partition Equal Subset Sum') },
-      { id: '78', title: 'Decode Ways', difficulty: 'Medium', url: lc('Decode Ways') },
-      { id: '79', title: 'Longest Palindromic Substring', difficulty: 'Medium', url: lc('Longest Palindromic Substring') },
-      { id: '80', title: 'Maximum Product Subarray', difficulty: 'Medium', url: lc('Maximum Product Subarray') },
-      { id: '81', title: 'Palindromic Substrings', difficulty: 'Medium', url: lc('Palindromic Substrings') },
+      { id: '69', title: 'Climbing Stairs', difficulty: 'Easy', url: lc('Climbing Stairs') },
+      { id: '70', title: 'House Robber', difficulty: 'Medium', url: lc('House Robber') },
+      { id: '71', title: 'Coin Change', difficulty: 'Medium', url: lc('Coin Change') },
+      { id: '72', title: 'Longest Increasing Subsequence', difficulty: 'Medium', url: lc('Longest Increasing Subsequence') },
+      { id: '73', title: 'Word Break', difficulty: 'Medium', url: lc('Word Break') },
+      { id: '74', title: 'Partition Equal Subset Sum', difficulty: 'Medium', url: lc('Partition Equal Subset Sum') },
+      { id: '75', title: 'Decode Ways', difficulty: 'Medium', url: lc('Decode Ways') },
+      { id: '76', title: 'Longest Palindromic Substring', difficulty: 'Medium', url: lc('Longest Palindromic Substring') },
+      { id: '77', title: 'Maximum Product Subarray', difficulty: 'Medium', url: lc('Maximum Product Subarray') },
     ]
   },
-  // 12. Dynamic Programming — 2D
+  // 13. Dynamic Programming — 2D (5 questions: 78-82) — Added: Edit Distance, Regular Expression Matching, Interleaving String
   {
     id: 'dp_2d',
     title: 'Dynamic Programming — 2D',
     questions: [
-      { id: '82', title: 'Unique Paths', difficulty: 'Medium', url: lc('Unique Paths') },
-      { id: '83', title: 'Longest Common Subsequence', difficulty: 'Medium', url: lc('Longest Common Subsequence') },
+      { id: '78', title: 'Unique Paths', difficulty: 'Medium', url: lc('Unique Paths') },
+      { id: '79', title: 'Longest Common Subsequence', difficulty: 'Medium', url: lc('Longest Common Subsequence') },
+      { id: '80', title: 'Edit Distance', difficulty: 'Medium', url: lc('Edit Distance') },
+      { id: '81', title: 'Regular Expression Matching', difficulty: 'Hard', url: lc('Regular Expression Matching') },
+      { id: '82', title: 'Interleaving String', difficulty: 'Medium', url: lc('Interleaving String') },
     ]
   },
-  // 13. Greedy
+  // 14. Greedy (3 questions: 83-85)
   {
     id: 'greedy',
     title: 'Greedy',
     questions: [
-      { id: '84', title: 'Maximum Subarray', difficulty: 'Medium', url: lc('Maximum Subarray') },
-      { id: '85', title: 'Jump Game', difficulty: 'Medium', url: lc('Jump Game') },
-      { id: '86', title: 'Gas Station', difficulty: 'Medium', url: lc('Gas Station') },
+      { id: '83', title: 'Maximum Subarray', difficulty: 'Medium', url: lc('Maximum Subarray') },
+      { id: '84', title: 'Jump Game', difficulty: 'Medium', url: lc('Jump Game') },
+      { id: '85', title: 'Gas Station', difficulty: 'Medium', url: lc('Gas Station') },
     ]
   },
-  // 14. Intervals
+  // 15. Intervals (3 questions: 86-88)
   {
     id: 'intervals',
     title: 'Intervals',
     questions: [
-      { id: '87', title: 'Merge Intervals', difficulty: 'Medium', url: lc('Merge Intervals') },
-      { id: '88', title: 'Insert Interval', difficulty: 'Medium', url: lc('Insert Interval') },
-      { id: '89', title: 'Non-overlapping Intervals', difficulty: 'Medium', url: lc('Non-overlapping Intervals') },
+      { id: '86', title: 'Merge Intervals', difficulty: 'Medium', url: lc('Merge Intervals') },
+      { id: '87', title: 'Insert Interval', difficulty: 'Medium', url: lc('Insert Interval') },
+      { id: '88', title: 'Non-overlapping Intervals', difficulty: 'Medium', url: lc('Non-overlapping Intervals') },
     ]
   },
-  // 15. Bit Manipulation
+  // 16. Bit Manipulation (4 questions: 89-92)
   {
     id: 'bit_manipulation',
     title: 'Bit Manipulation',
     questions: [
-      { id: '90', title: 'Single Number', difficulty: 'Easy', url: lc('Single Number') },
-      { id: '91', title: 'Number of 1 Bits', difficulty: 'Easy', url: lc('Number of 1 Bits') },
-      { id: '92', title: 'Missing Number', difficulty: 'Easy', url: lc('Missing Number') },
-      { id: '93', title: 'Counting Bits', difficulty: 'Easy', url: lc('Counting Bits') },
+      { id: '89', title: 'Single Number', difficulty: 'Easy', url: lc('Single Number') },
+      { id: '90', title: 'Number of 1 Bits', difficulty: 'Easy', url: lc('Number of 1 Bits') },
+      { id: '91', title: 'Missing Number', difficulty: 'Easy', url: lc('Missing Number') },
+      { id: '92', title: 'Counting Bits', difficulty: 'Easy', url: lc('Counting Bits') },
     ]
   },
-  // 16. Math & Geometry
+  // 17. Math & Geometry (3 questions: 93-95)
   {
     id: 'math_geometry',
     title: 'Math & Geometry',
     questions: [
-      { id: '94', title: 'Rotate Image', difficulty: 'Medium', url: lc('Rotate Image') },
-      { id: '95', title: 'Spiral Matrix', difficulty: 'Medium', url: lc('Spiral Matrix') },
-      { id: '96', title: 'Set Matrix Zeroes', difficulty: 'Medium', url: lc('Set Matrix Zeroes') },
+      { id: '93', title: 'Rotate Image', difficulty: 'Medium', url: lc('Rotate Image') },
+      { id: '94', title: 'Spiral Matrix', difficulty: 'Medium', url: lc('Spiral Matrix') },
+      { id: '95', title: 'Set Matrix Zeroes', difficulty: 'Medium', url: lc('Set Matrix Zeroes') },
     ]
   },
 ];
