@@ -36,12 +36,12 @@ export const roadmapData: Category[] = [
     title: 'Two Pointers',
     questions: [
       { id: '9', title: 'Valid Palindrome', difficulty: 'Easy', url: lc('Valid Palindrome') },
-      { id: '11', title: '3Sum', difficulty: 'Medium', url: lc('3Sum') },
-      { id: '15', title: 'Two Sum II', difficulty: 'Medium', url: lc('Two Sum II - Input Array Is Sorted') },
-      { id: '16', title: 'Trapping Rain Water', difficulty: 'Hard', url: lc('Trapping Rain Water') },
-      { id: '17', title: 'Container With Most Water', difficulty: 'Medium', url: lc('Container With Most Water') },
-      { id: '19', title: 'Sort Colors', difficulty: 'Medium', url: lc('Sort Colors') },
-      { id: '20', title: 'Move Zeroes', difficulty: 'Easy', url: lc('Move Zeroes') },
+      { id: '10', title: '3Sum', difficulty: 'Medium', url: lc('3Sum') },
+      { id: '11', title: 'Two Sum II', difficulty: 'Medium', url: lc('Two Sum II Input Array Is Sorted') },
+      { id: '12', title: 'Trapping Rain Water', difficulty: 'Hard', url: lc('Trapping Rain Water') },
+      { id: '13', title: 'Container With Most Water', difficulty: 'Medium', url: lc('Container With Most Water') },
+      { id: '14', title: 'Sort Colors', difficulty: 'Medium', url: lc('Sort Colors') },
+      { id: '15', title: 'Move Zeroes', difficulty: 'Easy', url: lc('Move Zeroes') },
     ]
   },
   // 2b. Sliding Window
@@ -49,11 +49,11 @@ export const roadmapData: Category[] = [
     id: 'sliding_window',
     title: 'Sliding Window',
     questions: [
-      { id: '10', title: 'Longest Substring Without Repeating Characters', difficulty: 'Medium', url: lc('Longest Substring Without Repeating Characters') },
-      { id: '12', title: 'Minimum Window Substring', difficulty: 'Hard', url: lc('Minimum Window Substring') },
-      { id: '13', title: 'Longest Repeating Character Replacement', difficulty: 'Medium', url: lc('Longest Repeating Character Replacement') },
-      { id: '14', title: 'Permutation in String', difficulty: 'Medium', url: lc('Permutation in String') },
-      { id: '18', title: 'Best Time to Buy and Sell Stock', difficulty: 'Easy', url: lc('Best Time to Buy and Sell Stock') },
+      { id: '16', title: 'Longest Substring Without Repeating Characters', difficulty: 'Medium', url: lc('Longest Substring Without Repeating Characters') },
+      { id: '17', title: 'Minimum Window Substring', difficulty: 'Hard', url: lc('Minimum Window Substring') },
+      { id: '18', title: 'Longest Repeating Character Replacement', difficulty: 'Medium', url: lc('Longest Repeating Character Replacement') },
+      { id: '19', title: 'Permutation in String', difficulty: 'Medium', url: lc('Permutation in String') },
+      { id: '20', title: 'Best Time to Buy and Sell Stock', difficulty: 'Easy', url: lc('Best Time to Buy and Sell Stock') },
       { id: '21', title: 'Sliding Window Maximum', difficulty: 'Hard', url: lc('Sliding Window Maximum') },
     ]
   },
@@ -160,8 +160,7 @@ export const roadmapData: Category[] = [
       { id: '68', title: 'Course Schedule II', difficulty: 'Medium', url: lc('Course Schedule II') },
       { id: '69', title: 'Rotting Oranges', difficulty: 'Medium', url: lc('Rotting Oranges') },
       { id: '70', title: 'Flood Fill', difficulty: 'Easy', url: lc('Flood Fill') },
-      { id: '71', title: 'Number of Connected Components', difficulty: 'Medium', url: 'https://leetcode.com/problems/number-of-connected-components-in-an-undirected-graph/' },
-      { id: '72', title: 'Word Ladder', difficulty: 'Hard', url: lc('Word Ladder') },
+      { id: '71', title: 'Word Ladder', difficulty: 'Hard', url: lc('Word Ladder') },
     ]
   },
   // 11. Dynamic Programming — 1D
@@ -169,16 +168,16 @@ export const roadmapData: Category[] = [
     id: 'dp_1d',
     title: 'Dynamic Programming — 1D',
     questions: [
-      { id: '73', title: 'Climbing Stairs', difficulty: 'Easy', url: lc('Climbing Stairs') },
-      { id: '74', title: 'House Robber', difficulty: 'Medium', url: lc('House Robber') },
-      { id: '75', title: 'Coin Change', difficulty: 'Medium', url: lc('Coin Change') },
-      { id: '76', title: 'Longest Increasing Subsequence', difficulty: 'Medium', url: lc('Longest Increasing Subsequence') },
-      { id: '77', title: 'Word Break', difficulty: 'Medium', url: lc('Word Break') },
-      { id: '78', title: 'Partition Equal Subset Sum', difficulty: 'Medium', url: lc('Partition Equal Subset Sum') },
-      { id: '79', title: 'Decode Ways', difficulty: 'Medium', url: lc('Decode Ways') },
-      { id: '80', title: 'Longest Palindromic Substring', difficulty: 'Medium', url: lc('Longest Palindromic Substring') },
-      { id: '81', title: 'Maximum Product Subarray', difficulty: 'Medium', url: lc('Maximum Product Subarray') },
-      { id: '82', title: 'Palindromic Substrings', difficulty: 'Medium', url: lc('Palindromic Substrings') },
+      { id: '72', title: 'Climbing Stairs', difficulty: 'Easy', url: lc('Climbing Stairs') },
+      { id: '73', title: 'House Robber', difficulty: 'Medium', url: lc('House Robber') },
+      { id: '74', title: 'Coin Change', difficulty: 'Medium', url: lc('Coin Change') },
+      { id: '75', title: 'Longest Increasing Subsequence', difficulty: 'Medium', url: lc('Longest Increasing Subsequence') },
+      { id: '76', title: 'Word Break', difficulty: 'Medium', url: lc('Word Break') },
+      { id: '77', title: 'Partition Equal Subset Sum', difficulty: 'Medium', url: lc('Partition Equal Subset Sum') },
+      { id: '78', title: 'Decode Ways', difficulty: 'Medium', url: lc('Decode Ways') },
+      { id: '79', title: 'Longest Palindromic Substring', difficulty: 'Medium', url: lc('Longest Palindromic Substring') },
+      { id: '80', title: 'Maximum Product Subarray', difficulty: 'Medium', url: lc('Maximum Product Subarray') },
+      { id: '81', title: 'Palindromic Substrings', difficulty: 'Medium', url: lc('Palindromic Substrings') },
     ]
   },
   // 12. Dynamic Programming — 2D
@@ -186,8 +185,8 @@ export const roadmapData: Category[] = [
     id: 'dp_2d',
     title: 'Dynamic Programming — 2D',
     questions: [
-      { id: '83', title: 'Unique Paths', difficulty: 'Medium', url: lc('Unique Paths') },
-      { id: '84', title: 'Longest Common Subsequence', difficulty: 'Medium', url: lc('Longest Common Subsequence') },
+      { id: '82', title: 'Unique Paths', difficulty: 'Medium', url: lc('Unique Paths') },
+      { id: '83', title: 'Longest Common Subsequence', difficulty: 'Medium', url: lc('Longest Common Subsequence') },
     ]
   },
   // 13. Greedy
@@ -195,9 +194,9 @@ export const roadmapData: Category[] = [
     id: 'greedy',
     title: 'Greedy',
     questions: [
-      { id: '85', title: 'Maximum Subarray', difficulty: 'Medium', url: lc('Maximum Subarray') },
-      { id: '86', title: 'Jump Game', difficulty: 'Medium', url: lc('Jump Game') },
-      { id: '87', title: 'Gas Station', difficulty: 'Medium', url: lc('Gas Station') },
+      { id: '84', title: 'Maximum Subarray', difficulty: 'Medium', url: lc('Maximum Subarray') },
+      { id: '85', title: 'Jump Game', difficulty: 'Medium', url: lc('Jump Game') },
+      { id: '86', title: 'Gas Station', difficulty: 'Medium', url: lc('Gas Station') },
     ]
   },
   // 14. Intervals
@@ -205,9 +204,9 @@ export const roadmapData: Category[] = [
     id: 'intervals',
     title: 'Intervals',
     questions: [
-      { id: '88', title: 'Merge Intervals', difficulty: 'Medium', url: lc('Merge Intervals') },
-      { id: '89', title: 'Insert Interval', difficulty: 'Medium', url: lc('Insert Interval') },
-      { id: '90', title: 'Non-overlapping Intervals', difficulty: 'Medium', url: lc('Non-overlapping Intervals') },
+      { id: '87', title: 'Merge Intervals', difficulty: 'Medium', url: lc('Merge Intervals') },
+      { id: '88', title: 'Insert Interval', difficulty: 'Medium', url: lc('Insert Interval') },
+      { id: '89', title: 'Non-overlapping Intervals', difficulty: 'Medium', url: lc('Non-overlapping Intervals') },
     ]
   },
   // 15. Bit Manipulation
@@ -215,10 +214,10 @@ export const roadmapData: Category[] = [
     id: 'bit_manipulation',
     title: 'Bit Manipulation',
     questions: [
-      { id: '91', title: 'Single Number', difficulty: 'Easy', url: lc('Single Number') },
-      { id: '92', title: 'Number of 1 Bits', difficulty: 'Easy', url: lc('Number of 1 Bits') },
-      { id: '93', title: 'Missing Number', difficulty: 'Easy', url: lc('Missing Number') },
-      { id: '94', title: 'Counting Bits', difficulty: 'Easy', url: lc('Counting Bits') },
+      { id: '90', title: 'Single Number', difficulty: 'Easy', url: lc('Single Number') },
+      { id: '91', title: 'Number of 1 Bits', difficulty: 'Easy', url: lc('Number of 1 Bits') },
+      { id: '92', title: 'Missing Number', difficulty: 'Easy', url: lc('Missing Number') },
+      { id: '93', title: 'Counting Bits', difficulty: 'Easy', url: lc('Counting Bits') },
     ]
   },
   // 16. Math & Geometry
@@ -226,9 +225,9 @@ export const roadmapData: Category[] = [
     id: 'math_geometry',
     title: 'Math & Geometry',
     questions: [
-      { id: '95', title: 'Rotate Image', difficulty: 'Medium', url: lc('Rotate Image') },
-      { id: '96', title: 'Spiral Matrix', difficulty: 'Medium', url: lc('Spiral Matrix') },
-      { id: '97', title: 'Set Matrix Zeroes', difficulty: 'Medium', url: lc('Set Matrix Zeroes') },
+      { id: '94', title: 'Rotate Image', difficulty: 'Medium', url: lc('Rotate Image') },
+      { id: '95', title: 'Spiral Matrix', difficulty: 'Medium', url: lc('Spiral Matrix') },
+      { id: '96', title: 'Set Matrix Zeroes', difficulty: 'Medium', url: lc('Set Matrix Zeroes') },
     ]
   },
 ];

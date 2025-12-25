@@ -22,7 +22,7 @@ const INITIAL_LAYOUT: Record<string, { x: number; y: number }> = {
   'stacks_monotonic': { x: 350, y: 220 },
 
   // Row 2 (440px)
-  'sliding_window': { x: -150, y: 440 },
+  'sliding_window': { x: -50, y: 440 },
   'linked_list': { x: 350, y: 440 },
   'binary_search_quickselect': { x: -450, y: 440 }, // Moved side to allow flow
 
