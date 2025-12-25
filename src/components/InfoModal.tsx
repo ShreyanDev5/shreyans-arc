@@ -39,7 +39,7 @@ const InfoModal: React.FC<InfoModalProps> = ({ isOpen, onClose }) => {
 
                 <div className="space-y-4 text-dark-text leading-relaxed">
                     <p className="text-[15px]">
-                        <span className="text-brand-primary font-semibold">96 handpicked problems.</span>{' '}
+                        <span className="text-brand-primary font-semibold">97 handpicked problems.</span>{' '}
                         The exact questions top companies ask—optimized for Freshers & SDE 1 roles.
                     </p>
 
