@@ -5,26 +5,25 @@ interface ConnectionLinesProps {
 }
 
 // Define the graph structure (adjacency list or edge list)
+// Define the graph structure (adjacency list or edge list)
 const CONNECTIONS = [
-    { from: 'arrays_hashing', to: 'core_sorting' },
+    { from: 'arrays_hashing', to: 'two_pointers' },
     { from: 'arrays_hashing', to: 'stacks_monotonic' },
-    { from: 'core_sorting', to: 'two_pointers_sliding_window' },
-    { from: 'two_pointers_sliding_window', to: 'binary_search_quickselect' },
-    { from: 'two_pointers_sliding_window', to: 'linked_list' },
+    { from: 'two_pointers', to: 'sliding_window' },
+    { from: 'two_pointers', to: 'binary_search_quickselect' },
+    { from: 'two_pointers', to: 'linked_list' },
+    // Binary Search flows to Trees? Or Sliding Window?
+    // Let's keep Binary Search -> Trees as it was
     { from: 'binary_search_quickselect', to: 'trees' },
-    { from: 'stacks_monotonic', to: 'trees' },
     { from: 'linked_list', to: 'trees' },
     { from: 'trees', to: 'trie' },
     { from: 'trees', to: 'heap_priority_queue' },
     { from: 'trees', to: 'backtracking' },
-    { from: 'backtracking', to: 'core_graph_basics' },
-    { from: 'core_graph_basics', to: 'graphs' },
-    { from: 'graphs', to: 'core_advanced_graph' },
-    { from: 'graphs', to: 'core_dp_patterns' },
-    { from: 'heap_priority_queue', to: 'core_advanced_graph' },
-    { from: 'core_advanced_graph', to: 'greedy' },
+    { from: 'backtracking', to: 'graphs' },
+    { from: 'heap_priority_queue', to: 'greedy' },
+    { from: 'graphs', to: 'greedy' },
+    { from: 'graphs', to: 'dp_1d' },
     { from: 'greedy', to: 'intervals' },
-    { from: 'core_dp_patterns', to: 'dp_1d' },
     { from: 'dp_1d', to: 'dp_2d' },
     { from: 'dp_1d', to: 'bit_manipulation' },
     { from: 'dp_2d', to: 'math_geometry' },
@@ -34,7 +33,8 @@ const CONNECTIONS = [
 // Standard height is ~60px (scaled), tall nodes need more.
 // These values are unscaled base heights.
 const CUSTOM_NODE_HEIGHTS: Record<string, number> = {
-    'two_pointers_sliding_window': 90,
+    'two_pointers': 90,
+    'sliding_window': 90,
     'binary_search_quickselect': 90,
     'heap_priority_queue': 90,
     'bit_manipulation': 90,

@@ -10,27 +10,44 @@ import InfoModal from './components/InfoModal';
 import { User } from 'firebase/auth';
 
 // Initial Layout Positions (Tree Structure)
+// Initial Layout Positions (Tree Structure)
+// Initial Layout Positions (Tree Structure)
+// Initial Layout Positions (Tree Structure)
 const INITIAL_LAYOUT: Record<string, { x: number; y: number }> = {
+  // Row 0 (0px)
   'arrays_hashing': { x: 100, y: 0 },
-  'core_sorting': { x: -150, y: 180 },
-  'stacks_monotonic': { x: 350, y: 180 },
-  'two_pointers_sliding_window': { x: -150, y: 360 },
-  'linked_list': { x: 350, y: 540 },
-  'binary_search_quickselect': { x: -150, y: 540 },
-  'trees': { x: 100, y: 720 },
-  'trie': { x: -200, y: 900 },
-  'heap_priority_queue': { x: 100, y: 900 },
-  'backtracking': { x: 400, y: 900 },
-  'core_graph_basics': { x: 400, y: 1080 },
-  'graphs': { x: 300, y: 1260 },
-  'core_advanced_graph': { x: 100, y: 1440 },
-  'core_dp_patterns': { x: 500, y: 1440 },
-  'greedy': { x: 100, y: 1620 },
-  'dp_1d': { x: 500, y: 1620 },
-  'bit_manipulation': { x: 900, y: 1800 },
-  'intervals': { x: 100, y: 1800 },
-  'dp_2d': { x: 500, y: 1800 },
-  'math_geometry': { x: 500, y: 1980 },
+
+  // Row 1 (220px)
+  'two_pointers': { x: -150, y: 220 },
+  'stacks_monotonic': { x: 350, y: 220 },
+
+  // Row 2 (440px)
+  'sliding_window': { x: -150, y: 440 },
+  'linked_list': { x: 350, y: 440 },
+  'binary_search_quickselect': { x: -450, y: 440 }, // Moved side to allow flow
+
+  // Row 3 (660px)
+  'trees': { x: 100, y: 660 },
+
+  // Row 4 (880px)
+  'trie': { x: -200, y: 880 },
+  'heap_priority_queue': { x: 100, y: 880 },
+  'backtracking': { x: 400, y: 880 },
+
+  // Row 5 (1100px)
+  'graphs': { x: 300, y: 1100 },
+
+  // Row 6 (1320px)
+  'greedy': { x: 100, y: 1320 },
+  'dp_1d': { x: 500, y: 1320 },
+
+  // Row 7 (1540px)
+  'intervals': { x: 100, y: 1540 },
+  'dp_2d': { x: 500, y: 1540 },
+  'bit_manipulation': { x: 900, y: 1540 },
+
+  // Row 8 (1760px)
+  'math_geometry': { x: 500, y: 1760 },
 };
 
 const App: React.FC = () => {
@@ -416,6 +433,7 @@ const App: React.FC = () => {
         <InfoModal
           isOpen={isInfoOpen}
           onClose={() => setIsInfoOpen(false)}
+          totalQuestions={totalQuestions}
         />
       </div>
 

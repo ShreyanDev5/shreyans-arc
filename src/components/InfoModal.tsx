@@ -3,9 +3,10 @@ import React, { useEffect } from 'react';
 interface InfoModalProps {
     isOpen: boolean;
     onClose: () => void;
+    totalQuestions: number;
 }
 
-const InfoModal: React.FC<InfoModalProps> = ({ isOpen, onClose }) => {
+const InfoModal: React.FC<InfoModalProps> = ({ isOpen, onClose, totalQuestions }) => {
     useEffect(() => {
         const handleEsc = (e: KeyboardEvent) => {
             if (e.key === 'Escape') onClose();
@@ -39,7 +40,7 @@ const InfoModal: React.FC<InfoModalProps> = ({ isOpen, onClose }) => {
 
                 <div className="space-y-4 text-dark-text leading-relaxed">
                     <p className="text-[15px]">
-                        <span className="text-brand-primary font-semibold">97 handpicked problems.</span>{' '}
+                        <span className="text-brand-primary font-semibold">{totalQuestions} handpicked problems.</span>{' '}
                         The exact questions top companies ask—optimized for Freshers & SDE 1 roles.
                     </p>
 
