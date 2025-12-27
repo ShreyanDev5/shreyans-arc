@@ -39,6 +39,8 @@ const CUSTOM_NODE_HEIGHTS: Record<string, number> = {
     'heap_priority_queue': 90,
     'bit_manipulation': 90,
     'math_geometry': 90,
+    'dp_1d': 90,
+    'dp_2d': 90,
     // Add others if needed based on visual inspection
 };
 

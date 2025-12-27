@@ -23,31 +23,31 @@ const INITIAL_LAYOUT: Record<string, { x: number; y: number }> = {
 
   // Row 2 (440px)
   'sliding_window': { x: -50, y: 440 },
-  'linked_list': { x: 350, y: 440 },
-  'binary_search_quickselect': { x: -450, y: 440 }, // Moved side to allow flow
+  'linked_list': { x: 300, y: 440 },
+  'binary_search_quickselect': { x: -400, y: 440 },
 
   // Row 3 (660px)
   'trees': { x: 100, y: 660 },
 
   // Row 4 (880px)
-  'trie': { x: -200, y: 880 },
+  'trie': { x: -250, y: 880 },
   'heap_priority_queue': { x: 100, y: 880 },
-  'backtracking': { x: 400, y: 880 },
+  'backtracking': { x: 450, y: 880 },
 
   // Row 5 (1100px)
   'graphs': { x: 300, y: 1100 },
 
   // Row 6 (1320px)
   'greedy': { x: 100, y: 1320 },
-  'dp_1d': { x: 500, y: 1320 },
+  'dp_1d': { x: 450, y: 1320 },
 
-  // Row 7 (1540px)
-  'intervals': { x: 100, y: 1540 },
-  'dp_2d': { x: 500, y: 1540 },
-  'bit_manipulation': { x: 900, y: 1540 },
+  // Row 7 (1520px)
+  'intervals': { x: 100, y: 1520 },
+  'dp_2d': { x: 450, y: 1520 },
+  'bit_manipulation': { x: 800, y: 1520 },
 
-  // Row 8 (1760px)
-  'math_geometry': { x: 500, y: 1760 },
+  // Row 8 (1720px)
+  'math_geometry': { x: 450, y: 1720 },
 };
 
 const App: React.FC = () => {
