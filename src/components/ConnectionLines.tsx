@@ -1,54 +1,16 @@
 import React from 'react';
+import {
+    CUSTOM_NODE_HEIGHTS,
+    ROADMAP_BASE_NODE_HEIGHT,
+    ROADMAP_CONNECTIONS,
+    ROADMAP_NODE_WIDTH,
+} from '../data/layout';
 
 interface ConnectionLinesProps {
     nodePositions: Record<string, { x: number; y: number }>;
 }
 
-// Define the graph structure (adjacency list or edge list)
-// Define the graph structure (adjacency list or edge list)
-const CONNECTIONS = [
-    { from: 'arrays_hashing', to: 'two_pointers' },
-    { from: 'arrays_hashing', to: 'stacks_monotonic' },
-    { from: 'two_pointers', to: 'sliding_window' },
-    { from: 'two_pointers', to: 'binary_search_quickselect' },
-    { from: 'two_pointers', to: 'linked_list' },
-    // Binary Search flows to Trees? Or Sliding Window?
-    // Let's keep Binary Search -> Trees as it was
-    { from: 'binary_search_quickselect', to: 'trees' },
-    { from: 'linked_list', to: 'trees' },
-    { from: 'trees', to: 'trie' },
-    { from: 'trees', to: 'heap_priority_queue' },
-    { from: 'trees', to: 'backtracking' },
-    { from: 'backtracking', to: 'graphs' },
-    { from: 'heap_priority_queue', to: 'greedy' },
-    { from: 'graphs', to: 'greedy' },
-    { from: 'graphs', to: 'dp_1d' },
-    { from: 'greedy', to: 'intervals' },
-    { from: 'dp_1d', to: 'dp_2d' },
-    { from: 'dp_1d', to: 'bit_manipulation' },
-    { from: 'dp_2d', to: 'math_geometry' },
-];
-
-// Static height configuration for nodes with wrapped text
-// Standard height is ~60px (scaled), tall nodes need more.
-// These values are unscaled base heights.
-const CUSTOM_NODE_HEIGHTS: Record<string, number> = {
-    'two_pointers': 90,
-    'sliding_window': 90,
-    'binary_search_quickselect': 90,
-    'heap_priority_queue': 90,
-    'bit_manipulation': 90,
-    'math_geometry': 90,
-    'dp_1d': 90,
-    'dp_2d': 90,
-    // Add others if needed based on visual inspection
-};
-
 const ConnectionLines: React.FC<ConnectionLinesProps> = ({ nodePositions }) => {
-    // Node dimensions (fixed base size)
-    const NODE_WIDTH = 240;
-    const BASE_NODE_HEIGHT = 60;
-
     return (
         <svg className="absolute inset-0 pointer-events-none overflow-visible" style={{ width: '100%', height: '100%' }}>
             <defs>
@@ -63,20 +25,20 @@ const ConnectionLines: React.FC<ConnectionLinesProps> = ({ nodePositions }) => {
                     <polygon points="0 0, 6 2, 0 4" fill="#FFFFFF" />
                 </marker>
             </defs>
-            {CONNECTIONS.map(({ from, to }, index) => {
+            {ROADMAP_CONNECTIONS.map(({ from, to }) => {
                 const start = nodePositions[from];
                 const end = nodePositions[to];
 
                 if (!start || !end) return null;
 
                 // Determine height for start node
-                const startBaseHeight = CUSTOM_NODE_HEIGHTS[from] || 60;
+                const startBaseHeight = CUSTOM_NODE_HEIGHTS[from] || ROADMAP_BASE_NODE_HEIGHT;
                 const startNodeHeight = startBaseHeight;
 
                 // Calculate center points in world space
-                const startX = start.x + NODE_WIDTH / 2;
+                const startX = start.x + ROADMAP_NODE_WIDTH / 2;
                 const startY = start.y + startNodeHeight;
-                const endX = end.x + NODE_WIDTH / 2;
+                const endX = end.x + ROADMAP_NODE_WIDTH / 2;
                 const endY = end.y;
 
                 // Vertical Bezier Curve with enhanced control for offset nodes

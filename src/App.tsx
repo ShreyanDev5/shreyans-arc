@@ -1,53 +1,33 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { lazy, Suspense, useState, useEffect, useRef, useCallback } from 'react';
 import { roadmapData, Category } from './data/questions';
 import { auth, googleProvider, signInWithPopup, firebaseSignOut, db, doc, onSnapshot, setDoc, isConfigured } from './lib/firebase';
-import { QuestionModal } from './components/QuestionModal';
+import { getDefaultViewport, INITIAL_LAYOUT, Position, ViewportTransform } from './data/layout';
 import Sidebar from './components/Sidebar';
-import SettingsPanel from './components/SettingsPanel';
 import RoadmapNode from './components/RoadmapNode';
 import ConnectionLines from './components/ConnectionLines';
-import InfoModal from './components/InfoModal';
-import { User } from 'firebase/auth';
+import type { User } from 'firebase/auth';
 
-// Initial Layout Positions (Tree Structure)
-// Initial Layout Positions (Tree Structure)
-// Initial Layout Positions (Tree Structure)
-// Initial Layout Positions (Tree Structure)
-const INITIAL_LAYOUT: Record<string, { x: number; y: number }> = {
-  // Row 0 (0px)
-  'arrays_hashing': { x: 100, y: 0 },
+const QuestionModal = lazy(async () => {
+  const module = await import('./components/QuestionModal');
+  return { default: module.QuestionModal };
+});
+const SettingsPanel = lazy(() => import('./components/SettingsPanel'));
+const InfoModal = lazy(() => import('./components/InfoModal'));
 
-  // Row 1 (220px)
-  'two_pointers': { x: -150, y: 220 },
-  'stacks_monotonic': { x: 350, y: 220 },
+const VALID_QUESTION_IDS = new Set(
+  roadmapData.flatMap((category) => category.questions.map((question) => question.id))
+);
 
-  // Row 2 (440px)
-  'sliding_window': { x: -50, y: 440 },
-  'linked_list': { x: 300, y: 440 },
-  'binary_search_quickselect': { x: -400, y: 440 },
+const createInitialNodePositions = (): Record<string, Position> => {
+  const positions = { ...INITIAL_LAYOUT };
 
-  // Row 3 (660px)
-  'trees': { x: 100, y: 660 },
+  roadmapData.forEach((category) => {
+    if (!positions[category.id]) {
+      positions[category.id] = { x: 0, y: 0 };
+    }
+  });
 
-  // Row 4 (880px)
-  'trie': { x: -250, y: 880 },
-  'heap_priority_queue': { x: 100, y: 880 },
-  'backtracking': { x: 450, y: 880 },
-
-  // Row 5 (1100px)
-  'graphs': { x: 300, y: 1100 },
-
-  // Row 6 (1320px)
-  'greedy': { x: 100, y: 1320 },
-  'dp_1d': { x: 450, y: 1320 },
-
-  // Row 7 (1520px)
-  'intervals': { x: 100, y: 1520 },
-  'dp_2d': { x: 450, y: 1520 },
-  'bit_manipulation': { x: 800, y: 1520 },
-
-  // Row 8 (1720px)
-  'math_geometry': { x: 450, y: 1720 },
+  return positions;
 };
 
 const App: React.FC = () => {
@@ -55,18 +35,9 @@ const App: React.FC = () => {
   const [user, setUser] = useState<User | null>(null);
   const [solvedIds, setSolvedIds] = useState<Set<string>>(new Set());
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
-  const [isAuthLoading, setIsAuthLoading] = useState(true);
 
   // --- State: UI ---
-  const [nodePositions, setNodePositions] = useState(() => {
-    const positions = { ...INITIAL_LAYOUT };
-    roadmapData.forEach(cat => {
-      if (!positions[cat.id]) {
-        positions[cat.id] = { x: 0, y: 0 };
-      }
-    });
-    return positions;
-  });
+  const [nodePositions, setNodePositions] = useState<Record<string, Position>>(createInitialNodePositions);
   const [settings, setSettings] = useState({ allowPan: true, allowZoom: true, allowDrag: false });
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -77,7 +48,7 @@ const App: React.FC = () => {
   const canvasRef = useRef<HTMLDivElement>(null);
 
   // Transform State (Source of Truth)
-  const transform = useRef({ x: 0, y: 0, scale: 1 });
+  const transform = useRef<ViewportTransform>({ x: 0, y: 0, scale: 1 });
 
   // Pointer State
   const pointers = useRef<Map<number, { x: number, y: number }>>(new Map());
@@ -103,60 +74,56 @@ const App: React.FC = () => {
 
   // Initialize View
   useEffect(() => {
-    // Center the graph initially
-    const padding = 100;
-    const width = window.innerWidth;
-    const height = window.innerHeight;
-
-    // Simple centering logic (can be improved with bounding box)
-    const isMobile = width < 768;
-    const initialScale = isMobile ? 0.35 : 0.6;
-    const centerOffset = isMobile ? 250 : 450;
-    const initialX = width / 2 - (centerOffset * initialScale); // Approx center of tree width
-    const initialY = 100;
-
-    transform.current = { x: initialX, y: initialY, scale: initialScale };
+    transform.current = getDefaultViewport(window.innerWidth);
     updateTransform();
   }, [updateTransform]);
 
   // --- Firebase Auth & Data Sync ---
   useEffect(() => {
-    if (!isConfigured) return;
+    if (!isConfigured || !auth || !db) return;
 
-    // Create a Set of all valid question IDs for integrity checking
-    const validQuestionIds = new Set<string>();
-    roadmapData.forEach(cat => {
-      cat.questions.forEach(q => validQuestionIds.add(q.id));
-    });
+    const filterValidIds = (ids: string[]) => ids.filter((id) => VALID_QUESTION_IDS.has(id));
+    let unsubscribeSnapshot: (() => void) | undefined;
 
-    const filterValidIds = (ids: string[]) => {
-      return ids.filter(id => validQuestionIds.has(id));
-    };
+    const unsubscribeAuth = auth.onAuthStateChanged((currentUser) => {
+      unsubscribeSnapshot?.();
+      unsubscribeSnapshot = undefined;
 
-    const unsubscribe = auth.onAuthStateChanged((currentUser) => {
       setUser(currentUser);
-      setIsAuthLoading(false);
+
       if (currentUser) {
         const userRef = doc(db, 'users', currentUser.uid);
-        return onSnapshot(userRef, (docSnap) => {
+        unsubscribeSnapshot = onSnapshot(userRef, (docSnap) => {
           if (docSnap.exists()) {
             const data = docSnap.data();
             const validSolved = filterValidIds(data.solved || []);
             setSolvedIds(new Set(validSolved));
+            return;
           }
-          else setDoc(userRef, { solved: [] }, { merge: true });
+          setDoc(userRef, { solved: [] }, { merge: true });
         });
+        return;
       }
-      else {
-        const local = localStorage.getItem('shreyans-arc-guest');
-        if (local) {
+
+      const local = localStorage.getItem('shreyans-arc-guest');
+      if (local) {
+        try {
           const parsed = JSON.parse(local);
           const validSolved = filterValidIds(parsed);
           setSolvedIds(new Set(validSolved));
+          return;
+        } catch {
+          localStorage.removeItem('shreyans-arc-guest');
         }
       }
+
+      setSolvedIds(new Set());
     });
-    return () => unsubscribe();
+
+    return () => {
+      unsubscribeSnapshot?.();
+      unsubscribeAuth();
+    };
   }, []);
 
   const toggleQuestion = async (id: string) => {
@@ -165,26 +132,21 @@ const App: React.FC = () => {
     else newSet.add(id);
     setSolvedIds(newSet);
     const idsArray = Array.from(newSet);
-    if (user) await setDoc(doc(db, 'users', user.uid), { solved: idsArray }, { merge: true });
+    if (user && db) await setDoc(doc(db, 'users', user.uid), { solved: idsArray }, { merge: true });
     else localStorage.setItem('shreyans-arc-guest', JSON.stringify(idsArray));
   };
 
   const handleLogin = async () => {
+    if (!auth || !googleProvider) return;
+
     try { await signInWithPopup(auth, googleProvider); }
     catch (error) { console.error(error); alert("Login failed."); }
   };
 
   const resetView = () => {
-    const width = window.innerWidth;
-    const isMobile = width < 768;
-    const initialScale = isMobile ? 0.35 : 0.6;
-    const centerOffset = isMobile ? 250 : 450;
-    const initialX = width / 2 - (centerOffset * initialScale);
-    const initialY = 100;
-
-    transform.current = { x: initialX, y: initialY, scale: initialScale };
+    transform.current = getDefaultViewport(window.innerWidth);
     updateTransform();
-    setNodePositions(INITIAL_LAYOUT);
+    setNodePositions(createInitialNodePositions());
   };
 
   // --- Interaction Handlers ---
@@ -400,7 +362,11 @@ const App: React.FC = () => {
           overallProgress={overallProgress}
           user={user}
           onLogin={handleLogin}
-          onLogout={() => firebaseSignOut(auth)}
+          onLogout={() => {
+            if (auth) {
+              return firebaseSignOut(auth);
+            }
+          }}
           onOpenSettings={() => setIsSettingsOpen(true)}
           onReset={resetView}
           onOpenInfo={() => setIsInfoOpen(true)}
@@ -424,17 +390,19 @@ const App: React.FC = () => {
       )}
 
       <div className="sidebar-ignore">
-        <SettingsPanel
-          settings={settings}
-          onToggle={(key) => setSettings(prev => ({ ...prev, [key]: !prev[key] }))}
-          isOpen={isSettingsOpen}
-          onClose={() => setIsSettingsOpen(false)}
-        />
-        <InfoModal
-          isOpen={isInfoOpen}
-          onClose={() => setIsInfoOpen(false)}
-          totalQuestions={totalQuestions}
-        />
+        <Suspense fallback={null}>
+          <SettingsPanel
+            settings={settings}
+            onToggle={(key) => setSettings(prev => ({ ...prev, [key]: !prev[key] }))}
+            isOpen={isSettingsOpen}
+            onClose={() => setIsSettingsOpen(false)}
+          />
+          <InfoModal
+            isOpen={isInfoOpen}
+            onClose={() => setIsInfoOpen(false)}
+            totalQuestions={totalQuestions}
+          />
+        </Suspense>
       </div>
 
       {/* Canvas Container */}
@@ -476,13 +444,15 @@ const App: React.FC = () => {
       {/* Modal */}
       {selectedCategory && (
         <div className="sidebar-ignore">
-          <QuestionModal
-            category={selectedCategory}
-            isOpen={!!selectedCategory}
-            onClose={() => setSelectedCategory(null)}
-            solvedIds={solvedIds}
-            toggleQuestion={toggleQuestion}
-          />
+          <Suspense fallback={null}>
+            <QuestionModal
+              category={selectedCategory}
+              isOpen={!!selectedCategory}
+              onClose={() => setSelectedCategory(null)}
+              solvedIds={solvedIds}
+              toggleQuestion={toggleQuestion}
+            />
+          </Suspense>
         </div>
       )}
     </div>
