@@ -1,5 +1,5 @@
 import React, { useMemo, useEffect } from 'react';
-import { Category, Question } from '../data/questions';
+import { Category } from '../data/questions';
 import clsx from 'clsx';
 
 interface QuestionModalProps {

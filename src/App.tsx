@@ -80,9 +80,30 @@ const App: React.FC = () => {
 
   // --- Firebase Auth & Data Sync ---
   useEffect(() => {
-    if (!isConfigured || !auth || !db) return;
-
     const filterValidIds = (ids: string[]) => ids.filter((id) => VALID_QUESTION_IDS.has(id));
+
+    // Fallback helper to load local guest progress
+    const loadLocalProgress = () => {
+      const local = localStorage.getItem('shreyans-arc-guest');
+      if (local) {
+        try {
+          const parsed = JSON.parse(local);
+          const validSolved = filterValidIds(parsed);
+          setSolvedIds(new Set(validSolved));
+          return;
+        } catch {
+          localStorage.removeItem('shreyans-arc-guest');
+        }
+      }
+      setSolvedIds(new Set());
+    };
+
+    if (!isConfigured || !auth || !db) {
+      // Firebase not configured: load guest progress from localStorage immediately
+      loadLocalProgress();
+      return;
+    }
+
     let unsubscribeSnapshot: (() => void) | undefined;
 
     const unsubscribeAuth = auth.onAuthStateChanged((currentUser) => {
@@ -105,19 +126,8 @@ const App: React.FC = () => {
         return;
       }
 
-      const local = localStorage.getItem('shreyans-arc-guest');
-      if (local) {
-        try {
-          const parsed = JSON.parse(local);
-          const validSolved = filterValidIds(parsed);
-          setSolvedIds(new Set(validSolved));
-          return;
-        } catch {
-          localStorage.removeItem('shreyans-arc-guest');
-        }
-      }
-
-      setSolvedIds(new Set());
+      // If user logs out or is a guest on configured app
+      loadLocalProgress();
     });
 
     return () => {
@@ -137,7 +147,10 @@ const App: React.FC = () => {
   };
 
   const handleLogin = async () => {
-    if (!auth || !googleProvider) return;
+    if (!isConfigured || !auth || !googleProvider) {
+      alert("Firebase is not configured. Cloud sync is unavailable; progress is saved locally as a guest.");
+      return;
+    }
 
     try { await signInWithPopup(auth, googleProvider); }
     catch (error) { console.error(error); alert("Login failed."); }
@@ -348,8 +361,6 @@ const App: React.FC = () => {
   const totalQuestions = roadmapData.reduce((acc, cat) => acc + cat.questions.length, 0);
   const totalSolved = solvedIds.size;
   const overallProgress = totalQuestions > 0 ? Math.round((totalSolved / totalQuestions) * 100) : 0;
-
-  if (!isConfigured) return <div className="text-white p-10">Config Required</div>;
 
   return (
     <div className="relative w-screen h-screen overflow-hidden bg-dark-bg text-dark-text font-sans selection:bg-brand-primary/30">
