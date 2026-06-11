@@ -41,7 +41,7 @@ const InfoModal: React.FC<InfoModalProps> = ({ isOpen, onClose, totalQuestions }
                 <div className="space-y-4 text-dark-text leading-relaxed">
                     <p className="text-[15px]">
                         <span className="text-brand-primary font-semibold">{totalQuestions} handpicked problems.</span>{' '}
-                        The exact questions top companies ask—optimized for new grads & SDE-1 roles.
+                        The exact questions top companies ask—optimized for New Grads & SDE-1 roles.
                     </p>
 
                     <div className="space-y-2 text-sm text-dark-muted">
