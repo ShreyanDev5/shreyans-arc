@@ -23,7 +23,7 @@ const InfoModal: React.FC<InfoModalProps> = ({ isOpen, onClose, totalQuestions }
             onClick={onClose}
         >
             <div
-                className="bg-dark-card border border-dark-border rounded-lg p-6 shadow-2xl w-[500px] max-w-[90vw] transform transition-all scale-100 relative"
+                className="bg-dark-card border border-dark-border rounded-lg p-5 shadow-2xl w-[500px] max-w-[90vw] transform transition-all scale-100 relative"
                 onClick={(e) => e.stopPropagation()}
             >
                 <button
@@ -36,9 +36,9 @@ const InfoModal: React.FC<InfoModalProps> = ({ isOpen, onClose, totalQuestions }
                     </svg>
                 </button>
 
-                <h2 className="text-2xl font-bold text-white mb-3">Your DSA Interview Roadmap</h2>
+                <h2 className="text-2xl font-bold text-white mb-2">Your DSA Interview Roadmap</h2>
 
-                <div className="space-y-4 text-dark-text leading-relaxed">
+                <div className="space-y-3 text-dark-text leading-relaxed">
                     <p className="text-[15px]">
                         <span className="text-brand-primary font-semibold">{totalQuestions} handpicked problems.</span>{' '}
                         The exact questions top companies ask—optimized for New Grads & SDE-1 roles.
@@ -51,13 +51,13 @@ const InfoModal: React.FC<InfoModalProps> = ({ isOpen, onClose, totalQuestions }
                     </div>
 
                     {/* J-Void Sister App Section */}
-                    <div className="mt-6 pt-5 border-t border-dark-border">
-                        <div className="bg-gradient-to-br from-[#1a1a2e] to-[#16213e] rounded-xl p-5 border border-[#2a2a4a]">
+                    <div className="mt-4 pt-4 border-t border-dark-border">
+                        <div className="bg-gradient-to-br from-[#1a1a2e] to-[#16213e] rounded-xl p-4 border border-[#2a2a4a]">
                             <div className="flex items-center gap-2 mb-2">
                                 <span className="text-lg">✨</span>
                                 <h3 className="text-white font-semibold text-base">J-Void – Java Practice</h3>
                             </div>
-                            <p className="text-dark-muted text-sm leading-relaxed mb-4">
+                            <p className="text-dark-muted text-sm leading-relaxed mb-3">
                                 A distraction-free environment to practice Java.<br />
                                 <span className="text-dark-text">No execution, no output, no noise—just you and the code.</span>
                             </p>
@@ -77,7 +77,7 @@ const InfoModal: React.FC<InfoModalProps> = ({ isOpen, onClose, totalQuestions }
                         </div>
                     </div>
 
-                    <p className="text-xs text-dark-muted text-center pt-2">
+                    <p className="text-xs text-dark-muted text-center pt-1">
                         Inspired by <a href="https://neetcode.io" target="_blank" rel="noopener noreferrer" className="text-brand-primary hover:underline">NeetCode.io</a> · Good luck crushing those interviews! 🚀
                     </p>
                 </div>
