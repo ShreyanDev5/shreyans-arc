@@ -148,7 +148,7 @@ const App: React.FC = () => {
 
   const handleLogin = async () => {
     if (!isConfigured || !auth || !googleProvider) {
-      alert("Firebase is not configured. Cloud sync is unavailable; progress is saved locally as a guest.");
+      alert("Firebase configuration not found. Your progress will be saved locally on this browser.");
       return;
     }
 

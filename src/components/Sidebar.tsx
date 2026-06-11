@@ -30,7 +30,7 @@ const Sidebar: React.FC<SidebarProps> = ({
 }) => {
     const getMotivationalMessage = (progress: number, solved: number) => {
         if (progress === 100) return "Mastery Unlocked! You're ready. 🚀";
-        if (progress === 0) return "Your journey to SDE-1 starts here.";
+        if (progress === 0) return "Your journey starts here.";
 
         const messages = {
             early: [ // 1-24%

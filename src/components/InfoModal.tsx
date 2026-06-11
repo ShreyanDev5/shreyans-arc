@@ -41,7 +41,7 @@ const InfoModal: React.FC<InfoModalProps> = ({ isOpen, onClose, totalQuestions }
                 <div className="space-y-4 text-dark-text leading-relaxed">
                     <p className="text-[15px]">
                         <span className="text-brand-primary font-semibold">{totalQuestions} handpicked problems.</span>{' '}
-                        The exact questions top companies ask—optimized for Freshers & SDE 1 roles.
+                        The exact questions top companies ask—optimized for new grads & SDE-1 roles.
                     </p>
 
                     <div className="space-y-2 text-sm text-dark-muted">
@@ -55,10 +55,10 @@ const InfoModal: React.FC<InfoModalProps> = ({ isOpen, onClose, totalQuestions }
                         <div className="bg-gradient-to-br from-[#1a1a2e] to-[#16213e] rounded-xl p-5 border border-[#2a2a4a]">
                             <div className="flex items-center gap-2 mb-2">
                                 <span className="text-lg">✨</span>
-                                <h3 className="text-white font-semibold text-base">J-Void – Java Syntax Practice</h3>
+                                <h3 className="text-white font-semibold text-base">J-Void – Java Practice</h3>
                             </div>
                             <p className="text-dark-muted text-sm leading-relaxed mb-4">
-                                Your distraction-free sanctuary for mastering Java syntax.<br />
+                                A distraction-free environment to practice Java.<br />
                                 <span className="text-dark-text">No execution, no output, no noise—just you and the code.</span>
                             </p>
                             <a
