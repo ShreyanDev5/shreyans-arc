@@ -4,14 +4,14 @@ An interactive Data Structures & Algorithms (DSA) roadmap and progress tracker. 
 
 ![Shreyan's Arc Home Page](public/readme_home_page.png)
 
-## Tech Stack
+## 🛠️ Tech Stack
 
 - **Frontend**: React 19, TypeScript, Tailwind CSS, Vite
 - **Backend/Auth**: Firebase (Firestore, Google Sign-In)
 
 ---
 
-## Features
+## ✨ Features
 
 - **Interactive Canvas**: Pan, zoom, and drag nodes to customize your roadmap layout.
 - **Pattern Tracking**: Focus on handpicked questions grouped by DSA patterns.
@@ -20,7 +20,7 @@ An interactive Data Structures & Algorithms (DSA) roadmap and progress tracker. 
 
 ---
 
-## Local Setup
+## 🚀 Local Setup
 
 ### 1. Clone & Install
 ```bash
@@ -55,7 +55,7 @@ Open `http://localhost:5173` (or the port shown in your terminal).
 
 ---
 
-## Build
+## 📦 Build
 
 ```bash
 npm run build
