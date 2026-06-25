@@ -28,25 +28,23 @@ const ConnectionLines: React.FC<ConnectionLinesProps> = ({ nodePositions, solved
             <defs>
                 <marker
                     id="arrowhead-incomplete"
-                    markerWidth="10"
-                    markerHeight="7"
-                    refX="9"
-                    refY="3.5"
+                    markerWidth="6"
+                    markerHeight="4.5"
+                    refX="5"
+                    refY="2.25"
                     orient="auto"
-                    markerUnits="userSpaceOnUse"
                 >
-                    <polygon points="1 1, 9 3.5, 1 6" fill="#3b82f6" />
+                    <polygon points="1 0.75, 5 2.25, 1 3.75" fill="#3b82f6" />
                 </marker>
                 <marker
                     id="arrowhead-completed"
-                    markerWidth="10"
-                    markerHeight="7"
-                    refX="9"
-                    refY="3.5"
+                    markerWidth="6"
+                    markerHeight="4.5"
+                    refX="5"
+                    refY="2.25"
                     orient="auto"
-                    markerUnits="userSpaceOnUse"
                 >
-                    <polygon points="1 1, 9 3.5, 1 6" fill="#10b981" />
+                    <polygon points="1 0.75, 5 2.25, 1 3.75" fill="#10b981" />
                 </marker>
             </defs>
             {ROADMAP_CONNECTIONS.map(({ from, to }) => {
@@ -65,14 +63,18 @@ const ConnectionLines: React.FC<ConnectionLinesProps> = ({ nodePositions, solved
                 const endX = end.x + ROADMAP_NODE_WIDTH / 2;
                 const endY = end.y - 1; // Terminate line exactly on the node's top border for perfect arrowhead alignment
 
-                // Vertical Bezier Curve with enhanced control for offset nodes
-                const distY = endY - startY;
+                // Shared Vertical Trunk Routing (Path Merging)
+                const TRUNK_HEIGHT = 35;
+                const adjStartY = startY + TRUNK_HEIGHT;
+
+                // Vertical Bezier Curve from trunk end
+                const distY = endY - adjStartY;
                 const distX = Math.abs(endX - startX);
 
                 // Smoother, gentler curve transition to prevent arrowhead misalignment on curves
                 const controlOffset = Math.min(distY * 0.45 + distX * 0.05, 110);
 
-                const path = `M ${startX} ${startY} C ${startX} ${startY + controlOffset}, ${endX} ${endY - controlOffset}, ${endX} ${endY}`;
+                const path = `M ${startX} ${startY} L ${startX} ${adjStartY} C ${startX} ${adjStartY + controlOffset}, ${endX} ${endY - controlOffset}, ${endX} ${endY}`;
 
                 // A path is active/unlocked if its starting node has been fully completed
                 const active = isCategoryComplete(from);
