@@ -50,24 +50,34 @@ const RoadmapNode: React.FC<RoadmapNodeProps> = ({
                 if (!isDragging) onClick(category);
             }}
             className={clsx(
-                "group cursor-pointer select-none transition-shadow duration-300 overflow-hidden",
-                "rounded-xl border border-dark-border",
-                isComplete ? "bg-[#16a34a] shadow-none" : "bg-[#923B0F] shadow-lg" // Vibrant green for complete, specific red-brown for incomplete
+                "group cursor-pointer select-none transition-all duration-300 overflow-hidden",
+                "rounded-xl border shadow-md",
+                isComplete 
+                    ? "bg-brand-accent/5 border-brand-accent/50 hover:border-brand-accent hover:bg-brand-accent/10" 
+                    : "bg-dark-card border-dark-border hover:border-brand-primary/50 hover:bg-dark-highlight/20"
             )}
         >
             {/* Minimal Progress Bar */}
-            <div className="absolute bottom-0 left-0 right-0 bg-black/20" style={{ height: '8px' }}>
+            <div className="absolute bottom-0 left-0 right-0 bg-black/25" style={{ height: '4px' }}>
                 <div
-                    className="h-full bg-[#16a34a] transition-all duration-500"
+                    className={clsx(
+                        "h-full transition-all duration-500",
+                        isComplete ? "bg-brand-accent" : "bg-brand-primary"
+                    )}
                     style={{ width: `${progress}%` }}
                 />
             </div>
 
             {/* Content */}
-            <div className="relative flex items-center justify-center" style={{ padding: '24px 20px' }}>
-                <span className="font-semibold text-white text-center" style={{ fontSize: '1em' }}>
+            <div className="relative flex flex-col items-center justify-center gap-1.5" style={{ padding: '20px 16px 24px 16px' }}>
+                <span className="font-semibold text-white text-center leading-tight" style={{ fontSize: '0.9em' }}>
                     {category.title}
                 </span>
+                {total > 0 && (
+                    <span className="text-xs font-mono text-dark-muted group-hover:text-dark-text/80 transition-colors">
+                        {solved} / {total}
+                    </span>
+                )}
             </div>
         </div>
     );

@@ -1,22 +1,24 @@
-# 🌌 Shreyan's Arc
+# Shreyan's Arc
 
-An interactive, premium **Data Structures & Algorithms (DSA) Roadmap** and progress tracker. Build your algorithmic foundations and prepare for technical interviews with a gorgeous, fluid, and gamified roadmap.
+An interactive Data Structures & Algorithms (DSA) roadmap and progress tracker. Built to study coding patterns and track interview prep.
 
-Built with **React 19**, **TypeScript**, **Vite**, and **Firebase**.
+## Tech Stack
 
----
-
-## ✨ Features
-
-- **🗺️ Interactive Infinite Canvas** — Smooth panning, zooming, and customizable drag-and-drop node layout editing.
-- **📈 Pattern-Based Tracking** — Handpicked, essential questions categorized by core patterns (Easy, Medium, Hard).
-- **💾 Auto-Degrading Guest Mode** — Zero-setup required! Runs instantly in guest mode, storing progress locally in your browser (`localStorage`).
-- **☁️ Firebase Cloud Sync** — Authenticate securely with Google to sync and save your progress across any device.
-- **⚡ Reactive Connections** — Watch your learning path unlock and glow in real-time as you master each topic.
+- **Frontend**: React 19, TypeScript, Tailwind CSS, Vite
+- **Backend/Auth**: Firebase (Firestore, Google Sign-In)
 
 ---
 
-## 🚀 Getting Started
+## Features
+
+- **Interactive Canvas**: Pan, zoom, and drag nodes to customize your roadmap layout.
+- **Pattern Tracking**: Focus on handpicked questions grouped by DSA patterns.
+- **Guest Mode**: Works instantly. Saves progress to `localStorage` with zero configuration.
+- **Cloud Sync**: Log in with Google to sync progress across multiple devices.
+
+---
+
+## Local Setup
 
 ### 1. Clone & Install
 ```bash
@@ -25,57 +27,38 @@ cd shreyans-arc
 npm install
 ```
 
-### 2. Configure (Optional)
-If you want to enable cloud sync across devices, configure Firebase:
-1. Copy `.env.example` to `.env`
-2. Fill in your Firebase Project Configuration keys:
-```env
-VITE_FIREBASE_API_KEY=your_api_key
-VITE_FIREBASE_AUTH_DOMAIN=your_auth_domain
-VITE_FIREBASE_PROJECT_ID=your_project_id
-...
-```
-*Note: If no `.env` is detected, the app automatically runs in local-first **Guest Mode**.*
+### 2. Configure Firebase (Optional)
+If you do not configure Firebase, the app runs in **Guest Mode** (saving progress to local storage). To enable Cloud Sync:
 
-### 3. Run Locally
+1. Copy `.env.example` to `.env`:
+   ```bash
+   cp .env.example .env
+   ```
+2. Create a project in the Firebase Console, enable **Google Sign-In** and **Firestore Database**.
+3. Fill in your project keys in `.env`:
+   ```env
+   VITE_FIREBASE_API_KEY=
+   VITE_FIREBASE_AUTH_DOMAIN=
+   VITE_FIREBASE_PROJECT_ID=
+   VITE_FIREBASE_STORAGE_BUCKET=
+   VITE_FIREBASE_MESSAGING_SENDER_ID=
+   VITE_FIREBASE_APP_ID=
+   ```
+
+### 3. Run
 ```bash
 npm run dev
 ```
-Open your browser at `http://localhost:3000`.
+Open `http://localhost:5173` (or the port shown in your terminal).
 
 ---
 
-## 🛠️ Build & Deployment
+## Build
 
-### Production Bundle
 ```bash
-# Build the optimized production bundle
 npm run build
-
-# Preview the production build locally
-npm run preview
 ```
-
-### Deployment
-Refer to [DEPLOYMENT.md](file:///c:/Projects/shreyans-arc/DEPLOYMENT.md) for detailed guidelines on launching the project on platforms like Vercel.
+Production assets are generated in the `/dist` folder. See [DEPLOYMENT.md](file:///c:/Projects/shreyans-arc/DEPLOYMENT.md) for deployment steps.
 
 ---
-
-## 📂 Project Structure
-
-```
-├── public/              # Static assets (logo, favicon)
-├── src/
-│   ├── components/      # UI Modals, Sidebar, and SVG Canvas layers
-│   ├── data/            # Layout configurations and questions database
-│   ├── lib/             # Third-party integrations (Firebase setup)
-│   ├── App.tsx          # Main Canvas coordinator, state management, and events
-│   ├── index.tsx        # React entry-point
-│   └── vite-env.d.ts    # TypeScript definitions
-├── index.html           # Main HTML document and Tailwind play configuration
-├── package.json         # Dependencies & scripts
-└── tsconfig.json        # TypeScript configuration
-```
-
----
-*Inspired by NeetCode.io · Good luck crushing those technical interviews! 🚀*
+*Inspired by NeetCode.io.*

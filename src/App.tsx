@@ -363,7 +363,7 @@ const App: React.FC = () => {
   const overallProgress = totalQuestions > 0 ? Math.round((totalSolved / totalQuestions) * 100) : 0;
 
   return (
-    <div className="relative w-screen h-screen overflow-hidden bg-dark-bg text-dark-text font-sans selection:bg-brand-primary/30">
+    <div className="relative w-screen h-screen overflow-hidden bg-dark-bg text-dark-text font-sans selection:bg-brand-primary/30 grid-bg">
 
       {/* UI Layer */}
       <div className="sidebar-ignore">
@@ -383,6 +383,7 @@ const App: React.FC = () => {
           onOpenInfo={() => setIsInfoOpen(true)}
           isOpen={isSidebarOpen}
           onClose={() => setIsSidebarOpen(false)}
+          isConfigured={isConfigured}
         />
       </div>
 
@@ -435,6 +436,7 @@ const App: React.FC = () => {
         >
           <ConnectionLines
             nodePositions={nodePositions}
+            solvedIds={solvedIds}
           />
 
           {roadmapData.map(category => (

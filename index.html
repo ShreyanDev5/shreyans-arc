@@ -23,20 +23,20 @@
           },
           colors: {
             dark: {
-              bg: '#1a1a1a',       // Deepest Black/Gray
-              card: '#242424',     // Slightly lighter for cards/sidebar
-              border: '#333333',   // Subtle borders
-              highlight: '#333333',// Hover states
-              text: '#f8fafc',     // Primary text
-              muted: '#94a3b8',    // Secondary text
+              bg: '#08090c',       // Premium deepest slate/black
+              card: '#11131c',     // Sleek slate cards
+              border: '#1f2230',   // Thin subtle borders
+              highlight: '#2a2e40',// Subtle hover states
+              text: '#f8fafc',     // Slate white text
+              muted: '#64748b',    // Slate gray muted text
             },
             brand: {
-              primary: '#3b82f6',      // Solid Blue (NeetCode style)
-              primaryHover: '#2563eb', // Darker Blue
-              secondary: '#8b5cf6',    // Purple accent
-              accent: '#10b981',       // Green (Completed)
-              danger: '#ef4444',       // Red
-              warning: '#f59e0b',      // Amber
+              primary: '#3b82f6',      // Slate blue
+              primaryHover: '#2563eb', // Active state
+              secondary: '#6366f1',    // Indigo accent
+              accent: '#10b981',       // Emerald (Completed state)
+              danger: '#ef4444',       
+              warning: '#f59e0b',      
             }
           },
           animation: {
@@ -59,9 +59,15 @@
   </script>
   <style>
     body {
-      background-color: #1a1a1a;
+      background-color: #08090c;
       color: #f8fafc;
       -webkit-font-smoothing: antialiased;
+    }
+
+    /* Minimal Dotted Grid Pattern */
+    .grid-bg {
+      background-image: radial-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+      background-size: 24px 24px;
     }
 
     /* Custom Scrollbar */
@@ -71,16 +77,16 @@
     }
 
     ::-webkit-scrollbar-track {
-      background: #1a1a1a;
+      background: #08090c;
     }
 
     ::-webkit-scrollbar-thumb {
-      background: #334155;
+      background: #1f2230;
       border-radius: 3px;
     }
 
     ::-webkit-scrollbar-thumb:hover {
-      background: #475569;
+      background: #2a2e40;
     }
 
     /* Checkbox Animation */

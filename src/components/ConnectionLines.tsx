@@ -5,24 +5,46 @@ import {
     ROADMAP_CONNECTIONS,
     ROADMAP_NODE_WIDTH,
 } from '../data/layout';
+import { roadmapData } from '../data/questions';
 
 interface ConnectionLinesProps {
     nodePositions: Record<string, { x: number; y: number }>;
+    solvedIds: Set<string>;
 }
 
-const ConnectionLines: React.FC<ConnectionLinesProps> = ({ nodePositions }) => {
+const ConnectionLines: React.FC<ConnectionLinesProps> = ({ nodePositions, solvedIds }) => {
+    // Helper to check if a category is complete
+    const isCategoryComplete = (catId: string) => {
+        const category = roadmapData.find(c => c.id === catId);
+        if (!category) return false;
+        const total = category.questions.length;
+        if (total === 0) return false;
+        const solved = category.questions.filter(q => solvedIds.has(q.id)).length;
+        return solved === total;
+    };
+
     return (
         <svg className="absolute inset-0 pointer-events-none overflow-visible" style={{ width: '100%', height: '100%' }}>
             <defs>
                 <marker
-                    id="arrowhead"
+                    id="arrowhead-muted"
                     markerWidth="6"
                     markerHeight="4"
                     refX="5"
                     refY="2"
                     orient="auto"
                 >
-                    <polygon points="0 0, 6 2, 0 4" fill="#FFFFFF" />
+                    <polygon points="0 0, 6 2, 0 4" fill="#1f2230" />
+                </marker>
+                <marker
+                    id="arrowhead-completed"
+                    markerWidth="6"
+                    markerHeight="4"
+                    refX="5"
+                    refY="2"
+                    orient="auto"
+                >
+                    <polygon points="0 0, 6 2, 0 4" fill="#10b981" />
                 </marker>
             </defs>
             {ROADMAP_CONNECTIONS.map(({ from, to }) => {
@@ -46,21 +68,22 @@ const ConnectionLines: React.FC<ConnectionLinesProps> = ({ nodePositions }) => {
                 const distX = Math.abs(endX - startX);
 
                 // Increase control point offset for horizontal distances to ensure vertical entry
-                // Base offset is half of vertical distance, but we clamp it
-                // For offset nodes, we want a "stiffer" curve at the end
                 const controlOffset = Math.min(distY * 0.6 + distX * 0.1, 150);
 
                 const path = `M ${startX} ${startY} C ${startX} ${startY + controlOffset}, ${endX} ${endY - controlOffset}, ${endX} ${endY}`;
+
+                // A path is active/unlocked if its starting node has been fully completed
+                const active = isCategoryComplete(from);
 
                 return (
                     <path
                         key={`${from}-${to}`}
                         d={path}
-                        stroke="#FFFFFF"
-                        strokeWidth={3}
+                        stroke={active ? "#10b981" : "#1f2230"}
+                        strokeWidth={2}
                         fill="none"
-                        className=""
-                        markerEnd="url(#arrowhead)"
+                        className="transition-colors duration-500"
+                        markerEnd={active ? "url(#arrowhead-completed)" : "url(#arrowhead-muted)"}
                         vectorEffect="non-scaling-stroke"
                     />
                 );

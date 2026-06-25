@@ -13,6 +13,7 @@ interface SidebarProps {
     onOpenInfo: () => void;
     isOpen: boolean;
     onClose: () => void;
+    isConfigured: boolean;
 }
 
 const Sidebar: React.FC<SidebarProps> = ({
@@ -26,7 +27,8 @@ const Sidebar: React.FC<SidebarProps> = ({
     onReset,
     onOpenInfo,
     isOpen,
-    onClose
+    onClose,
+    isConfigured
 }) => {
     const getMotivationalMessage = (progress: number, solved: number) => {
         if (progress === 100) return "Mastery Unlocked! You're ready. 🚀";
@@ -107,9 +109,9 @@ const Sidebar: React.FC<SidebarProps> = ({
                     <span>Total Progress</span>
                     <span className="text-white">{totalSolved} / {totalQuestions}</span>
                 </div>
-                <div className="w-full h-3 bg-dark-bg border border-dark-border rounded-full overflow-hidden">
+                <div className="w-full h-2 bg-dark-bg border border-dark-border rounded-full overflow-hidden">
                     <div
-                        className="h-full bg-[#16a34a] transition-all duration-700 ease-out shadow-[0_0_10px_rgba(22,163,74,0.4)]"
+                        className="h-full bg-brand-accent transition-all duration-700 ease-out"
                         style={{ width: `${overallProgress}%` }}
                     />
                 </div>
@@ -158,7 +160,12 @@ const Sidebar: React.FC<SidebarProps> = ({
                 </div>
 
                 {/* Auth Button */}
-                {user ? (
+                {!isConfigured ? (
+                    <div className="w-full py-2.5 px-4 rounded-lg bg-dark-bg border border-dark-border text-center text-xs font-mono text-dark-muted flex items-center justify-center gap-2 select-none">
+                        <span className="w-1.5 h-1.5 rounded-full bg-brand-accent" />
+                        Guest Mode (Local Storage)
+                    </div>
+                ) : user ? (
                     <button
                         onClick={onLogout}
                         className="w-full py-2 px-4 rounded-lg border border-dark-border text-dark-muted hover:text-white hover:bg-dark-bg transition-all text-sm font-medium flex items-center justify-center gap-2"
@@ -175,9 +182,15 @@ const Sidebar: React.FC<SidebarProps> = ({
                 ) : (
                     <button
                         onClick={onLogin}
-                        className="w-full py-2 px-4 rounded-lg bg-[#1d4ed8] text-white font-medium text-sm hover:bg-[#1e40af] transition-all shadow-lg shadow-blue-600/20"
+                        className="w-full py-2 px-4 rounded-lg bg-white hover:bg-slate-100 text-slate-900 font-semibold text-sm transition-all flex items-center justify-center gap-2.5 shadow-sm border border-slate-200"
                     >
-                        Login to Save Progress
+                        <svg className="w-4 h-4" viewBox="0 0 24 24">
+                            <path
+                                fill="#EA4335"
+                                d="M12.24 10.285V14.4h6.887c-.648 2.41-2.519 4.114-5.136 4.114A5.53 5.53 0 0 1 8.4 13a5.53 5.53 0 0 1 5.59-5.514c1.5 0 2.87.513 3.927 1.486l3.181-3.18A9.9 9.9 0 0 0 14 2C8.477 2 4 6.477 4 12s4.477 10 10 10c5.77 0 9.4-4.054 9.4-9.59 0-.648-.057-1.285-.16-1.875H12.24Z"
+                            />
+                        </svg>
+                        Sign in with Google
                     </button>
                 )}
             </div>        </div>
