@@ -28,23 +28,25 @@ const ConnectionLines: React.FC<ConnectionLinesProps> = ({ nodePositions, solved
             <defs>
                 <marker
                     id="arrowhead-incomplete"
-                    markerWidth="8"
-                    markerHeight="6"
-                    refX="8"
-                    refY="3"
+                    markerWidth="10"
+                    markerHeight="7"
+                    refX="9"
+                    refY="3.5"
                     orient="auto"
+                    markerUnits="userSpaceOnUse"
                 >
-                    <polygon points="0 0, 8 3, 0 6" fill="#3b82f6" />
+                    <polygon points="1 1, 9 3.5, 1 6" fill="#3b82f6" />
                 </marker>
                 <marker
                     id="arrowhead-completed"
-                    markerWidth="8"
-                    markerHeight="6"
-                    refX="8"
-                    refY="3"
+                    markerWidth="10"
+                    markerHeight="7"
+                    refX="9"
+                    refY="3.5"
                     orient="auto"
+                    markerUnits="userSpaceOnUse"
                 >
-                    <polygon points="0 0, 8 3, 0 6" fill="#10b981" />
+                    <polygon points="1 1, 9 3.5, 1 6" fill="#10b981" />
                 </marker>
             </defs>
             {ROADMAP_CONNECTIONS.map(({ from, to }) => {
@@ -61,7 +63,7 @@ const ConnectionLines: React.FC<ConnectionLinesProps> = ({ nodePositions, solved
                 const startX = start.x + ROADMAP_NODE_WIDTH / 2;
                 const startY = start.y + startNodeHeight;
                 const endX = end.x + ROADMAP_NODE_WIDTH / 2;
-                const endY = end.y - 8; // Terminate line 8px above target node border to prevent arrowhead overlaps
+                const endY = end.y - 1; // Terminate line exactly on the node's top border for perfect arrowhead alignment
 
                 // Vertical Bezier Curve with enhanced control for offset nodes
                 const distY = endY - startY;
