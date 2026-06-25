@@ -7,7 +7,7 @@ export interface ViewportTransform extends Position {
   scale: number;
 }
 
-export const ROADMAP_NODE_WIDTH = 240;
+export const ROADMAP_NODE_WIDTH = 280;
 export const ROADMAP_BASE_NODE_HEIGHT = 60;
 
 export const INITIAL_LAYOUT: Record<string, Position> = {

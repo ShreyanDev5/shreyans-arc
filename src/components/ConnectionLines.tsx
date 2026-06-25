@@ -27,14 +27,14 @@ const ConnectionLines: React.FC<ConnectionLinesProps> = ({ nodePositions, solved
         <svg className="absolute inset-0 pointer-events-none overflow-visible" style={{ width: '100%', height: '100%' }}>
             <defs>
                 <marker
-                    id="arrowhead-muted"
+                    id="arrowhead-incomplete"
                     markerWidth="6"
                     markerHeight="4"
                     refX="5"
                     refY="2"
                     orient="auto"
                 >
-                    <polygon points="0 0, 6 2, 0 4" fill="#1f2230" />
+                    <polygon points="0 0, 6 2, 0 4" fill="#3b82f6" />
                 </marker>
                 <marker
                     id="arrowhead-completed"
@@ -79,11 +79,11 @@ const ConnectionLines: React.FC<ConnectionLinesProps> = ({ nodePositions, solved
                     <path
                         key={`${from}-${to}`}
                         d={path}
-                        stroke={active ? "#10b981" : "#1f2230"}
-                        strokeWidth={2}
+                        stroke={active ? "#10b981" : "#3b82f6"}
+                        strokeWidth={3}
                         fill="none"
                         className="transition-colors duration-500"
-                        markerEnd={active ? "url(#arrowhead-completed)" : "url(#arrowhead-muted)"}
+                        markerEnd={active ? "url(#arrowhead-completed)" : "url(#arrowhead-incomplete)"}
                         vectorEffect="non-scaling-stroke"
                     />
                 );

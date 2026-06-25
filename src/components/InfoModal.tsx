@@ -52,23 +52,23 @@ const InfoModal: React.FC<InfoModalProps> = ({ isOpen, onClose, totalQuestions }
 
                     {/* J-Void Sister App Section */}
                     <div className="mt-4 pt-4 border-t border-dark-border">
-                        <div className="bg-gradient-to-br from-[#1a1a2e] to-[#16213e] rounded-xl p-4 border border-[#2a2a4a]">
+                        <div className="bg-dark-bg/60 border border-dark-border rounded-xl p-4">
                             <div className="flex items-center gap-2 mb-2">
                                 <span className="text-lg">✨</span>
                                 <h3 className="text-white font-semibold text-base">J-Void – Java Practice</h3>
                             </div>
                             <p className="text-dark-muted text-sm leading-relaxed mb-3">
                                 A distraction-free environment to practice Java.<br />
-                                <span className="text-dark-text">No execution, no output, no noise—just you and the code.</span>
+                                <span className="text-dark-text font-medium">No execution, no output, no noise—just you and the code.</span>
                             </p>
                             <a
                                 href="https://j-void.vercel.app/"
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="inline-flex items-center gap-2 px-4 py-2 bg-[#b45309] hover:bg-[#92400e] text-white text-sm font-medium rounded-lg transition-all shadow-lg shadow-amber-600/25 hover:shadow-amber-600/40"
+                                className="inline-flex items-center gap-2 px-3 py-1.5 border border-dark-border hover:border-brand-primary/60 hover:bg-dark-highlight text-white text-xs font-semibold rounded-lg transition-all"
                             >
                                 Try it now
-                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                                     <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
                                     <polyline points="15 3 21 3 21 9"></polyline>
                                     <line x1="10" y1="14" x2="21" y2="3"></line>
@@ -77,7 +77,7 @@ const InfoModal: React.FC<InfoModalProps> = ({ isOpen, onClose, totalQuestions }
                         </div>
                     </div>
 
-                    <p className="text-xs text-dark-muted text-center pt-1">
+                    <p className="text-[11px] text-dark-muted text-center pt-2">
                         Inspired by <a href="https://neetcode.io" target="_blank" rel="noopener noreferrer" className="text-brand-primary hover:underline">NeetCode.io</a> · Good luck crushing those interviews! 🚀
                     </p>
                 </div>

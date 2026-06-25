@@ -1,6 +1,7 @@
 import React from 'react';
 import clsx from 'clsx';
 import { Category } from '../data/questions';
+import { ROADMAP_NODE_WIDTH } from '../data/layout';
 
 interface RoadmapNodeProps {
     category: Category;
@@ -32,9 +33,8 @@ const RoadmapNode: React.FC<RoadmapNodeProps> = ({
         position: 'absolute',
         left: 0,
         top: 0,
-        width: '240px',
+        width: `${ROADMAP_NODE_WIDTH}px`,
         zIndex: 20,
-        fontSize: '20px',
     };
 
     const handleMouseDown = (e: React.MouseEvent) => {
@@ -51,10 +51,10 @@ const RoadmapNode: React.FC<RoadmapNodeProps> = ({
             }}
             className={clsx(
                 "group cursor-pointer select-none transition-all duration-300 overflow-hidden",
-                "rounded-xl border shadow-md",
+                "rounded-xl border-2 shadow-md",
                 isComplete 
-                    ? "bg-brand-accent/5 border-brand-accent/50 hover:border-brand-accent hover:bg-brand-accent/10" 
-                    : "bg-dark-card border-dark-border hover:border-brand-primary/50 hover:bg-dark-highlight/20"
+                    ? "bg-[#059669] border-[#059669] hover:bg-[#047857] hover:border-[#047857]" 
+                    : "bg-[#202020] border-dark-border hover:border-brand-primary/60 hover:bg-[#282828]"
             )}
         >
             {/* Minimal Progress Bar */}
@@ -69,12 +69,15 @@ const RoadmapNode: React.FC<RoadmapNodeProps> = ({
             </div>
 
             {/* Content */}
-            <div className="relative flex flex-col items-center justify-center gap-1.5" style={{ padding: '20px 16px 24px 16px' }}>
-                <span className="font-semibold text-white text-center leading-tight" style={{ fontSize: '0.9em' }}>
+            <div className="relative flex flex-col items-center justify-center gap-1.5" style={{ padding: '24px 20px 28px 20px' }}>
+                <span className="font-bold text-white text-center leading-tight text-[16px] tracking-wide">
                     {category.title}
                 </span>
                 {total > 0 && (
-                    <span className="text-xs font-mono text-dark-muted group-hover:text-dark-text/80 transition-colors">
+                    <span className={clsx(
+                        "text-xs font-mono transition-colors",
+                        isComplete ? "text-emerald-100/90" : "text-dark-muted group-hover:text-white/80"
+                    )}>
                         {solved} / {total}
                     </span>
                 )}

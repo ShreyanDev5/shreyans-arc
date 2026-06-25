@@ -104,7 +104,7 @@ const Sidebar: React.FC<SidebarProps> = ({
             </div>
 
             {/* Progress Section */}
-            <div className="py-9 px-5">
+            <div className="py-6 px-5">
                 <div className="flex justify-between text-sm font-medium text-dark-muted mb-2">
                     <span>Total Progress</span>
                     <span className="text-white">{totalSolved} / {totalQuestions}</span>
@@ -115,7 +115,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                         style={{ width: `${overallProgress}%` }}
                     />
                 </div>
-                <p className="text-xs text-dark-muted mt-3 text-center h-4 flex items-center justify-center transition-all duration-300">
+                <p className="text-xs font-mono text-dark-muted mt-3 text-center h-4 flex items-center justify-center transition-all duration-300 select-none">
                     {getMotivationalMessage(overallProgress, totalSolved)}
                 </p>
             </div>
