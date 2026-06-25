@@ -30,7 +30,7 @@ const ConnectionLines: React.FC<ConnectionLinesProps> = ({ nodePositions, solved
                     id="arrowhead-incomplete"
                     markerWidth="6"
                     markerHeight="4.5"
-                    refX="5"
+                    refX="1"
                     refY="2.25"
                     orient="auto"
                 >
@@ -40,7 +40,7 @@ const ConnectionLines: React.FC<ConnectionLinesProps> = ({ nodePositions, solved
                     id="arrowhead-completed"
                     markerWidth="6"
                     markerHeight="4.5"
-                    refX="5"
+                    refX="1"
                     refY="2.25"
                     orient="auto"
                 >
@@ -61,20 +61,26 @@ const ConnectionLines: React.FC<ConnectionLinesProps> = ({ nodePositions, solved
                 const startX = start.x + ROADMAP_NODE_WIDTH / 2;
                 const startY = start.y + startNodeHeight;
                 const endX = end.x + ROADMAP_NODE_WIDTH / 2;
-                const endY = end.y - 1; // Terminate line exactly on the node's top border for perfect arrowhead alignment
+                const endY = end.y - 21; // Terminate path 21px above target node (exactly at the base of the 20px arrowhead)
 
-                // Shared Vertical Trunk Routing (Path Merging)
-                const TRUNK_HEIGHT = 35;
-                const adjStartY = startY + TRUNK_HEIGHT;
+                // Outgoing trunk (from parent node bottom center) - 35px if multiple outgoing, 15px if single
+                const outgoingCount = ROADMAP_CONNECTIONS.filter(conn => conn.from === from).length;
+                const outTrunk = outgoingCount > 1 ? 35 : 15;
+                const adjStartY = startY + outTrunk;
 
-                // Vertical Bezier Curve from trunk end
-                const distY = endY - adjStartY;
+                // Incoming trunk (to child node top center) - 35px if multiple incoming, 15px if single
+                const incomingCount = ROADMAP_CONNECTIONS.filter(conn => conn.to === to).length;
+                const inTrunk = incomingCount > 1 ? 35 : 15;
+                const adjEndY = endY - inTrunk;
+
+                // Vertical Bezier Curve between trunk endpoints
+                const distY = adjEndY - adjStartY;
                 const distX = Math.abs(endX - startX);
 
                 // Smoother, gentler curve transition to prevent arrowhead misalignment on curves
                 const controlOffset = Math.min(distY * 0.45 + distX * 0.05, 110);
 
-                const path = `M ${startX} ${startY} L ${startX} ${adjStartY} C ${startX} ${adjStartY + controlOffset}, ${endX} ${endY - controlOffset}, ${endX} ${endY}`;
+                const path = `M ${startX} ${startY} L ${startX} ${adjStartY} C ${startX} ${adjStartY + controlOffset}, ${endX} ${adjEndY - controlOffset}, ${endX} ${adjEndY} L ${endX} ${endY}`;
 
                 // A path is active/unlocked if its starting node has been fully completed
                 const active = isCategoryComplete(from);
@@ -84,7 +90,7 @@ const ConnectionLines: React.FC<ConnectionLinesProps> = ({ nodePositions, solved
                         key={`${from}-${to}`}
                         d={path}
                         stroke={active ? "#10b981" : "#3b82f6"}
-                        strokeWidth={4}
+                        strokeWidth={5}
                         fill="none"
                         className="transition-colors duration-500"
                         markerEnd={active ? "url(#arrowhead-completed)" : "url(#arrowhead-incomplete)"}

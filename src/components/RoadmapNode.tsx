@@ -51,7 +51,8 @@ const RoadmapNode: React.FC<RoadmapNodeProps> = ({
                 if (!isDragging) onClick(category);
             }}
             className={clsx(
-                "group cursor-pointer select-none transition-all duration-300 overflow-hidden",
+                "group cursor-pointer select-none overflow-hidden",
+                !isDragging && "transition-all duration-300",
                 "rounded-xl border-2 shadow-md",
                 isComplete 
                     ? "bg-[#059669] border-[#059669] hover:bg-[#047857] hover:border-[#047857]" 
@@ -72,13 +73,13 @@ const RoadmapNode: React.FC<RoadmapNodeProps> = ({
             </div>
 
             {/* Content */}
-            <div className="relative flex flex-col items-center justify-center gap-1.5" style={{ padding: '24px 20px 28px 20px' }}>
-                <span className="font-bold text-white text-center leading-tight text-[16px] tracking-wide">
+            <div className="relative flex flex-col items-center justify-center gap-1.5" style={{ padding: '18px 20px 24px 20px' }}>
+                <span className="font-bold text-white text-center leading-tight text-[18px] tracking-wide">
                     {category.title}
                 </span>
                 {total > 0 && (
                     <span className={clsx(
-                        "text-xs font-mono transition-colors",
+                        "text-sm font-mono transition-colors",
                         isComplete ? "text-emerald-100/90" : "text-dark-muted group-hover:text-white/80"
                     )}>
                         {solved} / {total}

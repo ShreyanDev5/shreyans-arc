@@ -7,27 +7,27 @@ export interface ViewportTransform extends Position {
   scale: number;
 }
 
-export const ROADMAP_NODE_WIDTH = 280;
+export const ROADMAP_NODE_WIDTH = 320;
 export const ROADMAP_BASE_NODE_HEIGHT = 60;
 
 export const INITIAL_LAYOUT: Record<string, Position> = {
   arrays_hashing: { x: 100, y: 0 },
-  two_pointers: { x: -200, y: 260 },
-  stacks_monotonic: { x: 400, y: 260 },
-  binary_search_quickselect: { x: -550, y: 520 },
-  sliding_window: { x: -100, y: 520 },
-  linked_list: { x: 350, y: 520 },
-  trees: { x: 100, y: 780 },
-  trie: { x: -320, y: 1040 },
-  heap_priority_queue: { x: 100, y: 1040 },
-  backtracking: { x: 520, y: 1040 },
-  graphs: { x: 380, y: 1300 },
-  greedy: { x: 60, y: 1560 },
-  dp_1d: { x: 540, y: 1560 },
-  intervals: { x: 60, y: 1820 },
-  dp_2d: { x: 540, y: 1820 },
-  bit_manipulation: { x: 1020, y: 1820 },
-  math_geometry: { x: 540, y: 2080 },
+  two_pointers: { x: -200, y: 290 },
+  stacks_monotonic: { x: 400, y: 290 },
+  binary_search_quickselect: { x: -550, y: 580 },
+  sliding_window: { x: -100, y: 580 },
+  linked_list: { x: 350, y: 580 },
+  trees: { x: 100, y: 870 },
+  trie: { x: -320, y: 1160 },
+  heap_priority_queue: { x: 100, y: 1160 },
+  backtracking: { x: 520, y: 1160 },
+  graphs: { x: 380, y: 1450 },
+  greedy: { x: 60, y: 1740 },
+  dp_1d: { x: 540, y: 1740 },
+  intervals: { x: 60, y: 2030 },
+  dp_2d: { x: 540, y: 2030 },
+  bit_manipulation: { x: 1020, y: 2030 },
+  math_geometry: { x: 540, y: 2320 },
 };
 
 export const ROADMAP_CONNECTIONS = [
