@@ -2,6 +2,9 @@
 
 An interactive Data Structures & Algorithms (DSA) roadmap and progress tracker. Built to study coding patterns and track interview prep.
 
+![Shreyan's Arc Home Page](public/readme_home_page.png)
+
+
 ## Tech Stack
 
 - **Frontend**: React 19, TypeScript, Tailwind CSS, Vite
