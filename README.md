@@ -60,7 +60,7 @@ Open `http://localhost:5173` (or the port shown in your terminal).
 ```bash
 npm run build
 ```
-Production assets are generated in the `/dist` folder. See [DEPLOYMENT.md](DEPLOYMENT.md) for deployment steps.
+Production assets are generated in the `/dist` folder.
 
 ---
 *Inspired by NeetCode.io.*
