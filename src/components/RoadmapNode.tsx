@@ -25,6 +25,7 @@ const RoadmapNode: React.FC<RoadmapNodeProps> = ({
     const total = category.questions.length;
     const solved = category.questions.filter(q => solvedIds.has(q.id)).length;
     const isComplete = solved === total && total > 0;
+    const isInProgress = solved > 0 && !isComplete;
     const progress = total > 0 ? Math.round((solved / total) * 100) : 0;
 
     // Dynamic styles for positioning and sizing
@@ -54,7 +55,9 @@ const RoadmapNode: React.FC<RoadmapNodeProps> = ({
                 "rounded-xl border-2 shadow-md",
                 isComplete 
                     ? "bg-[#059669] border-[#059669] hover:bg-[#047857] hover:border-[#047857]" 
-                    : "bg-[#202020] border-dark-border hover:border-brand-primary/60 hover:bg-[#282828]"
+                    : isInProgress
+                        ? "bg-[#202020] border-brand-primary/80 hover:border-brand-primary hover:bg-[#2c2c2c]"
+                        : "bg-[#202020] border-dark-border hover:border-brand-primary/60 hover:bg-[#2c2c2c]"
             )}
         >
             {/* Minimal Progress Bar */}

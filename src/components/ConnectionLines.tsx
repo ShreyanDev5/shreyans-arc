@@ -28,23 +28,23 @@ const ConnectionLines: React.FC<ConnectionLinesProps> = ({ nodePositions, solved
             <defs>
                 <marker
                     id="arrowhead-incomplete"
-                    markerWidth="6"
-                    markerHeight="4"
-                    refX="5"
-                    refY="2"
+                    markerWidth="8"
+                    markerHeight="6"
+                    refX="8"
+                    refY="3"
                     orient="auto"
                 >
-                    <polygon points="0 0, 6 2, 0 4" fill="#3b82f6" />
+                    <polygon points="0 0, 8 3, 0 6" fill="#3b82f6" />
                 </marker>
                 <marker
                     id="arrowhead-completed"
-                    markerWidth="6"
-                    markerHeight="4"
-                    refX="5"
-                    refY="2"
+                    markerWidth="8"
+                    markerHeight="6"
+                    refX="8"
+                    refY="3"
                     orient="auto"
                 >
-                    <polygon points="0 0, 6 2, 0 4" fill="#10b981" />
+                    <polygon points="0 0, 8 3, 0 6" fill="#10b981" />
                 </marker>
             </defs>
             {ROADMAP_CONNECTIONS.map(({ from, to }) => {
@@ -61,14 +61,14 @@ const ConnectionLines: React.FC<ConnectionLinesProps> = ({ nodePositions, solved
                 const startX = start.x + ROADMAP_NODE_WIDTH / 2;
                 const startY = start.y + startNodeHeight;
                 const endX = end.x + ROADMAP_NODE_WIDTH / 2;
-                const endY = end.y;
+                const endY = end.y - 8; // Terminate line 8px above target node border to prevent arrowhead overlaps
 
                 // Vertical Bezier Curve with enhanced control for offset nodes
                 const distY = endY - startY;
                 const distX = Math.abs(endX - startX);
 
-                // Increase control point offset for horizontal distances to ensure vertical entry
-                const controlOffset = Math.min(distY * 0.6 + distX * 0.1, 150);
+                // Smoother, gentler curve transition to prevent arrowhead misalignment on curves
+                const controlOffset = Math.min(distY * 0.45 + distX * 0.05, 110);
 
                 const path = `M ${startX} ${startY} C ${startX} ${startY + controlOffset}, ${endX} ${endY - controlOffset}, ${endX} ${endY}`;
 
