@@ -4,7 +4,6 @@ An interactive Data Structures & Algorithms (DSA) roadmap and progress tracker. 
 
 ![Shreyan's Arc Home Page](public/readme_home_page.png)
 
-
 ## Tech Stack
 
 - **Frontend**: React 19, TypeScript, Tailwind CSS, Vite
@@ -61,7 +60,7 @@ Open `http://localhost:5173` (or the port shown in your terminal).
 ```bash
 npm run build
 ```
-Production assets are generated in the `/dist` folder. See [DEPLOYMENT.md](file:///c:/Projects/shreyans-arc/DEPLOYMENT.md) for deployment steps.
+Production assets are generated in the `/dist` folder. See [DEPLOYMENT.md](DEPLOYMENT.md) for deployment steps.
 
 ---
 *Inspired by NeetCode.io.*
