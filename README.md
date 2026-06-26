@@ -9,6 +9,7 @@ An interactive Data Structures & Algorithms (DSA) roadmap and progress tracker. 
 - **Frontend**: React 19, TypeScript, Tailwind CSS, Vite
 - **Backend/Auth**: Firebase (Firestore, Google Sign-In)
 - **AI Tools**: GitHub Copilot, Antigravity
+- **Deployment**: Vercel
 
 ---
 
@@ -65,3 +66,10 @@ Production assets are generated in the `/dist` folder.
 
 ---
 *Inspired by NeetCode.io.*
+
+---
+
+## 🌐 Deployment
+
+- **Platform**: Vercel
+
