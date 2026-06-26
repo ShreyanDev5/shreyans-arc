@@ -89,8 +89,8 @@ const Sidebar: React.FC<SidebarProps> = ({
         >
             {/* Header */}
             <div className="p-5 border-b border-dark-border flex justify-between items-start">
-                <div className="flex items-center gap-3">
-                    <img src="/logo.svg" alt="Logo" className="w-8 h-8" />
+                <div className="flex items-center gap-1.5">
+                    <img src="/logo.svg" alt="Logo" className="w-[26px] h-[26px] relative -top-[1px]" />
                     <div>
                         <h2 className="text-xl font-bold text-white leading-tight">Shreyan's Arc</h2>
                     </div>
