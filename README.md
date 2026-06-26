@@ -1,4 +1,4 @@
-# <img src="public/logo_readme.svg" width="28" height="28" align="middle"> Shreyan's Arc
+# <img src="public/logo_readme_v2.svg" width="28" height="28" align="middle"> Shreyan's Arc
 
 An interactive Data Structures & Algorithms (DSA) roadmap and progress tracker. Built to study coding patterns and track interview prep.
 
