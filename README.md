@@ -1,3 +1,5 @@
+![Shreyan's Arc Logo](public/logo.svg)
+
 # Shreyan's Arc
 
 An interactive Data Structures & Algorithms (DSA) roadmap and progress tracker. Built to study coding patterns and track interview prep.
@@ -8,6 +10,7 @@ An interactive Data Structures & Algorithms (DSA) roadmap and progress tracker. 
 
 - **Frontend**: React 19, TypeScript, Tailwind CSS, Vite
 - **Backend/Auth**: Firebase (Firestore, Google Sign-In)
+- **AI Tools**: GitHub Copilot, Antigravity
 
 ---
 
