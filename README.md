@@ -71,5 +71,6 @@ Production assets are generated in the `/dist` folder.
 
 ## 🌐 Deployment
 
-- **Platform**: Vercel
+- **Platform**: [Vercel](https://vercel.com)
+- **Live Link**: [shreyans-arc.vercel.app](https://shreyans-arc.vercel.app)
 
