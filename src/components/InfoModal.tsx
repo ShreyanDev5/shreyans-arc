@@ -6,7 +6,7 @@ interface InfoModalProps {
     totalQuestions: number;
 }
 
-const InfoModal: React.FC<InfoModalProps> = ({ isOpen, onClose, totalQuestions }) => {
+const InfoModal: React.FC<InfoModalProps> = ({ isOpen, onClose }) => {
     useEffect(() => {
         const handleEsc = (e: KeyboardEvent) => {
             if (e.key === 'Escape') onClose();
@@ -38,28 +38,23 @@ const InfoModal: React.FC<InfoModalProps> = ({ isOpen, onClose, totalQuestions }
 
                 <h2 className="text-2xl font-bold text-white mb-2">Your DSA Interview Roadmap</h2>
 
-                <div className="space-y-3 text-dark-text leading-relaxed">
-                    <p className="text-[15px]">
-                        <span className="text-brand-primary font-semibold">{totalQuestions} handpicked problems.</span>{' '}
-                        The exact questions top companies ask—optimized for New Grads & SDE-1 roles.
+                <div className="space-y-4 text-dark-text leading-relaxed">
+                    <p className="text-sm leading-relaxed text-dark-text">
+                        Combines the <a href="https://neetcode.io" target="_blank" rel="noopener noreferrer" className="text-brand-primary font-medium hover:underline">Blind 75 list (popularized by NeetCode)</a> with key problems from <a href="https://seanprashad.com/leetcode-patterns/" target="_blank" rel="noopener noreferrer" className="text-brand-primary font-medium hover:underline">Sean Prashad&apos;s LeetCode Patterns</a>—built to master essential DSA patterns in minimal time.
                     </p>
 
                     <div className="space-y-2 text-sm text-dark-muted">
-                        <p>🎯 <span className="text-white">Click nodes</span> to reveal pattern-specific questions</p>
-                        <p>📈 <span className="text-white">Track progress</span> as you solve and watch your bar grow</p>
-                        <p>🗺️ <span className="text-white">Follow the path</span>—arrows guide the optimal learning order</p>
+                        <p>📌 <span className="text-white font-medium">Click nodes</span> to view pattern-specific questions</p>
+                        <p>📌 <span className="text-white font-medium">Track progress</span> as you solve problems</p>
+                        <p>📌 <span className="text-white font-medium">Follow arrows</span> for the optimal learning sequence</p>
                     </div>
 
-                    {/* J-Void Sister App Section */}
+                    {/* J-Void Project Section */}
                     <div className="mt-4 pt-4 border-t border-dark-border">
                         <div className="bg-dark-bg/60 border border-dark-border rounded-xl p-4">
-                            <div className="flex items-center gap-2 mb-2">
-                                <span className="text-lg">✨</span>
-                                <h3 className="text-white font-semibold text-base">J-Void – Java Practice</h3>
-                            </div>
+                            <h3 className="text-white font-semibold text-base mb-1.5">J-Void – Java Practice</h3>
                             <p className="text-dark-muted text-sm leading-relaxed mb-3">
-                                A distraction-free environment to practice Java.<br />
-                                <span className="text-dark-text font-medium">No execution, no output, no noise—just you and the code.</span>
+                                Check out <span className="text-white font-medium">J-Void</span>, another project of mine offering a distraction-free Java coding environment—no execution, no output, no noise.
                             </p>
                             <a
                                 href="https://j-void.vercel.app/"
@@ -67,7 +62,7 @@ const InfoModal: React.FC<InfoModalProps> = ({ isOpen, onClose, totalQuestions }
                                 rel="noopener noreferrer"
                                 className="inline-flex items-center gap-2 px-3 py-1.5 border border-dark-border hover:border-brand-primary/60 hover:bg-dark-highlight text-white text-xs font-semibold rounded-lg transition-all"
                             >
-                                Try it now
+                                Explore J-Void
                                 <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                                     <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
                                     <polyline points="15 3 21 3 21 9"></polyline>
@@ -76,10 +71,6 @@ const InfoModal: React.FC<InfoModalProps> = ({ isOpen, onClose, totalQuestions }
                             </a>
                         </div>
                     </div>
-
-                    <p className="text-[11px] text-dark-muted text-center pt-2">
-                        Inspired by <a href="https://neetcode.io" target="_blank" rel="noopener noreferrer" className="text-brand-primary hover:underline">NeetCode.io</a> · Good luck crushing those interviews! 🚀
-                    </p>
                 </div>
             </div>
         </div>
