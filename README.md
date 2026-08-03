@@ -16,7 +16,7 @@ An interactive Data Structures & Algorithms (DSA) roadmap and progress tracker. 
 ## ✨ Features
 
 - **Interactive Canvas**: Pan, zoom, and drag nodes to customize your roadmap layout.
-- **Pattern Tracking**: Focus on handpicked questions grouped by DSA patterns.
+- **Pattern Tracking**: Focus on 58 handpicked questions grouped across 17 essential DSA patterns.
 - **Guest Mode**: Works instantly. Saves progress to `localStorage` with zero configuration.
 - **Cloud Sync**: Log in with Google to sync progress across multiple devices.
 
