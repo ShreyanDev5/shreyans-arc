@@ -50,7 +50,7 @@ export const roadmapData: Category[] = [
       { id: '19', title: 'Best Time to Buy and Sell Stock', difficulty: 'Easy', url: lc('Best Time to Buy and Sell Stock') },
     ]
   },
-  // 4. Stacks & Monotonic (4 questions)
+  // 4. Stacks & Monotonic (3 questions)
   {
     id: 'stacks_monotonic',
     title: 'Stacks & Monotonic',
@@ -58,7 +58,6 @@ export const roadmapData: Category[] = [
       { id: '21', title: 'Valid Parentheses', difficulty: 'Easy', url: lc('Valid Parentheses') },
       { id: '22', title: 'Min Stack', difficulty: 'Medium', url: lc('Min Stack') },
       { id: '23', title: 'Daily Temperatures', difficulty: 'Medium', url: lc('Daily Temperatures') },
-      { id: '25', title: 'Largest Rectangle in Histogram', difficulty: 'Hard', url: lc('Largest Rectangle in Histogram') },
     ]
   },
   // 5. Binary Search & Quickselect (3 questions)
@@ -102,12 +101,11 @@ export const roadmapData: Category[] = [
       { id: '45', title: 'Implement Trie (Prefix Tree)', difficulty: 'Medium', url: lc('Implement Trie (Prefix Tree)') },
     ]
   },
-  // 9. Heap / Priority Queue (3 questions)
+  // 9. Heap / Priority Queue (2 questions)
   {
     id: 'heap_priority_queue',
     title: 'Heap / Priority Queue',
     questions: [
-      { id: '47', title: 'Kth Largest Element in a Stream', difficulty: 'Easy', url: lc('Kth Largest Element in a Stream') },
       { id: '48', title: 'Merge k Sorted Lists', difficulty: 'Hard', url: lc('Merge k Sorted Lists') },
       { id: '49', title: 'Task Scheduler', difficulty: 'Medium', url: lc('Task Scheduler') },
     ]
@@ -133,8 +131,8 @@ export const roadmapData: Category[] = [
       { id: '59', title: 'Clone Graph', difficulty: 'Medium', url: lc('Clone Graph') },
       { id: '60', title: 'Course Schedule', difficulty: 'Medium', url: lc('Course Schedule') },
       { id: '62', title: 'Rotting Oranges', difficulty: 'Medium', url: lc('Rotting Oranges') },
-      { id: '64', title: 'Word Ladder', difficulty: 'Hard', url: lc('Word Ladder') },
       { id: '67', title: 'Network Delay Time', difficulty: 'Medium', url: lc('Network Delay Time') },
+      { id: '68', title: 'Redundant Connection', difficulty: 'Medium', url: lc('Redundant Connection') },
     ]
   },
   // 12. Dynamic Programming — 1D (5 questions)
@@ -167,12 +165,13 @@ export const roadmapData: Category[] = [
       { id: '84', title: 'Jump Game', difficulty: 'Medium', url: lc('Jump Game') },
     ]
   },
-  // 15. Intervals (1 question)
+  // 15. Intervals (2 questions)
   {
     id: 'intervals',
     title: 'Intervals',
     questions: [
       { id: '86', title: 'Merge Intervals', difficulty: 'Medium', url: lc('Merge Intervals') },
+      { id: '87', title: 'Insert Interval', difficulty: 'Medium', url: lc('Insert Interval') },
     ]
   },
   // 16. Bit Manipulation (3 questions)
