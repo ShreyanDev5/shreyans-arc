@@ -1,4 +1,4 @@
-# <img src="public/logo_readme_v7.svg" width="30" height="30" align="center" alt="Logo" /> Shreyan's Arc
+# <img src="public/logo_readme_v7.svg" width="36" height="36" align="center" alt="Logo" /> Shreyan's Arc
 
 An interactive Data Structures & Algorithms (DSA) roadmap and progress tracker featuring 58 curated problems across 17 core patterns.
 
