@@ -3,6 +3,7 @@
 An interactive Data Structures & Algorithms (DSA) roadmap and progress tracker featuring 58 curated problems across 17 core patterns.
 
 [![Live Demo](https://img.shields.io/badge/Live_Demo-shreyans--arc.vercel.app-blue?style=flat-square&logo=vercel&logoColor=white)](https://shreyans-arc.vercel.app)
+[![Database](https://img.shields.io/badge/Database-Firebase-FFCA28?style=flat-square&logo=firebase&logoColor=black)](https://firebase.google.com/)
 
 ---
 
