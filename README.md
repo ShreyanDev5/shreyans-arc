@@ -10,7 +10,7 @@ An interactive Data Structures & Algorithms (DSA) roadmap and progress tracker f
 
 | Interactive Roadmap Canvas |
 | :---: |
-| <img src="public/readme_home_page.png" width="720" alt="Shreyan's Arc Preview" /> |
+| <img src="public/readme_home_page.png" width="100%" alt="Shreyan's Arc Preview" /> |
 
 ---
 
