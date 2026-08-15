@@ -29,7 +29,7 @@ An interactive Data Structures & Algorithms (DSA) roadmap and progress tracker f
 - **Frontend**: React 19, TypeScript, Vite, Tailwind CSS
 - **Backend & Services**: Firebase (Authentication, Cloud Firestore)
 - **Deployment & Infra**: Vercel
-- **AI Tooling**: Antigravity
+- **AI Tooling**: Antigravity, Cursor
 
 ---
 
@@ -88,14 +88,15 @@ VITE_FIREBASE_APP_ID=your_app_id
 ```bash
 npm run dev
 ```
-Open `http://localhost:5173` in your browser.
+
+Open [http://localhost:5173](http://localhost:5173) in your browser.
 
 ---
 
 ## Deployment
 
-- **Production URL**: [shreyans-arc.vercel.app](https://shreyans-arc.vercel.app)
-- **Hosting Platform**: [Vercel](https://vercel.com)
+- **Live Application**: [shreyans-arc.vercel.app](https://shreyans-arc.vercel.app)
+- **Platform**: Hosted and deployed continuously via [Vercel](https://vercel.com)
 
 ---
 
