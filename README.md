@@ -1,27 +1,62 @@
-# <img src="public/logo_readme_v7.svg" width="36" height="36" align="center" alt="Logo" /> Shreyan's Arc
+# <img src="public/logo.svg" width="28" height="28" style="vertical-align: middle;" /> Shreyan's Arc
 
 An interactive Data Structures & Algorithms (DSA) roadmap and progress tracker featuring 58 curated problems across 17 core patterns.
 
-[Live Demo](https://shreyans-arc.vercel.app)
+[![Live Demo](https://img.shields.io/badge/Live_Demo-shreyans--arc.vercel.app-blue?style=flat-square&logo=vercel&logoColor=white)](https://shreyans-arc.vercel.app)
 
-![Shreyan's Arc Preview](public/readme_home_page.png)
+---
+
+## Preview
+
+| Interactive Roadmap Canvas |
+| :---: |
+| <img src="public/readme_home_page.png" width="720" alt="Shreyan's Arc Preview" /> |
+
+---
 
 ## Features
 
-- **Interactive Canvas:** Pan, zoom, and drag nodes to navigate the visual roadmap.
-- **58 Curated Problems:** Handpicked questions categorized across 17 essential DSA patterns.
-- **Guest Mode:** Track completion offline instantly with automatic `localStorage` persistence.
-- **Cloud Sync:** Sign in with Google to sync progress across devices in real time via Firestore.
-- **Direct Practice:** Instant modal with problem difficulty and one-click links to LeetCode.
+- **Interactive Visual Canvas**: Pan, zoom, and drag nodes across an interconnected DSA topic graph.
+- **58 Curated Problems**: Practice handpicked questions categorized across 17 core algorithmic patterns.
+- **Offline Guest Mode**: Track problem completions instantly with zero login required via `localStorage`.
+- **Real-Time Cloud Sync**: Sign in with Google to persist and sync roadmap progress across devices via Firebase Cloud Firestore.
+- **Direct LeetCode Practice**: Access instant problem modals with difficulty tags and one-click problem links.
+
+---
 
 ## Tech Stack
 
-- **Frontend:** React 19, TypeScript, Tailwind CSS, Vite
-- **Backend / Auth:** Firebase (Auth, Cloud Firestore)
-- **AI Tooling:** Antigravity
-- **Deployment:** Vercel
+- **Frontend**: React 19, TypeScript, Vite, Tailwind CSS
+- **Backend & Services**: Firebase (Authentication, Cloud Firestore)
+- **Deployment & Infra**: Vercel
+- **AI Tooling**: Antigravity
 
-## Local Setup
+---
+
+## Project Structure
+
+```text
+shreyans-arc/
+├── public/              # Static brand assets and preview images
+├── src/
+│   ├── components/      # UI components (Canvas, Modals, Sidebar, Settings)
+│   ├── data/            # Roadmap layout definitions and question bank
+│   ├── lib/             # Firebase SDK client initialization
+│   ├── App.tsx          # Main canvas viewport and state manager
+│   └── index.tsx        # React application entry point
+├── .env.example         # Template for Firebase credentials
+├── package.json         # Dependencies and scripts
+└── vite.config.ts       # Vite bundler configuration
+```
+
+---
+
+## Getting Started
+
+### Prerequisites
+
+- **Node.js**: `v18.0.0` or higher
+- **npm**: `v9.0.0` or higher
 
 ### 1. Clone & Install
 
@@ -33,18 +68,19 @@ npm install
 
 ### 2. Environment Setup (Optional)
 
-The app runs in **Guest Mode** by default. To enable Google Sign-In and Cloud Sync, copy the template and add your Firebase credentials:
+The application runs in **Guest Mode** by default with full offline functionality. To enable Google Sign-In and Cloud Firestore sync:
 
-- **PowerShell / Bash:** `cp .env.example .env`
-- **Command Prompt:** `copy .env.example .env`
+- **macOS / Linux / PowerShell**: `cp .env.example .env`
+- **Windows (CMD)**: `copy .env.example .env`
 
+Populate `.env` with your Firebase credentials:
 ```env
-VITE_FIREBASE_API_KEY=
-VITE_FIREBASE_AUTH_DOMAIN=
-VITE_FIREBASE_PROJECT_ID=
-VITE_FIREBASE_STORAGE_BUCKET=
-VITE_FIREBASE_MESSAGING_SENDER_ID=
-VITE_FIREBASE_APP_ID=
+VITE_FIREBASE_API_KEY=your_api_key
+VITE_FIREBASE_AUTH_DOMAIN=your_auth_domain
+VITE_FIREBASE_PROJECT_ID=your_project_id
+VITE_FIREBASE_STORAGE_BUCKET=your_storage_bucket
+VITE_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
+VITE_FIREBASE_APP_ID=your_app_id
 ```
 
 ### 3. Run Locally
@@ -54,13 +90,18 @@ npm run dev
 ```
 Open `http://localhost:5173` in your browser.
 
-## Build
+---
 
-```bash
-npm run build
-```
-Production assets are generated in `/dist`.
+## Deployment
 
-## Acknowledgments
+- **Production URL**: [shreyans-arc.vercel.app](https://shreyans-arc.vercel.app)
+- **Hosting Platform**: [Vercel](https://vercel.com)
 
-- Inspired by [NeetCode.io](https://neetcode.io).
+---
+
+## Author
+
+**Shreyan Sardar**
+- **Portfolio**: [shreyandev.vercel.app](https://shreyandev.vercel.app)
+- **GitHub**: [@ShreyanDev5](https://github.com/ShreyanDev5)
+- **LinkedIn**: [shreyansardar](https://www.linkedin.com/in/shreyansardar/)
