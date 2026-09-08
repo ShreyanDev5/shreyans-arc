@@ -1,4 +1,5 @@
-import React, { lazy, Suspense, useState, useEffect, useRef, useCallback } from 'react';
+import React, { lazy, Suspense, useState, useEffect, useRef, useCallback, useMemo } from 'react';
+import clsx from 'clsx';
 import { roadmapData, Category } from './data/questions';
 import { auth, googleProvider, signInWithPopup, firebaseSignOut, db, doc, onSnapshot, setDoc, isConfigured } from './lib/firebase';
 import { getDefaultViewport, INITIAL_LAYOUT, Position, ViewportTransform } from './data/layout';
@@ -11,7 +12,6 @@ const QuestionModal = lazy(async () => {
   const module = await import('./components/QuestionModal');
   return { default: module.QuestionModal };
 });
-const SettingsPanel = lazy(() => import('./components/SettingsPanel'));
 const InfoModal = lazy(() => import('./components/InfoModal'));
 
 const VALID_QUESTION_IDS = new Set(
@@ -35,12 +35,12 @@ const App: React.FC = () => {
   const [user, setUser] = useState<User | null>(null);
   const [solvedIds, setSolvedIds] = useState<Set<string>>(new Set());
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
+  const [highlightedQuestionId, setHighlightedQuestionId] = useState<string | null>(null);
+  const [lastActiveCatId, setLastActiveCatId] = useState<string | null>(null);
 
   // --- State: UI ---
-  const [nodePositions, setNodePositions] = useState<Record<string, Position>>(createInitialNodePositions);
-  const [settings, setSettings] = useState({ allowPan: true, allowZoom: true, allowDrag: false });
-  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [nodePositions] = useState<Record<string, Position>>(createInitialNodePositions);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isInfoOpen, setIsInfoOpen] = useState(false);
 
   // --- Refs for Interaction Logic ---
@@ -52,8 +52,6 @@ const App: React.FC = () => {
 
   // Pointer State
   const pointers = useRef<Map<number, { x: number, y: number }>>(new Map());
-  const [draggingNodeId, setDraggingNodeId] = useState<string | null>(null);
-  const lastDragPos = useRef({ x: 0, y: 0 }); // World coordinates for node dragging
 
   // Helper: Update Transform
   const updateTransform = useCallback(() => {
@@ -74,7 +72,7 @@ const App: React.FC = () => {
 
   // Initialize View
   useEffect(() => {
-    transform.current = getDefaultViewport(window.innerWidth);
+    transform.current = getDefaultViewport(window.innerWidth, window.innerHeight);
     updateTransform();
   }, [updateTransform]);
 
@@ -141,6 +139,11 @@ const App: React.FC = () => {
     if (newSet.has(id)) newSet.delete(id);
     else newSet.add(id);
     setSolvedIds(newSet);
+
+    // Track active category to seamlessly recommend the next problem in the active topic
+    const cat = roadmapData.find(c => c.questions.some(q => q.id === id));
+    if (cat) setLastActiveCatId(cat.id);
+
     const idsArray = Array.from(newSet);
     if (user && db) await setDoc(doc(db, 'users', user.uid), { solved: idsArray }, { merge: true });
     else localStorage.setItem('shreyans-arc-guest', JSON.stringify(idsArray));
@@ -148,19 +151,55 @@ const App: React.FC = () => {
 
   const handleLogin = async () => {
     if (!isConfigured || !auth || !googleProvider) {
-      alert("Firebase configuration not found. Your progress will be saved locally on this browser.");
+      alert("Cloud sync is not configured. Progress is saved locally in this browser.");
       return;
     }
 
     try { await signInWithPopup(auth, googleProvider); }
-    catch (error) { console.error(error); alert("Login failed."); }
+    catch (error) { console.error(error); alert("Sign in failed. Please try again."); }
   };
 
-  const resetView = () => {
-    transform.current = getDefaultViewport(window.innerWidth);
+  const resetView = useCallback(() => {
+    transform.current = getDefaultViewport(window.innerWidth, window.innerHeight);
     updateTransform();
-    setNodePositions(createInitialNodePositions());
-  };
+  }, [updateTransform]);
+
+  const handleZoom = useCallback((direction: 'in' | 'out') => {
+    if (!containerRef.current) return;
+    const factor = direction === 'in' ? 1.25 : 0.8;
+    const newScale = Math.min(Math.max(transform.current.scale * factor, 0.1), 3);
+    const rect = containerRef.current.getBoundingClientRect();
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+    const { x, y, scale } = transform.current;
+    const newX = centerX - (centerX - x) * (newScale / scale);
+    const newY = centerY - (centerY - y) * (newScale / scale);
+    transform.current = { x: newX, y: newY, scale: newScale };
+    updateTransform();
+  }, [updateTransform]);
+
+  // Keyboard Navigation & Shortcuts
+  useEffect(() => {
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (['INPUT', 'TEXTAREA'].includes((e.target as HTMLElement)?.tagName)) return;
+      if (e.key === '=' || e.key === '+') {
+        e.preventDefault();
+        handleZoom('in');
+      } else if (e.key === '-' || e.key === '_') {
+        e.preventDefault();
+        handleZoom('out');
+      } else if (e.key === '0') {
+        e.preventDefault();
+        resetView();
+      } else if (e.key === 'Escape') {
+        setIsSidebarOpen(false);
+        setIsInfoOpen(false);
+        setSelectedCategory(null);
+      }
+    };
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, [handleZoom, resetView]);
 
   // --- Interaction Handlers ---
 
@@ -217,26 +256,8 @@ const App: React.FC = () => {
     const prevPointers = new Map<number, { x: number, y: number }>(pointers.current);
     pointers.current.set(e.pointerId, currentPos);
 
-    // Node Dragging
-    if (draggingNodeId && settings.allowDrag) {
-      const worldPos = screenToWorld(e.clientX, e.clientY);
-      const dx = worldPos.x - lastDragPos.current.x;
-      const dy = worldPos.y - lastDragPos.current.y;
-
-      setNodePositions(prev => {
-        const id = draggingNodeId;
-        const current = prev[id] || { x: 0, y: 0 };
-        return {
-          ...prev,
-          [id]: { x: current.x + dx, y: current.y + dy }
-        };
-      });
-      lastDragPos.current = worldPos;
-      return;
-    }
-
     // Pan & Zoom
-    if (pointers.current.size === 1 && settings.allowPan) {
+    if (pointers.current.size === 1) {
       const prev = prevPointers.get(e.pointerId)!;
       const curr = pointers.current.get(e.pointerId)!;
       const dx = curr.x - prev.x;
@@ -245,7 +266,7 @@ const App: React.FC = () => {
       transform.current.x += dx;
       transform.current.y += dy;
       updateTransform();
-    } else if (pointers.current.size === 2 && settings.allowZoom) {
+    } else if (pointers.current.size === 2) {
       const [p1Id, p2Id] = Array.from(pointers.current.keys()) as number[];
       const prevP1 = prevPointers.get(p1Id)!;
       const prevP2 = prevPointers.get(p2Id)!;
@@ -268,11 +289,6 @@ const App: React.FC = () => {
       const dx = currCenter.x - prevCenter.x;
       const dy = currCenter.y - prevCenter.y;
 
-      // Calculate zoom offset
-      // World point under centroid should stay under centroid
-      // (Center - Pan) / OldScale = (Center - NewPan) / NewScale
-      // NewPan = Center - (Center - Pan) * (NewScale / OldScale)
-
       const oldScale = transform.current.scale;
       const x = currCenter.x - (prevCenter.x - transform.current.x) * (newScale / oldScale) + dx;
       const y = currCenter.y - (prevCenter.y - transform.current.y) * (newScale / oldScale) + dy;
@@ -289,7 +305,6 @@ const App: React.FC = () => {
     pointers.current.delete(e.pointerId);
     pointerStartPos.current.delete(e.pointerId);
     hasCaptured.current.delete(e.pointerId);
-    setDraggingNodeId(null);
   };
 
   // Non-passive wheel listener for zoom
@@ -298,15 +313,10 @@ const App: React.FC = () => {
     if (!container) return;
 
     const onWheel = (e: WheelEvent) => {
-      if (!settings.allowZoom) return;
       e.preventDefault();
 
       // Fix for trackpad pinch-to-zoom on Windows (Ctrl + Wheel)
-      // Trackpad usually sends small deltas (e.g. < 50) with deltaMode 0 (pixels).
-      // Mouse wheel + Ctrl usually sends large deltas (e.g. 100).
-      // We boost the sensitivity for trackpad to make it feel natural.
       let multiplier = 0.001;
-      // Check for trackpad: Ctrl key + Pixel mode (0) + small delta
       if (e.ctrlKey && e.deltaMode === 0 && Math.abs(e.deltaY) < 50) {
         multiplier = 0.015;
       }
@@ -328,15 +338,7 @@ const App: React.FC = () => {
 
     container.addEventListener('wheel', onWheel, { passive: false });
     return () => container.removeEventListener('wheel', onWheel);
-  }, [settings.allowZoom, updateTransform]);
-
-  const handleNodeMouseDown = (e: React.MouseEvent, id: string) => {
-    if (settings.allowDrag) {
-      e.stopPropagation();
-      setDraggingNodeId(id);
-      lastDragPos.current = screenToWorld(e.clientX, e.clientY);
-    }
-  };
+  }, [updateTransform]);
 
   const handleDoubleTap = (e: React.MouseEvent) => {
     // Simple double click/tap zoom reset or zoom in
@@ -362,15 +364,159 @@ const App: React.FC = () => {
   const totalSolved = solvedIds.size;
   const overallProgress = totalQuestions > 0 ? Math.round((totalSolved / totalQuestions) * 100) : 0;
 
-  return (
-    <div className="relative w-screen h-screen overflow-hidden bg-dark-bg text-dark-text font-sans selection:bg-brand-primary/30 grid-bg">
+  // Next Recommended Problem
+  // 1. Active category continuation: if user is practicing a topic, guide them through its questions
+  // 2. Learning frontier: if user switched topics, continue at the latest in-progress pattern
+  // 3. Sequential roadmap: guides from foundations (Arrays, Two Pointers) to advanced structures
+  const nextQuestion = useMemo(() => {
+    // 1. Active category continuation
+    if (lastActiveCatId) {
+      const activeCat = roadmapData.find(c => c.id === lastActiveCatId);
+      if (activeCat) {
+        const nextInActive = activeCat.questions.find(q => !solvedIds.has(q.id));
+        if (nextInActive) {
+          return { category: activeCat, question: nextInActive };
+        }
+      }
+    }
 
-      {/* UI Layer */}
+    // 2. Latest in-progress category in roadmap sequence (active frontier)
+    for (let i = roadmapData.length - 1; i >= 0; i--) {
+      const cat = roadmapData[i];
+      const solvedInCat = cat.questions.filter(q => solvedIds.has(q.id)).length;
+      if (solvedInCat > 0 && solvedInCat < cat.questions.length) {
+        const nextUnsolved = cat.questions.find(q => !solvedIds.has(q.id));
+        if (nextUnsolved) {
+          return { category: cat, question: nextUnsolved };
+        }
+      }
+    }
+
+    // 3. Earliest unsolved question in roadmap sequence
+    for (const category of roadmapData) {
+      for (const question of category.questions) {
+        if (!solvedIds.has(question.id)) {
+          return { category, question };
+        }
+      }
+    }
+    return null;
+  }, [solvedIds, lastActiveCatId]);
+
+  return (
+    <div className="relative w-screen h-screen overflow-hidden bg-dark-bg text-dark-text font-sans selection:bg-brand-primary/30">
+
+      {/* Floating Top Controls */}
+      <header className="sidebar-ignore fixed top-3 sm:top-4 right-3 sm:right-4 z-40 pointer-events-auto flex items-center gap-1.5 sm:gap-2">
+        {/* Next Recommended Problem */}
+          {nextQuestion ? (
+            <button
+              onClick={() => {
+                setSelectedCategory(nextQuestion.category);
+                setHighlightedQuestionId(nextQuestion.question.id);
+              }}
+              className="flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1.5 sm:py-2 bg-dark-card/90 backdrop-blur-md border border-dark-border hover:border-blue-500/50 rounded-xl shadow-lg text-xs transition-all group"
+              title={`Next up in ${nextQuestion.category.title}: ${nextQuestion.question.title} (${nextQuestion.question.difficulty})`}
+            >
+              <span className="w-2 h-2 rounded-full bg-brand-primary animate-pulse flex-shrink-0" />
+              <span className="hidden sm:inline text-dark-muted">Next up:</span>
+              <span className="sm:hidden text-dark-muted">Next:</span>
+              <span className="font-medium text-[#ededf0] group-hover:text-white transition-colors truncate max-w-[85px] xs:max-w-[130px] sm:max-w-[200px] lg:max-w-[320px] xl:max-w-[420px]">
+                {nextQuestion.question.title}
+              </span>
+              <svg className="w-3 h-3 text-dark-muted group-hover:text-[#ededf0] group-hover:translate-x-0.5 transition-all flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </button>
+          ) : (
+            <div className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 sm:py-2 bg-dark-card/90 backdrop-blur-md border border-emerald-500/30 rounded-xl shadow-lg text-xs font-medium text-emerald-400">
+              <span>All 58 Solved</span>
+              <span>🎉</span>
+            </div>
+          )}
+
+          {/* Progress Pill / Sidebar Trigger */}
+          <button
+            onClick={() => setIsSidebarOpen(prev => !prev)}
+            className="flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3.5 py-1.5 sm:py-2 bg-dark-card/90 backdrop-blur-md border border-dark-border hover:border-emerald-500/50 rounded-xl shadow-lg transition-all group flex-shrink-0"
+            title="Progress & stats"
+          >
+            <div className="w-2 h-2 rounded-full bg-brand-accent group-hover:shadow-[0_0_8px_rgba(16,185,129,0.4)] transition-shadow flex-shrink-0" />
+            <span className="text-xs font-mono tabular-nums font-medium text-[#ededf0] group-hover:text-white transition-colors">
+              {totalSolved} / {totalQuestions}
+            </span>
+            <span className="hidden sm:inline text-[11px] font-mono tabular-nums text-dark-muted group-hover:text-[#b4b4bf] transition-colors">
+              ({overallProgress}%)
+            </span>
+          </button>
+      </header>
+
+      {/* Floating Canvas Dock (Bottom Center) */}
+      <div
+        className="sidebar-ignore fixed left-1/2 -translate-x-1/2 z-40 pointer-events-auto flex items-center gap-0.5 p-1 bg-dark-card/90 backdrop-blur-md border border-dark-border/90 rounded-xl shadow-2xl"
+        style={{ bottom: 'max(1rem, calc(0.75rem + env(safe-area-inset-bottom, 0px)))' }}
+      >
+        <button
+          onClick={() => handleZoom('out')}
+          className="p-2 sm:p-1.5 text-dark-muted hover:text-[#ededf0] hover:bg-dark-highlight rounded-lg transition-colors"
+          title="Zoom out (-)"
+          aria-label="Zoom out"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+        </button>
+
+        <button
+          onClick={resetView}
+          className="p-2 sm:p-1.5 text-dark-muted hover:text-[#ededf0] hover:bg-dark-highlight rounded-lg transition-colors"
+          title="Center view (0)"
+          aria-label="Center view"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="22" y1="12" x2="18" y2="12"></line>
+            <line x1="6" y1="12" x2="2" y2="12"></line>
+            <line x1="12" y1="6" x2="12" y2="2"></line>
+            <line x1="12" y1="22" x2="12" y2="18"></line>
+          </svg>
+        </button>
+
+        <button
+          onClick={() => handleZoom('in')}
+          className="p-2 sm:p-1.5 text-dark-muted hover:text-[#ededf0] hover:bg-dark-highlight rounded-lg transition-colors"
+          title="Zoom in (+)"
+          aria-label="Zoom in"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+        </button>
+
+        <div className="w-px h-3.5 bg-dark-border mx-0.5" />
+
+        <button
+          onClick={() => setIsInfoOpen(true)}
+          className="p-2 sm:p-1.5 text-dark-muted hover:text-[#ededf0] hover:bg-dark-highlight rounded-lg transition-colors"
+          title="About & shortcuts"
+          aria-label="About"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+            <line x1="12" y1="17" x2="12.01" y2="17"></line>
+          </svg>
+        </button>
+      </div>
+
+      {/* Sidebar Drawer */}
       <div className="sidebar-ignore">
         <Sidebar
           totalSolved={totalSolved}
           totalQuestions={totalQuestions}
           overallProgress={overallProgress}
+          solvedIds={solvedIds}
           user={user}
           onLogin={handleLogin}
           onLogout={() => {
@@ -378,37 +524,15 @@ const App: React.FC = () => {
               return firebaseSignOut(auth);
             }
           }}
-          onOpenSettings={() => setIsSettingsOpen(true)}
-          onReset={resetView}
-          onOpenInfo={() => setIsInfoOpen(true)}
           isOpen={isSidebarOpen}
           onClose={() => setIsSidebarOpen(false)}
           isConfigured={isConfigured}
         />
       </div>
 
-      {/* Menu Button */}
-      {!isSidebarOpen && (
-        <button
-          onClick={() => setIsSidebarOpen(true)}
-          className="sidebar-ignore fixed top-6 right-6 z-40 p-3 bg-dark-card border border-dark-border rounded-lg text-white shadow-xl hover:bg-dark-highlight transition-all animate-fade-in"
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <line x1="3" y1="12" x2="21" y2="12"></line>
-            <line x1="3" y1="6" x2="21" y2="6"></line>
-            <line x1="3" y1="18" x2="21" y2="18"></line>
-          </svg>
-        </button>
-      )}
-
+      {/* Modals */}
       <div className="sidebar-ignore">
         <Suspense fallback={null}>
-          <SettingsPanel
-            settings={settings}
-            onToggle={(key) => setSettings(prev => ({ ...prev, [key]: !prev[key] }))}
-            isOpen={isSettingsOpen}
-            onClose={() => setIsSettingsOpen(false)}
-          />
           <InfoModal
             isOpen={isInfoOpen}
             onClose={() => setIsInfoOpen(false)}
@@ -444,11 +568,12 @@ const App: React.FC = () => {
               key={category.id}
               category={category}
               solvedIds={solvedIds}
-              onClick={setSelectedCategory}
+              onClick={(cat) => {
+                setSelectedCategory(cat);
+                setHighlightedQuestionId(null);
+              }}
               x={nodePositions[category.id]?.x || 0}
               y={nodePositions[category.id]?.y || 0}
-              isDragging={!!draggingNodeId}
-              onMouseDown={handleNodeMouseDown}
             />
           ))}
         </div>
@@ -461,9 +586,13 @@ const App: React.FC = () => {
             <QuestionModal
               category={selectedCategory}
               isOpen={!!selectedCategory}
-              onClose={() => setSelectedCategory(null)}
+              onClose={() => {
+                setSelectedCategory(null);
+                setHighlightedQuestionId(null);
+              }}
               solvedIds={solvedIds}
               toggleQuestion={toggleQuestion}
+              highlightedQuestionId={highlightedQuestionId}
             />
           </Suspense>
         </div>

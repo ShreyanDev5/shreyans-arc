@@ -1,109 +1,49 @@
-# <img src="public/logo.svg" width="28" height="28" style="vertical-align: middle;" /> Shreyan's Arc
+# Shreyan's Arc
 
-An interactive Data Structures & Algorithms (DSA) roadmap and progress tracker featuring 58 curated problems across 17 core patterns.
+An interactive DSA roadmap and progress tracker with 58 curated problems across 17 core patterns.
 
-[![Live Demo](https://img.shields.io/badge/Live_Demo-shreyans--arc.vercel.app-blue?style=flat-square&logo=vercel&logoColor=white)](https://shreyans-arc.vercel.app)
-[![Database](https://img.shields.io/badge/Database-Firebase-FFCA28?style=flat-square&logo=firebase&logoColor=black)](https://firebase.google.com/)
+[![Live Demo](https://img.shields.io/badge/Live_Demo-shreyans--arc.vercel.app-blue?style=flat-square)](https://shreyans-arc.vercel.app)
+[![Database](https://img.shields.io/badge/Database-Firebase-FFCA28?style=flat-square)](https://firebase.google.com/)
 
 ---
 
-## Preview
-
-| Interactive Roadmap Canvas |
-| :---: |
-| <img src="public/readme_home_page.png" width="100%" alt="Shreyan's Arc Preview" /> |
+![Shreyan's Arc Preview](public/readme_home_page.png)
 
 ---
 
 ## Features
 
-- **Interactive Visual Canvas**: Pan, zoom, and drag nodes across an interconnected DSA topic graph.
-- **58 Curated Problems**: Practice handpicked questions categorized across 17 core algorithmic patterns.
-- **Offline Guest Mode**: Track problem completions instantly with zero login required via `localStorage`.
-- **Real-Time Cloud Sync**: Sign in with Google to persist and sync roadmap progress across devices via Firebase Cloud Firestore.
-- **Direct LeetCode Practice**: Access instant problem modals with difficulty tags and one-click problem links.
+- **Interactive roadmap canvas:** Pan, zoom, and explore 17 connected algorithmic patterns.
+- **58 curated problems:** High-yield questions covering foundational patterns from NeetCode and Sean Prashad.
+- **Local & cloud sync:** Progress saves automatically in your browser, with optional Google sign-in to sync across devices.
+- **Direct practice:** One-click links to open problems directly on LeetCode.
 
 ---
 
 ## Tech Stack
 
-- **Frontend**: React 19, TypeScript, Vite, Tailwind CSS
-- **Backend & Services**: Firebase (Authentication, Cloud Firestore)
-- **Deployment & Infra**: Vercel
-- **AI Tooling**: Antigravity, Cursor
-
----
-
-## Project Structure
-
-```text
-shreyans-arc/
-├── public/              # Static brand assets and preview images
-├── src/
-│   ├── components/      # UI components (Canvas, Modals, Sidebar, Settings)
-│   ├── data/            # Roadmap layout definitions and question bank
-│   ├── lib/             # Firebase SDK client initialization
-│   ├── App.tsx          # Main canvas viewport and state manager
-│   └── index.tsx        # React application entry point
-├── .env.example         # Template for Firebase credentials
-├── package.json         # Dependencies and scripts
-└── vite.config.ts       # Vite bundler configuration
-```
+- **Frontend:** React 19, TypeScript, Vite, Tailwind CSS
+- **Backend & Auth:** Firebase (Authentication, Cloud Firestore)
+- **Deployment:** Vercel
 
 ---
 
 ## Getting Started
 
-### Prerequisites
-
-- **Node.js**: `v18.0.0` or higher
-- **npm**: `v9.0.0` or higher
-
-### 1. Clone & Install
-
 ```bash
+# Clone the repository
 git clone https://github.com/ShreyanDev5/shreyans-arc.git
 cd shreyans-arc
+
+# Install dependencies and start dev server
 npm install
-```
-
-### 2. Environment Setup (Optional)
-
-The application runs in **Guest Mode** by default with full offline functionality. To enable Google Sign-In and Cloud Firestore sync:
-
-- **macOS / Linux / PowerShell**: `cp .env.example .env`
-- **Windows (CMD)**: `copy .env.example .env`
-
-Populate `.env` with your Firebase credentials:
-```env
-VITE_FIREBASE_API_KEY=your_api_key
-VITE_FIREBASE_AUTH_DOMAIN=your_auth_domain
-VITE_FIREBASE_PROJECT_ID=your_project_id
-VITE_FIREBASE_STORAGE_BUCKET=your_storage_bucket
-VITE_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
-VITE_FIREBASE_APP_ID=your_app_id
-```
-
-### 3. Run Locally
-
-```bash
 npm run dev
 ```
 
-Open [http://localhost:5173](http://localhost:5173) in your browser.
-
----
-
-## Deployment
-
-- **Live Application**: [shreyans-arc.vercel.app](https://shreyans-arc.vercel.app)
-- **Platform**: Hosted and deployed continuously via [Vercel](https://vercel.com)
+The app runs out of the box using local storage. To enable Google sign-in and cloud sync, copy `.env.example` to `.env` and add your Firebase credentials.
 
 ---
 
 ## Author
 
-**Shreyan Sardar**
-- **Portfolio**: [shreyandev.vercel.app](https://shreyandev.vercel.app)
-- **GitHub**: [@ShreyanDev5](https://github.com/ShreyanDev5)
-- **LinkedIn**: [shreyansardar](https://www.linkedin.com/in/shreyansardar/)
+**Shreyan Sardar** · [Portfolio](https://shreyandev.vercel.app) · [GitHub](https://github.com/ShreyanDev5) · [LinkedIn](https://www.linkedin.com/in/shreyansardar/)

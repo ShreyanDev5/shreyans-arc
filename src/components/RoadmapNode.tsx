@@ -9,8 +9,6 @@ interface RoadmapNodeProps {
     onClick: (c: Category) => void;
     x: number;
     y: number;
-    isDragging: boolean;
-    onMouseDown: (e: React.MouseEvent, id: string) => void;
 }
 
 const RoadmapNode: React.FC<RoadmapNodeProps> = ({
@@ -18,9 +16,7 @@ const RoadmapNode: React.FC<RoadmapNodeProps> = ({
     solvedIds,
     onClick,
     x,
-    y,
-    isDragging,
-    onMouseDown
+    y
 }) => {
     const total = category.questions.length;
     const solved = category.questions.filter(q => solvedIds.has(q.id)).length;
@@ -38,53 +34,52 @@ const RoadmapNode: React.FC<RoadmapNodeProps> = ({
         zIndex: 20,
     };
 
-    const handleMouseDown = (e: React.MouseEvent) => {
-        e.stopPropagation(); // Prevent canvas drag start
-        onMouseDown(e, category.id);
-    };
-
     return (
         <div
             style={style}
-            onMouseDown={handleMouseDown}
-            onClick={(e) => {
-                if (!isDragging) onClick(category);
-            }}
+            onClick={() => onClick(category)}
             className={clsx(
-                "group cursor-pointer select-none overflow-hidden",
-                !isDragging && "transition-all duration-300",
-                "rounded-xl border-2 shadow-md",
+                "group cursor-pointer select-none overflow-hidden relative",
+                "transition-all duration-150 ease-out hover:-translate-y-1 hover:shadow-[0_8px_24px_rgba(0,0,0,0.6)]",
+                "rounded-xl border shadow-sm",
                 isComplete 
-                    ? "bg-[#059669] border-[#059669] hover:bg-[#047857] hover:border-[#047857]" 
+                    ? "bg-[#141a16] border-emerald-500/35 hover:border-emerald-500/70 hover:bg-[#151f18]" 
                     : isInProgress
-                        ? "bg-[#202020] border-brand-primary/80 hover:border-brand-primary hover:bg-[#2c2c2c]"
-                        : "bg-[#202020] border-dark-border hover:border-brand-primary/60 hover:bg-[#2c2c2c]"
+                        ? "bg-[#14171f] border-brand-primary/40 hover:border-blue-500/70 hover:bg-[#161a26]"
+                        : "bg-[#161619] border-dark-border hover:border-zinc-500/70 hover:bg-[#1b1b20]"
             )}
         >
-            {/* Minimal Progress Bar */}
-            <div className="absolute bottom-0 left-0 right-0 bg-black/25" style={{ height: '6px' }}>
-                <div
-                    className={clsx(
-                        "h-full transition-all duration-500",
-                        isComplete ? "bg-brand-accent" : "bg-brand-primary"
-                    )}
-                    style={{ width: `${progress}%` }}
-                />
-            </div>
-
             {/* Content */}
-            <div className="relative flex flex-col items-center justify-center gap-1.5" style={{ padding: '18px 20px 24px 20px' }}>
-                <span className="font-bold text-white text-center leading-tight text-[18px] tracking-wide">
+            <div className="relative flex flex-col items-center justify-center gap-1.5 h-[72px] px-2.5 pt-2 pb-3.5">
+                <span className="font-medium text-center leading-[1.28] text-[12.5px] tracking-[-0.01em] line-clamp-2 text-[#ededf0] group-hover:text-white transition-colors max-w-full px-1">
                     {category.title}
                 </span>
+
                 {total > 0 && (
                     <span className={clsx(
-                        "text-sm font-mono transition-colors",
-                        isComplete ? "text-emerald-100/90" : "text-dark-muted group-hover:text-white/80"
+                        "text-[10.5px] font-mono tabular-nums font-medium px-2.5 py-0.5 rounded-full border leading-none transition-colors",
+                        isComplete 
+                            ? "bg-emerald-500/10 border-emerald-500/25 text-emerald-400 group-hover:border-emerald-500/50" 
+                            : isInProgress
+                                ? "bg-brand-primary/10 border-brand-primary/25 text-blue-400 group-hover:border-blue-400/50"
+                                : "bg-white/[0.03] border-white/10 text-[#94949f] group-hover:border-white/20 group-hover:text-[#ededf0]"
                     )}>
                         {solved} / {total}
                     </span>
                 )}
+            </div>
+
+            {/* Inset Floating Progress Capsule Bar */}
+            <div className="absolute bottom-2 left-3.5 right-3.5 h-[4.5px] bg-black/60 rounded-full overflow-hidden">
+                <div
+                    className={clsx(
+                        "h-full rounded-full transition-all duration-300 ease-out",
+                        isComplete 
+                            ? "bg-emerald-500 group-hover:bg-emerald-400" 
+                            : "bg-brand-primary group-hover:bg-blue-400"
+                    )}
+                    style={{ width: `${progress}%` }}
+                />
             </div>
         </div>
     );

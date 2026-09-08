@@ -4,13 +4,13 @@
 <head>
   <meta charset="UTF-8" />
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
   <title>Shreyan's Arc | DSA Roadmap</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap"
     rel="stylesheet">
   <script>
     tailwind.config = {
@@ -23,25 +23,28 @@
           },
           colors: {
             dark: {
-              bg: '#191919',       // Notion page dark background
-              card: '#202020',     // Notion card/menu background
-              border: '#2e2e2e',   // Notion subtle border
-              highlight: '#373737',// Notion hover state
-              text: '#f1f1f1',     // Notion text color
-              muted: '#9b9b9b',    // Notion muted gray
+              bg: '#0e0e11',       // Deep premium dark gray
+              card: '#16161a',     // Elevated card surface
+              cardMuted: '#121215',// Recessed card surface
+              border: '#26262d',   // Crisp card border
+              highlight: '#24242c',// Hover state
+              text: '#ededf0',     // Warm off-white (eliminates eye strain & halation)
+              muted: '#94949f',    // Warm secondary zinc
+              subtle: '#64646f',   // Warm tertiary subtle
             },
             brand: {
-              primary: '#3b82f6',      // Slate blue
-              primaryHover: '#2563eb', // Active state
-              secondary: '#6366f1',    // Indigo accent
-              accent: '#10b981',       // Emerald (Completed state)
+              primary: '#3b82f6',      // Accent blue
+              primaryHover: '#2563eb', // Active blue
+              secondary: '#6366f1',    // Indigo
+              accent: '#10b981',       // Emerald
+              accentMuted: '#064e3b',  // Muted emerald
               danger: '#ef4444',       
               warning: '#f59e0b',      
             }
           },
           animation: {
-            'fade-in': 'fadeIn 0.3s ease-out',
-            'slide-up': 'slideUp 0.4s ease-out',
+            'fade-in': 'fadeIn 0.25s ease-out',
+            'slide-up': 'slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
           },
           keyframes: {
             fadeIn: {
@@ -49,7 +52,7 @@
               '100%': { opacity: '1' },
             },
             slideUp: {
-              '0%': { transform: 'translateY(20px)', opacity: '0' },
+              '0%': { transform: 'translateY(16px)', opacity: '0' },
               '100%': { transform: 'translateY(0)', opacity: '1' },
             }
           }
@@ -58,16 +61,26 @@
     }
   </script>
   <style>
+    html,
     body {
-      background-color: #191919;
-      color: #f1f1f1;
+      overscroll-behavior: none;
+      background-color: #0e0e11;
+      color: #ededf0;
       -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+      font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
     }
 
-    /* Minimal Dotted Grid Pattern */
+    /* Tabular figures for monospace counts and stats to prevent jitter */
+    .font-mono {
+      font-feature-settings: normal;
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* Clean Solid Canvas Background */
     .grid-bg {
-      background-image: radial-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px);
-      background-size: 24px 24px;
+      background-color: #0e0e11;
     }
 
     /* Custom Scrollbar */
@@ -77,16 +90,16 @@
     }
 
     ::-webkit-scrollbar-track {
-      background: #191919;
+      background: #121214;
     }
 
     ::-webkit-scrollbar-thumb {
-      background: #2e2e2e;
+      background: #27272c;
       border-radius: 3px;
     }
 
     ::-webkit-scrollbar-thumb:hover {
-      background: #373737;
+      background: #36363e;
     }
 
     /* Checkbox Animation */

@@ -29,22 +29,24 @@ const ConnectionLines: React.FC<ConnectionLinesProps> = ({ nodePositions, solved
                 <marker
                     id="arrowhead-incomplete"
                     markerWidth="6"
-                    markerHeight="4.5"
-                    refX="1"
-                    refY="2.25"
+                    markerHeight="6"
+                    refX="0"
+                    refY="3"
                     orient="auto"
+                    markerUnits="userSpaceOnUse"
                 >
-                    <polygon points="1 0.75, 5 2.25, 1 3.75" fill="#3b82f6" />
+                    <polygon points="0 0.5, 6 3, 0 5.5" fill="#52525d" />
                 </marker>
                 <marker
                     id="arrowhead-completed"
                     markerWidth="6"
-                    markerHeight="4.5"
-                    refX="1"
-                    refY="2.25"
+                    markerHeight="6"
+                    refX="0"
+                    refY="3"
                     orient="auto"
+                    markerUnits="userSpaceOnUse"
                 >
-                    <polygon points="1 0.75, 5 2.25, 1 3.75" fill="#10b981" />
+                    <polygon points="0 0.5, 6 3, 0 5.5" fill="#10b981" />
                 </marker>
             </defs>
             {ROADMAP_CONNECTIONS.map(({ from, to }) => {
@@ -53,46 +55,43 @@ const ConnectionLines: React.FC<ConnectionLinesProps> = ({ nodePositions, solved
 
                 if (!start || !end) return null;
 
-                // Determine height for start node
-                const startBaseHeight = CUSTOM_NODE_HEIGHTS[from] || ROADMAP_BASE_NODE_HEIGHT;
-                const startNodeHeight = startBaseHeight;
-
-                // Calculate center points in world space
+                // Center points in world space (compact node: 240px wide, 72px tall)
                 const startX = start.x + ROADMAP_NODE_WIDTH / 2;
-                const startY = start.y + startNodeHeight;
+                const startY = start.y + ROADMAP_BASE_NODE_HEIGHT;
                 const endX = end.x + ROADMAP_NODE_WIDTH / 2;
-                const endY = end.y - 21; // Terminate path 21px above target node (exactly at the base of the 20px arrowhead)
+                const endY = end.y;
 
-                // Outgoing trunk (from parent node bottom center) - 35px if multiple outgoing, 15px if single
-                const outgoingCount = ROADMAP_CONNECTIONS.filter(conn => conn.from === from).length;
-                const outTrunk = outgoingCount > 1 ? 35 : 15;
-                const adjStartY = startY + outTrunk;
+                // Pure vertical approach and departure stubs ensure arrowheads are 100% vertical
+                const departureY = startY + 12;
+                const approachY = endY - 14;
 
-                // Incoming trunk (to child node top center) - 35px if multiple incoming, 15px if single
-                const incomingCount = ROADMAP_CONNECTIONS.filter(conn => conn.to === to).length;
-                const inTrunk = incomingCount > 1 ? 35 : 15;
-                const adjEndY = endY - inTrunk;
+                const curveDy = approachY - departureY;
+                const dx = Math.abs(endX - startX);
 
-                // Vertical Bezier Curve between trunk endpoints
-                const distY = adjEndY - adjStartY;
-                const distX = Math.abs(endX - startX);
+                // Smooth the curve for distant left/right nodes without over-bulging
+                const isWide = dx > 80;
+                const horizontalBoost = isWide ? Math.min(dx * 0.12, 48) : Math.min(dx * 0.04, 12);
+                const handleY = Math.max(curveDy * 0.42, 20) + horizontalBoost;
 
-                // Smoother, gentler curve transition to prevent arrowhead misalignment on curves
-                const controlOffset = Math.min(distY * 0.45 + distX * 0.05, 110);
+                const cp1x = startX;
+                const cp1y = departureY + handleY;
+                const cp2x = endX;
+                const cp2y = approachY - handleY;
 
-                const path = `M ${startX} ${startY} L ${startX} ${adjStartY} C ${startX} ${adjStartY + controlOffset}, ${endX} ${adjEndY - controlOffset}, ${endX} ${adjEndY} L ${endX} ${endY}`;
+                // Stop line stroke exactly at (endY - 6) so stroke never renders beneath arrowhead
+                const path = `M ${startX} ${startY} L ${startX} ${departureY} C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${endX} ${approachY} L ${endX} ${endY - 6}`;
 
-                // A path is active/unlocked if its starting node has been fully completed
                 const active = isCategoryComplete(from);
 
                 return (
                     <path
                         key={`${from}-${to}`}
                         d={path}
-                        stroke={active ? "#10b981" : "#3b82f6"}
-                        strokeWidth={5}
+                        stroke={active ? "#10b981" : "#52525d"}
+                        strokeWidth={1.8}
+                        strokeOpacity={active ? 1 : 0.8}
                         fill="none"
-                        className="transition-colors duration-500"
+                        className="transition-colors duration-200"
                         markerEnd={active ? "url(#arrowhead-completed)" : "url(#arrowhead-incomplete)"}
                         vectorEffect="non-scaling-stroke"
                     />

@@ -1,21 +1,29 @@
-<svg width="100%" height="100%" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+<svg width="100%" height="100%" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
   <defs>
-    <linearGradient id="brand_gradient" x1="80" y1="20" x2="20" y2="80" gradientUnits="userSpaceOnUse">
+    <linearGradient id="arc_grad" x1="6" y1="26" x2="26" y2="6" gradientUnits="userSpaceOnUse">
       <stop offset="0%" stop-color="#3b82f6" />
       <stop offset="100%" stop-color="#10b981" />
     </linearGradient>
   </defs>
   
-  <!-- The Path: A smooth sigmoid curve representing the journey/arc -->
-  <path d="M 25 75 C 50 75, 50 25, 75 25" 
-        stroke="url(#brand_gradient)" 
-        stroke-width="12" 
+  <!-- Upward Directed Arc Delta ('A' for Arc + Graph Tree) -->
+  <path d="M 6.5 25.5 C 9 15.5, 13 7.5, 16 5.5 C 19 7.5, 23 15.5, 25.5 25.5" 
+        stroke="url(#arc_grad)" 
+        stroke-width="2.2" 
         stroke-linecap="round" 
         stroke-linejoin="round" />
         
-  <!-- Start Node (Bottom-Left) - Green (End of gradient flow) -->
-  <circle cx="25" cy="75" r="8" fill="#10b981" />
+  <!-- Internal Graph Crossbar Connection -->
+  <path d="M 10 19 C 13.5 17.5, 18.5 17.5, 22 19" 
+        stroke="#60a5fa" 
+        stroke-opacity="0.8" 
+        stroke-width="1.8" 
+        stroke-linecap="round" />
+        
+  <!-- Apex Mastery Vertex (Emerald) -->
+  <circle cx="16" cy="5.5" r="2.2" fill="#10b981" />
   
-  <!-- End Node (Top-Right) - Blue (Start of gradient flow) -->
-  <circle cx="75" cy="25" r="8" fill="#3b82f6" />
+  <!-- Foundation Vertices (Blue) -->
+  <circle cx="6.5" cy="25.5" r="1.8" fill="#3b82f6" />
+  <circle cx="25.5" cy="25.5" r="1.8" fill="#3b82f6" />
 </svg>
