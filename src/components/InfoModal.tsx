@@ -41,12 +41,12 @@ const InfoModal: React.FC<InfoModalProps> = ({ isOpen, onClose }) => {
                 </div>
 
                 <div className="space-y-3 sm:space-y-3.5 text-[13px] sm:text-sm leading-relaxed text-[#c4c4cf]">
-                    <div className="p-3 sm:p-3.5 bg-dark-bg/60 border border-dark-border/80 rounded-xl space-y-1.5">
+                    <div className="p-3 sm:p-3.5 bg-dark-bg/60 border border-dark-border/80 rounded-xl space-y-1">
                         <p className="text-[#ededf0] font-medium leading-snug">
                             Master the 8 patterns behind almost every LeetCode problem.
                         </p>
                         <p className="text-xs text-dark-muted leading-relaxed">
-                            37 high-yield problems. Zero duplicate grind. 80% interview readiness in 20% of the time.
+                            37 high-yield problems. Zero duplicate grind.
                         </p>
                     </div>
 
