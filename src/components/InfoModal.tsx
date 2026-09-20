@@ -41,43 +41,13 @@ const InfoModal: React.FC<InfoModalProps> = ({ isOpen, onClose }) => {
                 </div>
 
                 <div className="space-y-3 sm:space-y-3.5 text-[13px] sm:text-sm leading-relaxed text-[#c4c4cf]">
-                    <p>
-                        58 essential problems across 17 patterns, organized into a visual roadmap connecting NeetCode and Sean Prashad's curated sets:
-                    </p>
-
-                    {/* Symmetrical Curated Resources Grid */}
-                    <div className="grid grid-cols-2 gap-2 text-xs">
-                        <a
-                            href="https://neetcode.io/"
-                            target="_blank"
-                            rel="noreferrer"
-                            className="flex items-center justify-between px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-xl bg-dark-bg/60 hover:bg-dark-bg border border-dark-border/80 hover:border-zinc-500/50 transition-all group"
-                        >
-                            <div className="flex flex-col min-w-0">
-                                <span className="text-[10px] font-mono font-medium text-dark-muted">01</span>
-                                <span className="text-[11.5px] sm:text-xs font-medium text-[#ededf0] group-hover:text-blue-400 transition-colors truncate">NeetCode · Blind 75</span>
-                            </div>
-                            <svg className="w-3.5 h-3.5 text-dark-muted group-hover:text-blue-400 transition-transform duration-200 group-hover:translate-x-[1px] group-hover:-translate-y-[1px] flex-shrink-0 ml-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                <line x1="7" y1="17" x2="17" y2="7" />
-                                <polyline points="7 7 17 7 17 17" />
-                            </svg>
-                        </a>
-
-                        <a
-                            href="https://seanprashad.com/leetcode-patterns/"
-                            target="_blank"
-                            rel="noreferrer"
-                            className="flex items-center justify-between px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-xl bg-dark-bg/60 hover:bg-dark-bg border border-dark-border/80 hover:border-zinc-500/50 transition-all group"
-                        >
-                            <div className="flex flex-col min-w-0">
-                                <span className="text-[10px] font-mono font-medium text-dark-muted">02</span>
-                                <span className="text-[11.5px] sm:text-xs font-medium text-[#ededf0] group-hover:text-blue-400 transition-colors truncate">Sean Prashad Patterns</span>
-                            </div>
-                            <svg className="w-3.5 h-3.5 text-dark-muted group-hover:text-blue-400 transition-transform duration-200 group-hover:translate-x-[1px] group-hover:-translate-y-[1px] flex-shrink-0 ml-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                <line x1="7" y1="17" x2="17" y2="7" />
-                                <polyline points="7 7 17 7 17 17" />
-                            </svg>
-                        </a>
+                    <div className="p-3 sm:p-3.5 bg-dark-bg/60 border border-dark-border/80 rounded-xl space-y-1.5">
+                        <p className="text-[#ededf0] font-medium leading-snug">
+                            Master the 8 patterns behind almost every LeetCode problem.
+                        </p>
+                        <p className="text-xs text-dark-muted leading-relaxed">
+                            37 high-yield problems. Zero duplicate grind. 80% interview readiness in 20% of the time.
+                        </p>
                     </div>
 
                     {/* Navigation & Shortcuts */}

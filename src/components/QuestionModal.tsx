@@ -8,6 +8,7 @@ interface QuestionModalProps {
   onClose: () => void;
   solvedIds: Set<string>;
   toggleQuestion: (id: string) => void;
+  uncheckAll?: () => void;
   highlightedQuestionId?: string | null;
 }
 
@@ -17,6 +18,7 @@ export const QuestionModal: React.FC<QuestionModalProps> = ({
   onClose,
   solvedIds,
   toggleQuestion,
+  uncheckAll,
   highlightedQuestionId
 }) => {
   const [highlightedId, setHighlightedId] = useState<string | null>(highlightedQuestionId || null);
@@ -105,9 +107,24 @@ export const QuestionModal: React.FC<QuestionModalProps> = ({
             ) : (
               <span className="text-dark-muted">Progress</span>
             )}
-            <span className={clsx("font-mono tabular-nums font-medium", progress === 100 ? "text-emerald-400 font-semibold" : "text-[#ededf0]")}>
-              {solvedCount} of {total} ({progress}%)
-            </span>
+            <div className="flex items-center gap-2.5">
+              {solvedCount > 0 && uncheckAll && (
+                <button
+                  onClick={uncheckAll}
+                  className="text-[11px] font-mono text-dark-muted hover:text-rose-400 transition-colors flex items-center gap-1 px-1.5 py-0.5 rounded hover:bg-rose-500/10"
+                  title="Uncheck all problems in this pattern"
+                >
+                  <svg className="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
+                    <path d="M3 3v5h5" />
+                  </svg>
+                  <span>Reset</span>
+                </button>
+              )}
+              <span className={clsx("font-mono tabular-nums font-medium", progress === 100 ? "text-emerald-400 font-semibold" : "text-[#ededf0]")}>
+                {solvedCount} of {total} ({progress}%)
+              </span>
+            </div>
           </div>
 
           <div className="w-full h-1.5 bg-dark-bg rounded-full overflow-hidden border border-dark-border/80">

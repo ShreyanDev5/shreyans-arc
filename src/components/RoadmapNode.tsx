@@ -50,8 +50,8 @@ const RoadmapNode: React.FC<RoadmapNodeProps> = ({
             )}
         >
             {/* Content */}
-            <div className="relative flex flex-col items-center justify-center gap-1.5 h-[72px] px-2.5 pt-2 pb-3.5">
-                <span className="font-medium text-center leading-[1.28] text-[12.5px] tracking-[-0.01em] line-clamp-2 text-[#ededf0] group-hover:text-white transition-colors max-w-full px-1">
+            <div className="relative flex flex-col items-center justify-center gap-1.5 h-[74px] px-3 pt-2 pb-3.5">
+                <span className="font-medium text-center leading-snug text-[12.5px] tracking-[-0.01em] line-clamp-2 text-[#ededf0] group-hover:text-white transition-colors max-w-full px-1">
                     {category.title}
                 </span>
 

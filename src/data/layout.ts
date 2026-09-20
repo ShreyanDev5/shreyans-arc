@@ -7,48 +7,30 @@ export interface ViewportTransform extends Position {
   scale: number;
 }
 
-export const ROADMAP_NODE_WIDTH = 200;
-export const ROADMAP_BASE_NODE_HEIGHT = 72;
+export const ROADMAP_NODE_WIDTH = 210;
+export const ROADMAP_BASE_NODE_HEIGHT = 74;
 
 export const INITIAL_LAYOUT: Record<string, Position> = {
-  arrays_hashing: { x: 220, y: 0 },
-  two_pointers: { x: 80, y: 185 },
-  stacks_monotonic: { x: 360, y: 185 },
-  binary_search_quickselect: { x: -50, y: 370 },
-  sliding_window: { x: 220, y: 370 },
-  linked_list: { x: 490, y: 370 },
-  trees: { x: 220, y: 555 },
-  trie: { x: -50, y: 740 },
-  heap_priority_queue: { x: 220, y: 740 },
-  backtracking: { x: 490, y: 740 },
-  graphs: { x: 490, y: 925 },
-  greedy: { x: 220, y: 1110 },
-  dp_1d: { x: 490, y: 1110 },
-  intervals: { x: 220, y: 1295 },
-  dp_2d: { x: 490, y: 1295 },
-  bit_manipulation: { x: 760, y: 1295 },
-  math_geometry: { x: 490, y: 1480 },
+  hashmaps_hashsets: { x: 250, y: 0 },
+  two_pointers: { x: 100, y: 160 },
+  monotonic_stack_prefix_sum: { x: 400, y: 160 },
+  modified_binary_search: { x: -50, y: 320 },
+  sliding_window: { x: 250, y: 320 },
+  heap_priority_queue: { x: 550, y: 320 },
+  bfs_dfs: { x: 250, y: 480 },
+  memoization: { x: 250, y: 640 },
 };
 
 export const ROADMAP_CONNECTIONS = [
-  { from: 'arrays_hashing', to: 'two_pointers' },
-  { from: 'arrays_hashing', to: 'stacks_monotonic' },
+  { from: 'hashmaps_hashsets', to: 'two_pointers' },
+  { from: 'hashmaps_hashsets', to: 'monotonic_stack_prefix_sum' },
+  { from: 'two_pointers', to: 'modified_binary_search' },
   { from: 'two_pointers', to: 'sliding_window' },
-  { from: 'two_pointers', to: 'binary_search_quickselect' },
-  { from: 'two_pointers', to: 'linked_list' },
-  { from: 'binary_search_quickselect', to: 'trees' },
-  { from: 'linked_list', to: 'trees' },
-  { from: 'trees', to: 'trie' },
-  { from: 'trees', to: 'heap_priority_queue' },
-  { from: 'trees', to: 'backtracking' },
-  { from: 'backtracking', to: 'graphs' },
-  { from: 'heap_priority_queue', to: 'greedy' },
-  { from: 'graphs', to: 'greedy' },
-  { from: 'graphs', to: 'dp_1d' },
-  { from: 'greedy', to: 'intervals' },
-  { from: 'dp_1d', to: 'dp_2d' },
-  { from: 'dp_1d', to: 'bit_manipulation' },
-  { from: 'dp_2d', to: 'math_geometry' },
+  { from: 'monotonic_stack_prefix_sum', to: 'heap_priority_queue' },
+  { from: 'modified_binary_search', to: 'bfs_dfs' },
+  { from: 'sliding_window', to: 'bfs_dfs' },
+  { from: 'heap_priority_queue', to: 'bfs_dfs' },
+  { from: 'bfs_dfs', to: 'memoization' },
 ] as const;
 
 export const CUSTOM_NODE_HEIGHTS: Record<string, number> = {};
@@ -58,23 +40,23 @@ export const getDefaultViewport = (width: number, height?: number): ViewportTran
   const viewportHeight = height || (typeof window !== 'undefined' ? window.innerHeight : 900);
 
   // Full roadmap bounding box:
-  // X: spans -50 to 960 (width = 1010, horizontal center = 455)
-  // Y: spans 0 to 1552 (height = 1552, vertical center = 776)
-  const ROADMAP_WIDTH = 1010;
-  const ROADMAP_HEIGHT = 1552;
-  const ROADMAP_CENTER_X = 455;
-  const ROADMAP_CENTER_Y = 776;
+  // X: spans -50 to 760 (width = 810, horizontal center = 355)
+  // Y: spans 0 to 714 (height = 714, vertical center = 357)
+  const ROADMAP_WIDTH = 810;
+  const ROADMAP_HEIGHT = 714;
+  const ROADMAP_CENTER_X = 355;
+  const ROADMAP_CENTER_Y = 357;
 
   // Safe visual margins (accommodates top bar and bottom dock)
-  const padX = isMobile ? 32 : 100;
-  const padY = isMobile ? 120 : 150;
+  const padX = isMobile ? 40 : 160;
+  const padY = isMobile ? 140 : 200;
 
   const scaleX = (width - padX) / ROADMAP_WIDTH;
   const scaleY = (viewportHeight - padY) / ROADMAP_HEIGHT;
 
-  // Fit the ENTIRE roadmap both horizontally and vertically
-  const maxScale = isMobile ? 0.40 : 0.62;
-  const scale = Math.min(maxScale, Math.max(0.18, Math.min(scaleX, scaleY)));
+  // Slightly zoomed out for best breathing room
+  const maxScale = isMobile ? 0.55 : 0.78;
+  const scale = Math.min(maxScale, Math.max(0.25, Math.min(scaleX, scaleY)));
 
   return {
     x: width / 2 - ROADMAP_CENTER_X * scale,

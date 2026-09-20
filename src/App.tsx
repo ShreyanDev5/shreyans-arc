@@ -149,6 +149,18 @@ const App: React.FC = () => {
     else localStorage.setItem('shreyans-arc-guest', JSON.stringify(idsArray));
   };
 
+  const uncheckCategoryQuestions = async (catId: string) => {
+    const cat = roadmapData.find(c => c.id === catId);
+    if (!cat) return;
+    const catQuestionIds = new Set(cat.questions.map(q => q.id));
+    const newSet = new Set([...solvedIds].filter(id => !catQuestionIds.has(id)));
+    setSolvedIds(newSet);
+
+    const idsArray = Array.from(newSet);
+    if (user && db) await setDoc(doc(db, 'users', user.uid), { solved: idsArray }, { merge: true });
+    else localStorage.setItem('shreyans-arc-guest', JSON.stringify(idsArray));
+  };
+
   const handleLogin = async () => {
     if (!isConfigured || !auth || !googleProvider) {
       alert("Cloud sync is not configured. Progress is saved locally in this browser.");
@@ -430,7 +442,7 @@ const App: React.FC = () => {
             </button>
           ) : (
             <div className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 sm:py-2 bg-dark-card/90 backdrop-blur-md border border-emerald-500/30 rounded-xl shadow-lg text-xs font-medium text-emerald-400">
-              <span>All 58 Solved</span>
+              <span>All {totalQuestions} Solved</span>
               <span>🎉</span>
             </div>
           )}
@@ -592,6 +604,7 @@ const App: React.FC = () => {
               }}
               solvedIds={solvedIds}
               toggleQuestion={toggleQuestion}
+              uncheckAll={() => uncheckCategoryQuestions(selectedCategory.id)}
               highlightedQuestionId={highlightedQuestionId}
             />
           </Suspense>

@@ -1,6 +1,7 @@
 # Shreyan's Arc
 
-An interactive DSA roadmap and progress tracker with 58 curated problems across 17 core patterns.
+> **Master the 8 patterns behind almost every LeetCode problem.**  
+> 37 high-yield problems. Zero duplicate grind. 80% interview readiness in 20% of the time.
 
 [![Live Demo](https://img.shields.io/badge/Live_Demo-shreyans--arc.vercel.app-blue?style=flat-square)](https://shreyans-arc.vercel.app)
 [![Database](https://img.shields.io/badge/Database-Firebase-FFCA28?style=flat-square)](https://firebase.google.com/)
@@ -11,12 +12,29 @@ An interactive DSA roadmap and progress tracker with 58 curated problems across 
 
 ---
 
+## The 8 Core Patterns
+
+Instead of memorizing hundreds of disconnected questions, this roadmap focuses on the 8 universal mental models:
+
+1. **Hashmaps / Hashsets:** Instant memory lookup ($O(1)$)
+2. **Two Pointers:** Linear scan with two indices
+3. **Sliding Window:** Expanding and shrinking dynamic frames
+4. **Modified Binary Search:** Logarithmic search space reduction
+5. **Stack & Prefix Sum:** History tracking and running sum lookups
+6. **Heap / Priority Queue:** Instant min/max extraction and top-$k$ tracking
+7. **BFS / DFS:** State-space, tree, and graph search
+8. **Memoization:** Dynamic programming and subproblem caching
+
+---
+
 ## Features
 
-- **Interactive roadmap canvas:** Pan, zoom, and explore 17 connected algorithmic patterns.
-- **58 curated problems:** High-yield questions covering foundational patterns from NeetCode and Sean Prashad.
-- **Local & cloud sync:** Progress saves automatically in your browser, with optional Google sign-in to sync across devices.
-- **Direct practice:** One-click links to open problems directly on LeetCode.
+- **Interactive Roadmap Canvas:** Smooth pan, zoom, and auto-centering across the 8-node DAG.
+- **37 High-Yield Problems:** Curated to eliminate clone questions while retaining 100% pattern coverage.
+- **Smart "Next Up" Engine:** Automatically recommends the next problem based on your active topic and progress.
+- **1-Click Topic Reset:** Clear checked questions for any pattern with a single click.
+- **Local & Cloud Sync:** Instant offline progress tracking via `localStorage`, with optional Google Sign-In for cross-device cloud sync.
+- **Direct Practice:** One-click links to open problems directly on LeetCode.
 
 ---
 
@@ -47,3 +65,4 @@ The app runs out of the box using local storage. To enable Google sign-in and cl
 ## Author
 
 **Shreyan Sardar** · [Portfolio](https://shreyandev.vercel.app) · [GitHub](https://github.com/ShreyanDev5) · [LinkedIn](https://www.linkedin.com/in/shreyansardar/)
+
